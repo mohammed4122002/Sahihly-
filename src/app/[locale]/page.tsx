@@ -19,6 +19,10 @@ import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default async function HomePage({
   params,
 }: {
@@ -27,7 +31,7 @@ export default async function HomePage({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
-  const base = `/${locale}`;
+  const base = "";
 
   return (
     <>
@@ -235,7 +239,7 @@ export default async function HomePage({
               <LogoMark className="floaty mx-auto mb-6 h-14 w-14" />
               <h2 className="text-3xl font-bold sm:text-4xl">{dict.cta.title}</h2>
               <p className="mx-auto mt-3 max-w-xl text-white/60">{dict.cta.subtitle}</p>
-              <a href="#detector" className="btn-primary mt-8 inline-flex rounded-full px-8 py-3 text-sm">
+              <a href="/#detector" className="btn-primary mt-8 inline-flex rounded-full px-8 py-3 text-sm">
                 {dict.cta.button}
               </a>
             </div>

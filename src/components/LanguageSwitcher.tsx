@@ -1,19 +1,17 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { locales, type Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
+/**
+ * Manual language override. The URL never changes — we store the preference
+ * in a cookie and reload so the server re-negotiates the language.
+ */
 export default function LanguageSwitcher({ locale }: { locale: Locale }) {
-  const pathname = usePathname();
-  const router = useRouter();
-
   function switchTo(target: Locale) {
     if (target === locale) return;
     document.cookie = `sahihly_locale=${target}; path=/; max-age=${60 * 60 * 24 * 365}`;
-    const parts = pathname.split("/");
-    parts[1] = target; // replace locale segment
-    router.push(parts.join("/") || `/${target}`);
+    window.location.reload();
   }
 
   return (

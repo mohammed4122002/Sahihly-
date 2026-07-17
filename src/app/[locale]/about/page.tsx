@@ -14,10 +14,7 @@ export async function generateMetadata({
   return {
     title: dict.nav.about,
     description: dict.ethics.body,
-    alternates: {
-      canonical: `/${locale}/about`,
-      languages: { en: "/en/about", ar: "/ar/about" },
-    },
+    alternates: { canonical: "/about" },
   };
 }
 

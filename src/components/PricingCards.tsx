@@ -18,13 +18,13 @@ export default function PricingCards({
   const [notice, setNotice] = useState<string | null>(null);
   const router = useRouter();
   const p = dict.pricing;
-  const base = `/${locale}`;
+  const base = "";
 
   const yearlyPrice: Record<string, string> = { pro: "$115", ultimate: "$278" };
 
   async function choose(planId: string) {
     if (planId === "free") {
-      router.push(base);
+      router.push("/");
       return;
     }
     setNotice(null);

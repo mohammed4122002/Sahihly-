@@ -25,10 +25,7 @@ export async function generateMetadata({
   return {
     title: c.title[loc],
     description: c.intro[loc],
-    alternates: {
-      canonical: `/${loc}/vs/${competitor}`,
-      languages: { en: `/en/vs/${competitor}`, ar: `/ar/vs/${competitor}` },
-    },
+    alternates: { canonical: `/vs/${competitor}` },
   };
 }
 
@@ -42,7 +39,7 @@ export default async function ComparePage({
   const dict = getDictionary(locale);
   const c = getCompetitor(competitor);
   if (!c) notFound();
-  const base = `/${locale}`;
+  const base = "";
 
   return (
     <div className="container-x max-w-4xl py-16">
@@ -86,7 +83,7 @@ export default async function ComparePage({
       <Reveal delay={2}>
         <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-8 text-center">
           <p className="text-lg text-white/80">{c.verdict[locale]}</p>
-          <Link href={base} className="btn-primary mt-6 inline-flex rounded-full px-6 py-3 text-sm">
+          <Link href="/" className="btn-primary mt-6 inline-flex rounded-full px-6 py-3 text-sm">
             {dict.compare.tryFree}
           </Link>
         </div>

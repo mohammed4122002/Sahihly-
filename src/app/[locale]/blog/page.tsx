@@ -16,7 +16,7 @@ export async function generateMetadata({
   return {
     title: dict.blog.title,
     description: dict.blog.subtitle,
-    alternates: { canonical: `/${locale}/blog`, languages: { en: "/en/blog", ar: "/ar/blog" } },
+    alternates: { canonical: "/blog" },
   };
 }
 
@@ -28,7 +28,7 @@ export default async function BlogPage({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
-  const base = `/${locale}`;
+  const base = "";
 
   return (
     <div className="container-x py-16">

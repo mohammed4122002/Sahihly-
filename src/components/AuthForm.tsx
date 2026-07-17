@@ -18,7 +18,7 @@ export default function AuthForm({
   dict: Dictionary;
 }) {
   const a = dict.auth;
-  const base = `/${locale}`;
+  const base = "";
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") || "/dashboard";

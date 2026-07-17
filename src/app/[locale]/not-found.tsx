@@ -9,11 +9,8 @@ export default function NotFound() {
         The page you&apos;re looking for doesn&apos;t exist.
       </p>
       <div className="mt-6 flex gap-3">
-        <Link href="/en" className="btn-primary rounded-full px-6 py-2.5 text-sm">
-          Home
-        </Link>
-        <Link href="/ar" className="btn-ghost rounded-full px-6 py-2.5 text-sm">
-          الرئيسية
+        <Link href="/" className="btn-primary rounded-full px-6 py-2.5 text-sm">
+          Home · الرئيسية
         </Link>
       </div>
     </div>

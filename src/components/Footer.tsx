@@ -13,7 +13,7 @@ export default function Footer({
   locale: Locale;
   dict: Dictionary;
 }) {
-  const base = `/${locale}`;
+  const base = "";
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
 
@@ -33,8 +33,8 @@ export default function Footer({
     {
       title: dict.footer.product,
       links: [
-        { href: `${base}#detector`, label: dict.nav.detector },
-        { href: `${base}#humanizer`, label: dict.nav.humanizer },
+        { href: "/#detector", label: dict.nav.detector },
+        { href: "/#humanizer", label: dict.nav.humanizer },
         { href: `${base}/pricing`, label: dict.nav.pricing },
       ],
     },

@@ -25,10 +25,7 @@ export async function generateMetadata({
   return {
     title: post.title[loc],
     description: post.excerpt[loc],
-    alternates: {
-      canonical: `/${loc}/blog/${slug}`,
-      languages: { en: `/en/blog/${slug}`, ar: `/ar/blog/${slug}` },
-    },
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: { title: post.title[loc], description: post.excerpt[loc], type: "article" },
   };
 }
@@ -43,7 +40,7 @@ export default async function PostPage({
   const dict = getDictionary(locale);
   const post = getPost(slug);
   if (!post) notFound();
-  const base = `/${locale}`;
+  const base = "";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -52,7 +49,7 @@ export default async function PostPage({
     datePublished: post.date,
     inLanguage: locale,
     author: { "@type": "Organization", name: "Sahihly" },
-    url: `${SITE_URL}/${locale}/blog/${slug}`,
+    url: `${SITE_URL}/blog/${slug}`,
   };
 
   return (
@@ -88,7 +85,7 @@ export default async function PostPage({
 
       <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
         <p className="text-sm text-white/70">{dict.cta.subtitle}</p>
-        <Link href={base} className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
+        <Link href="/" className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
           {dict.cta.button}
         </Link>
       </div>

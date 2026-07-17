@@ -9,9 +9,12 @@ languages — with first-class Arabic support and native-quality English.
 
 ## ✨ Features
 
-- **Bilingual routing** — `/en` (LTR) and `/ar` (RTL) with server-side language detection
-  (`Accept-Language`), a manual AR/EN switcher, cookie persistence, and correct `hreflang`
-  tags for SEO.
+- **Invisible bilingual routing (airanktools-style)** — one clean URL for everyone
+  (`sahihly.com/pricing`, never `/en` or `/ar`). The language is negotiated **server-side**
+  from the device's `Accept-Language` (no flash of wrong language), overridable with the
+  AR/EN switcher (cookie, 1 year). Internally the middleware *rewrites* to prebuilt
+  static pages per language, so it stays fast. Legacy `/en/*` and `/ar/*` links 308-redirect
+  to the clean URL while adopting that language — which doubles as shareable language links.
 - **AI Detector** — probability score + sentence-level highlights.
 - **Humanizer** — meaning-safe rewrite with before/after, copy & download.
 - **Dual engine** — uses the Anthropic API (Claude) when `ANTHROPIC_API_KEY` is set, and
@@ -95,10 +98,18 @@ before each period ends (manual-renewal model).
 
 ## 📈 SEO / AdSense
 
-- Per-locale canonical + `hreflang` (`en`, `ar`, `x-default`).
-- `sitemap.xml` and `robots.txt` generated from routes + content.
-- JSON-LD (`SoftwareApplication`, `BlogPosting`).
-- Set `NEXT_PUBLIC_ADSENSE_CLIENT` to load the AdSense script.
+- Clean canonical per page (no locale in URLs); crawlers without an Arabic
+  `Accept-Language` see the English version (the priority market), and
+  `Content-Language` is set per response.
+- `sitemap.xml`, `robots.txt`, dynamic **OpenGraph image** (`/opengraph-image`),
+  PWA `manifest.webmanifest`, JSON-LD (`SoftwareApplication`, `BlogPosting`).
+- AdSense: set `NEXT_PUBLIC_ADSENSE_CLIENT` — this loads the script **and**
+  serves `/ads.txt` automatically.
+
+> Trade-off (chosen deliberately): with one URL per page, Google indexes a single
+> language per URL — the English experience. The Arabic experience is still fully
+> served to Arabic devices, and `sahihly.com/ar` remains shareable (it sets the
+> language, then redirects to the clean URL).
 
 ## ⚖️ Responsible use
 

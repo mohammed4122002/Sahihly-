@@ -16,7 +16,7 @@ export default async function DashboardPage({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
-  const base = `/${locale}`;
+  const base = "";
   const d = dict.dashboard;
 
   const supabase = await createClient();
@@ -101,7 +101,7 @@ export default async function DashboardPage({
               ? "توجّه للاستوديو لتحليل نص أو تنسينه."
               : "Head to the studio to detect or humanize."}
           </p>
-          <Link href={base} className="btn-ghost mt-4 inline-flex rounded-full px-4 py-2 text-sm">
+          <Link href="/" className="btn-ghost mt-4 inline-flex rounded-full px-4 py-2 text-sm">
             {dict.cta.button}
           </Link>
         </div>

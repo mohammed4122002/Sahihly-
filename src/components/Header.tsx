@@ -18,7 +18,7 @@ export default function Header({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const base = `/${locale}`;
+  const base = "";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -28,8 +28,8 @@ export default function Header({
   }, []);
 
   const links = [
-    { href: `${base}#detector`, label: dict.nav.detector },
-    { href: `${base}#humanizer`, label: dict.nav.humanizer },
+    { href: "/#detector", label: dict.nav.detector },
+    { href: "/#humanizer", label: dict.nav.humanizer },
     { href: `${base}/pricing`, label: dict.nav.pricing },
     { href: `${base}/blog`, label: dict.nav.blog },
     { href: `${base}/about`, label: dict.nav.about },
@@ -43,7 +43,7 @@ export default function Header({
       )}
     >
       <nav className="container-x flex h-16 items-center justify-between gap-4">
-        <Link href={base} aria-label="Sahihly home">
+        <Link href="/" aria-label="Sahihly home">
           <Logo />
         </Link>
 

@@ -11,6 +11,12 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+export const viewport = {
+  themeColor: "#0b1f3a",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -37,21 +43,13 @@ export async function generateMetadata({
       "Arabic AI detector",
       "Sahihly",
     ],
-    alternates: {
-      canonical: `/${loc}`,
-      languages: {
-        en: "/en",
-        ar: "/ar",
-        "x-default": "/en",
-      },
-    },
     openGraph: {
       type: "website",
       siteName: dict.meta.siteName,
       title: `${dict.meta.siteName} — ${dict.meta.tagline}`,
       description: dict.meta.description,
       locale: loc === "ar" ? "ar_AR" : "en_US",
-      url: `${SITE_URL}/${loc}`,
+      url: SITE_URL,
     },
     twitter: {
       card: "summary_large_image",
@@ -83,7 +81,7 @@ export default async function LocaleLayout({
     description: dict.meta.description,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     inLanguage: locale === "ar" ? "ar" : "en",
-    url: `${SITE_URL}/${locale}`,
+    url: SITE_URL,
   };
 
   return (

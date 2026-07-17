@@ -15,10 +15,7 @@ export async function generateMetadata({
   return {
     title: dict.pricing.title,
     description: dict.pricing.subtitle,
-    alternates: {
-      canonical: `/${locale}/pricing`,
-      languages: { en: "/en/pricing", ar: "/ar/pricing" },
-    },
+    alternates: { canonical: "/pricing" },
   };
 }
 

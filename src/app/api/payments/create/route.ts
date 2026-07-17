@@ -6,10 +6,9 @@ import { SITE_URL } from "@/lib/i18n/config";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const { plan, cycle, locale } = (await req.json()) as {
+  const { plan, cycle } = (await req.json()) as {
     plan: PlanId;
     cycle: BillingCycle;
-    locale?: string;
   };
 
   if (!["pro", "ultimate"].includes(plan) || !["monthly", "yearly"].includes(cycle)) {
@@ -27,7 +26,6 @@ export async function POST(req: NextRequest) {
 
   const amount = planAmount(plan, cycle);
   const merchantTradeNo = `SH${Date.now()}${Math.floor(Math.random() * 1000)}`;
-  const lang = locale === "ar" ? "ar" : "en";
 
   // Record the pending order (service client bypasses RLS for server writes).
   try {
@@ -55,8 +53,8 @@ export async function POST(req: NextRequest) {
       userId: user.id,
       merchantTradeNo,
       description: `Sahihly ${plan} (${cycle})`,
-      returnUrl: `${SITE_URL}/${lang}/dashboard?paid=1`,
-      cancelUrl: `${SITE_URL}/${lang}/pricing`,
+      returnUrl: `${SITE_URL}/dashboard?paid=1`,
+      cancelUrl: `${SITE_URL}/pricing`,
     });
 
     try {
