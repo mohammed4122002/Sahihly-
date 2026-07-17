@@ -4,7 +4,8 @@ import { getDictionary } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import SignOutButton from "@/components/SignOutButton";
-import { CreditCard, History, Sparkles } from "lucide-react";
+import { isAdminEmail } from "@/lib/admin";
+import { CreditCard, History, Sparkles, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -71,7 +72,18 @@ export default async function DashboardPage({
             {profile?.full_name || user.email?.split("@")[0]}
           </h1>
         </div>
-        <SignOutButton locale={locale} label={d.signOut} />
+        <div className="flex items-center gap-2">
+          {isAdminEmail(user.email) && (
+            <Link
+              href="/admin"
+              className="btn-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+            >
+              <ShieldCheck size={15} />
+              {locale === "ar" ? "لوحة الإدارة" : "Admin Console"}
+            </Link>
+          )}
+          <SignOutButton locale={locale} label={d.signOut} />
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
