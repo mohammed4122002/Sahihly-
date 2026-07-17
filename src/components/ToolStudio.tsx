@@ -93,6 +93,10 @@ export default function ToolStudio({
   const [copied, setCopied] = useState(false);
 
   const words = useMemo(() => countWords(text), [text]);
+  const inputLang = useMemo(
+    () => (text.trim() ? (/[؀-ۿ]/.test(text) ? "AR" : "EN") : null),
+    [text]
+  );
   const t = dict.tool;
 
   async function run() {
@@ -187,6 +191,11 @@ export default function ToolStudio({
           />
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3 text-xs text-white/50">
+              {inputLang && (
+                <span className="rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 font-medium text-violet-300">
+                  {inputLang}
+                </span>
+              )}
               <span className={words > 250 ? "text-red-400" : ""}>
                 {words} / 250 {t.words}
               </span>
@@ -296,6 +305,14 @@ export default function ToolStudio({
                   ))}
                 </div>
                 <p className="mt-2 text-[11px] text-white/40">{t.highlighted}</p>
+                {detect.verdict !== "human" && (
+                  <button
+                    onClick={() => setTab("humanize")}
+                    className="btn-primary mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-xs"
+                  >
+                    <Sparkles size={13} /> {t.tabHumanize}
+                  </button>
+                )}
               </motion.div>
             )}
 
@@ -326,8 +343,23 @@ export default function ToolStudio({
                     </button>
                   </div>
                 </div>
-                <div className="max-h-52 overflow-y-auto rounded-xl bg-black/20 p-3 text-sm leading-relaxed">
-                  {human.text}
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div>
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-white/35">
+                      {t.before}
+                    </span>
+                    <div className="max-h-44 overflow-y-auto rounded-xl bg-black/20 p-3 text-xs leading-relaxed text-white/50">
+                      {text}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="mb-1 block text-[10px] uppercase tracking-wider text-violet-300/80">
+                      {t.after}
+                    </span>
+                    <div className="max-h-44 overflow-y-auto rounded-xl border border-violet-400/20 bg-violet-400/[0.06] p-3 text-xs leading-relaxed">
+                      {human.text}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}

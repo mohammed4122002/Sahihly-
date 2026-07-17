@@ -90,6 +90,37 @@ export const competitors: Competitor[] = [
   },
 ];
 
+competitors.push(
+  {
+    slug: "copyleaks",
+    name: "Copyleaks",
+    title: { en: "Sahihly vs Copyleaks", ar: "صحيحلي مقابل Copyleaks" },
+    intro: {
+      en: "Copyleaks is an enterprise-leaning plagiarism and AI-detection suite. Sahihly focuses on the writer: instant detection plus humanizing, free to try, and genuinely bilingual.",
+      ar: "Copyleaks حزمة مؤسسية لكشف الانتحال والذكاء الاصطناعي. يركّز صحيحلي على الكاتب نفسه: كشف فوري مع تنسين، تجربة مجانية، وثنائية لغة حقيقية.",
+    },
+    rows: commonRows(),
+    verdict: {
+      en: "For individual writers who need fast checks and fixes in Arabic or English, Sahihly is the lighter, sharper tool.",
+      ar: "للكاتب الفرد الذي يريد فحصاً وإصلاحاً سريعين بالعربية أو الإنجليزية، صحيحلي الأداة الأخف والأدق.",
+    },
+  },
+  {
+    slug: "zerogpt",
+    name: "ZeroGPT",
+    title: { en: "Sahihly vs ZeroGPT", ar: "صحيحلي مقابل ZeroGPT" },
+    intro: {
+      en: "ZeroGPT offers quick free AI checks. Sahihly adds what comes after the score: sentence-level insight and a humanizer that fixes the style — in Arabic as well as English.",
+      ar: "يقدّم ZeroGPT فحوصات مجانية سريعة. يضيف صحيحلي ما بعد النتيجة: تحليل على مستوى الجملة ومُنسّن يصلح الأسلوب — بالعربية كما بالإنجليزية.",
+    },
+    rows: commonRows(),
+    verdict: {
+      en: "A score alone doesn't improve your draft. Sahihly shows you why — then helps you rewrite it.",
+      ar: "النتيجة وحدها لا تحسّن مسودّتك. يريك صحيحلي السبب — ثم يساعدك على إعادة الصياغة.",
+    },
+  }
+);
+
 export function getCompetitor(slug: string): Competitor | undefined {
   return competitors.find((c) => c.slug === slug);
 }

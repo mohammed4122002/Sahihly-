@@ -45,6 +45,8 @@ export default function Footer({
         { href: `${base}/vs/undetectable-ai`, label: "vs Undetectable.ai" },
         { href: `${base}/vs/quillbot`, label: "vs QuillBot" },
         { href: `${base}/vs/gptzero`, label: "vs GPTZero" },
+        { href: `${base}/vs/copyleaks`, label: "vs Copyleaks" },
+        { href: `${base}/vs/zerogpt`, label: "vs ZeroGPT" },
       ],
     },
     {
@@ -54,11 +56,18 @@ export default function Footer({
         { href: `${base}/about#policy`, label: dict.ethics.link },
       ],
     },
+    {
+      title: dict.footer.legal,
+      links: [
+        { href: `${base}/privacy`, label: dict.footer.privacy },
+        { href: `${base}/terms`, label: dict.footer.terms },
+      ],
+    },
   ];
 
   return (
     <footer className="mt-24 border-t border-white/10">
-      <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
+      <div className="container-x grid gap-10 py-14 md:grid-cols-3 lg:grid-cols-6">
         <div className="lg:col-span-2">
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-white/50">

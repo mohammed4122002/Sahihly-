@@ -270,6 +270,39 @@ h1, h2, h3, .font-display {
   padding-inline: 1.5rem;
 }
 
+/* Section eyebrow label */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b8a6e8;
+}
+.eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b8a6e8);
+}
+[dir="rtl"] .eyebrow { letter-spacing: 0.05em; }
+[dir="rtl"] .eyebrow::before {
+  background: linear-gradient(-90deg, transparent, #b8a6e8);
+}
+
+[dir="rtl"] .scroll-progress { transform-origin: right; }
+
+/* 3D tilt-lite hover for cards */
+.tilt {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
+}
+.tilt:hover {
+  transform: perspective(900px) rotateX(2deg) translateY(-6px);
+  box-shadow: 0 24px 60px -24px rgba(124, 95, 211, 0.4);
+}
+
 .mask-fade {
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);

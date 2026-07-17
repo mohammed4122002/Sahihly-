@@ -9,6 +9,11 @@ import {
   ArrowRight,
   Check,
   X,
+  GraduationCap,
+  PenTool,
+  Briefcase,
+  Users,
+  BadgeCheck,
 } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
@@ -18,6 +23,7 @@ import FAQ from "@/components/FAQ";
 import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
+const useCaseIcons = [GraduationCap, PenTool, Briefcase, Users];
 
 export const metadata = {
   alternates: { canonical: "/" },
@@ -33,8 +39,22 @@ export default async function HomePage({
   const dict = getDictionary(locale);
   const base = "";
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: dict.faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* ---------------- HERO ---------------- */}
       <section className="relative overflow-hidden pb-8 pt-14 sm:pt-20">
         <div className="container-x">
@@ -109,11 +129,33 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ---------------- TRUST STRIP ---------------- */}
+      <section className="py-10">
+        <div className="container-x">
+          <Reveal>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {dict.trustStrip.map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs text-white/70"
+                >
+                  <BadgeCheck size={14} className="text-violet-300" />
+                  {item}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ---------------- FEATURES ---------------- */}
       <section className="py-20">
         <div className="container-x">
           <Reveal>
-            <h2 className="text-center text-3xl font-bold sm:text-4xl">
+            <div className="text-center">
+              <span className="eyebrow">{dict.features.eyebrow}</span>
+            </div>
+            <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">
               {dict.features.title}
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-white/60">
@@ -125,7 +167,7 @@ export default async function HomePage({
               const Icon = featureIcons[i] ?? Sparkles;
               return (
                 <Reveal key={f.title} delay={i} as="div">
-                  <div className="glass glow-card h-full rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1">
+                  <div className="glass glow-card tilt h-full rounded-2xl p-6">
                     <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-400/15 text-violet-300">
                       <Icon size={20} />
                     </div>
@@ -143,7 +185,10 @@ export default async function HomePage({
       <section className="py-16">
         <div className="container-x">
           <Reveal>
-            <h2 className="text-center text-3xl font-bold sm:text-4xl">{dict.how.title}</h2>
+            <div className="text-center">
+              <span className="eyebrow">{dict.how.eyebrow}</span>
+            </div>
+            <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">{dict.how.title}</h2>
           </Reveal>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {dict.how.steps.map((s, i) => (
@@ -159,6 +204,39 @@ export default async function HomePage({
                 </div>
               </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- USE CASES ---------------- */}
+      <section className="py-16">
+        <div className="container-x">
+          <Reveal>
+            <div className="text-center">
+              <span className="eyebrow">{dict.useCases.eyebrow}</span>
+            </div>
+            <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">
+              {dict.useCases.title}
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-white/60">
+              {dict.useCases.subtitle}
+            </p>
+          </Reveal>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {dict.useCases.items.map((u, i) => {
+              const Icon = useCaseIcons[i] ?? Users;
+              return (
+                <Reveal key={u.title} delay={i} as="div">
+                  <div className="glass tilt h-full rounded-2xl p-6">
+                    <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-400/15 text-violet-300">
+                      <Icon size={20} />
+                    </div>
+                    <h3 className="font-semibold">{u.title}</h3>
+                    <p className="mt-2 text-sm text-white/55">{u.desc}</p>
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -223,7 +301,10 @@ export default async function HomePage({
       <section className="py-16">
         <div className="container-x max-w-3xl">
           <Reveal>
-            <h2 className="text-center text-3xl font-bold sm:text-4xl">{dict.faq.title}</h2>
+            <div className="text-center">
+              <span className="eyebrow">{dict.faq.eyebrow}</span>
+            </div>
+            <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">{dict.faq.title}</h2>
           </Reveal>
           <div className="mt-10">
             <FAQ items={dict.faq.items} />

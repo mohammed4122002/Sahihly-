@@ -1,9 +1,9 @@
 const en = {
   meta: {
     siteName: "Sahihly",
-    tagline: "AI Detection & Humanizing — done right, in English and Arabic.",
+    tagline: "Free AI Detector & AI Humanizer — English + Arabic",
     description:
-      "Sahihly is a bilingual writing-quality studio. Check whether text reads as AI-generated, then refine the style so it sounds naturally human — with first-class Arabic support no English-only tool can match.",
+      "Check any text with a free AI detector, then humanize it into natural writing — without changing the meaning. Sahihly is the only studio built natively for both Arabic and English, with sentence-level highlights and no signup required.",
   },
   nav: {
     detector: "AI Detector",
@@ -58,7 +58,15 @@ const en = {
     disclaimer:
       "Sahihly estimates writing style. No detector is 100% accurate — use results as guidance, not proof.",
   },
+  trustStrip: [
+    "No signup to try",
+    "Arabic + English native",
+    "Sentence-level highlights",
+    "Meaning-safe rewriting",
+    "Privacy-first",
+  ],
   features: {
+    eyebrow: "Why Sahihly",
     title: "One engine. Two jobs. Two languages.",
     subtitle:
       "Everything runs on the same model that actually understands Arabic morphology and English nuance.",
@@ -90,11 +98,35 @@ const en = {
     ],
   },
   how: {
+    eyebrow: "Workflow",
     title: "How it works",
     steps: [
       { title: "Paste your text", desc: "Drop in an essay, article, email — anything up to your plan's limit." },
       { title: "Detect or humanize", desc: "Get an AI-likelihood score with highlights, or a natural rewrite." },
       { title: "Refine and export", desc: "Compare before/after, copy, or download the polished result." },
+    ],
+  },
+  useCases: {
+    eyebrow: "Made for you",
+    title: "Who writes with Sahihly?",
+    subtitle: "Anyone who ships words for a living — or a grade.",
+    items: [
+      {
+        title: "Students",
+        desc: "Review your own essays before submission: understand which passages read as machine-written and revise them into your genuine voice.",
+      },
+      {
+        title: "Content creators",
+        desc: "Draft with AI, publish like a human. Smooth robotic phrasing into copy your audience actually enjoys reading.",
+      },
+      {
+        title: "Freelancers",
+        desc: "Deliver client work with confidence. Run a final style pass so every piece sounds professional, natural, and on-brand.",
+      },
+      {
+        title: "Bilingual teams",
+        desc: "One tool for both markets. Check and refine Arabic and English content with the same quality bar — no more juggling tools.",
+      },
     ],
   },
   ethics: {
@@ -160,8 +192,11 @@ const en = {
     empty: "Articles are coming soon.",
   },
   faq: {
+    eyebrow: "Answers",
     title: "Frequently asked questions",
     items: [
+      { q: "Is Sahihly's AI detector free?", a: "Yes — up to 250 words per run, 3 runs a day, with no account. Paid plans raise the limits and save your history." },
+      { q: "Which languages does Sahihly support?", a: "English and Arabic, both as first-class languages on the same engine. That includes Modern Standard Arabic with real morphological understanding." },
       { q: "Is Sahihly accurate?", a: "It gives a well-reasoned estimate of how AI-like text reads. No detector is perfect, so treat scores as guidance rather than proof." },
       { q: "Does it really understand Arabic?", a: "Yes. Arabic is a first-class language here — the engine reasons about morphology and register, not a machine translation of English rules." },
       { q: "Can I use it to beat Turnitin?", a: "No. Sahihly is for improving your own writing's style and clarity. We don't support or market evading academic-integrity systems." },
@@ -181,6 +216,8 @@ const en = {
     legal: "Legal",
     rights: "All rights reserved.",
     builtWith: "Bilingual by design — Arabic & English.",
+    privacy: "Privacy Policy",
+    terms: "Terms of Use",
     newsletter: "Get product updates",
     subscribe: "Subscribe",
     emailPlaceholder: "you@email.com",

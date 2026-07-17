@@ -6,6 +6,7 @@ import { inter, spaceGrotesk, plexArabic } from "@/lib/fonts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Backgrounds from "@/components/Backgrounds";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -106,6 +107,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <Backgrounds />
+        <ScrollProgress />
         <Header locale={locale} dict={dict} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />

@@ -67,6 +67,63 @@ export const posts: BlogPost[] = [
   },
 ];
 
+posts.push(
+  {
+    slug: "what-ai-detector-accuracy-means",
+    date: "2026-07-05",
+    readingTime: 9,
+    category: "Guides",
+    title: {
+      en: "What \"99% Accurate\" Really Means in AI Detectors",
+      ar: "ماذا تعني «دقة ٩٩٪» فعلاً في كواشف الذكاء الاصطناعي",
+    },
+    excerpt: {
+      en: "Accuracy claims hide two very different error types. Understanding them will change how you read every score.",
+      ar: "ادعاءات الدقة تخفي نوعين مختلفين من الأخطاء. فهمهما سيغيّر طريقة قراءتك لكل نتيجة.",
+    },
+    body: {
+      en: `<h2>Two errors, one number</h2><p>A detector can fail in two ways: flagging human writing as AI (<strong>false positive</strong>) or missing AI text entirely (<strong>false negative</strong>). A single "accuracy" number blends both — and the blend depends entirely on what texts were tested.</p><h2>Why false positives matter most</h2><p>For students and professionals, a false positive is the costly error: your own honest writing gets flagged. Non-native phrasing, formal registers, and heavily edited text all raise false-positive risk. This is exactly why scores should inform revision, never verdicts.</p><h2>Questions to ask any detector</h2><ul><li>What languages was it validated on? English-only validation says nothing about Arabic.</li><li>Does it show <em>which</em> sentences drove the score?</li><li>Does it express uncertainty, or pretend to be binary?</li></ul><p>Sahihly shows sentence-level highlights and treats every score as an estimate — because that's what it honestly is.</p>`,
+      ar: `<h2>خطآن، رقم واحد</h2><p>يفشل الكاشف بطريقتين: وسم كتابة بشرية بأنها آلية (<strong>إيجابي كاذب</strong>) أو تفويت نص آلي بالكامل (<strong>سلبي كاذب</strong>). رقم «الدقة» الواحد يخلط الاثنين — والخليط يعتمد كلياً على النصوص المُختبَرة.</p><h2>لماذا الإيجابي الكاذب هو الأهم</h2><p>للطلاب والمحترفين، الإيجابي الكاذب هو الخطأ المكلف: كتابتك الصادقة تُوسم آلية. الصياغة غير الأصلية والسجل الرسمي والنص المحرَّر بكثافة كلها ترفع الخطر. ولهذا بالضبط يجب أن توجّه النتائج المراجعة، لا الأحكام.</p><h2>أسئلة اسألها لأي كاشف</h2><ul><li>على أي لغات جرى التحقق؟ التحقق الإنجليزي لا يقول شيئاً عن العربية.</li><li>هل يُظهر <em>أي</em> الجمل رفعت النتيجة؟</li><li>هل يعبّر عن اللايقين أم يتظاهر بالقطعية؟</li></ul><p>يعرض صحيحلي تمييزاً على مستوى الجملة ويعامل كل نتيجة كتقدير — لأن هذا ما هي عليه بصدق.</p>`,
+    },
+  },
+  {
+    slug: "responsible-pre-submission-checklist",
+    date: "2026-07-10",
+    readingTime: 6,
+    category: "Writing",
+    title: {
+      en: "A Responsible Pre-Submission Checklist for the AI Era",
+      ar: "قائمة مراجعة مسؤولة قبل التسليم في عصر الذكاء الاصطناعي",
+    },
+    excerpt: {
+      en: "Five honest steps to review your work before you hit submit — without crossing any integrity lines.",
+      ar: "خمس خطوات صادقة لمراجعة عملك قبل التسليم — دون تجاوز أي خطوط للنزاهة.",
+    },
+    body: {
+      en: `<h2>1. Know your institution's policy</h2><p>Some courses allow AI assistance with disclosure; others prohibit it entirely. Nothing in this checklist overrides your policy.</p><h2>2. Own every claim</h2><p>If a draft passed through any tool, verify each fact and citation yourself. You are the author of record.</p><h2>3. Check the style honestly</h2><p>Run a detector <em>on your own work</em> to see which passages read as machine-written — then revise them in your voice, don't just shuffle words.</p><h2>4. Read it aloud</h2><p>The oldest trick still works: robotic rhythm is easier to hear than to see.</p><h2>5. Disclose when required</h2><p>If your course requires disclosing AI assistance, disclose it. A style pass is not a substitute for honesty.</p>`,
+      ar: `<h2>١. اعرف سياسة مؤسستك</h2><p>بعض المساقات تسمح بمساعدة الذكاء الاصطناعي مع الإفصاح؛ وأخرى تمنعها كلياً. لا شيء في هذه القائمة يتجاوز سياستك.</p><h2>٢. تحمّل مسؤولية كل ادعاء</h2><p>إن مرّت مسودّتك بأي أداة، تحقّق بنفسك من كل معلومة واستشهاد. أنت المؤلف المسؤول.</p><h2>٣. افحص الأسلوب بصدق</h2><p>شغّل الكاشف <em>على عملك أنت</em> لترى أي الفقرات تبدو آلية — ثم أعد صياغتها بصوتك، لا تكتفِ بتبديل الكلمات.</p><h2>٤. اقرأه بصوت عالٍ</h2><p>أقدم حيلة ما زالت تعمل: الإيقاع الآلي يُسمع أسهل مما يُرى.</p><h2>٥. أفصح حين يُطلب</h2><p>إن اشترط مساقك الإفصاح عن مساعدة الذكاء الاصطناعي، فأفصح. تمريرة الأسلوب ليست بديلاً عن الأمانة.</p>`,
+    },
+  },
+  {
+    slug: "arabic-writing-in-the-ai-era",
+    date: "2026-07-14",
+    readingTime: 7,
+    category: "Arabic",
+    title: {
+      en: "Writing Great Arabic in the AI Era: A Practical Guide",
+      ar: "كتابة عربية رائعة في عصر الذكاء الاصطناعي: دليل عملي",
+    },
+    excerpt: {
+      en: "AI drafts Arabic with telltale habits. Here's how to spot them — and restore the music of the language.",
+      ar: "يسوّد الذكاء الاصطناعي العربية بعادات فاضحة. إليك كيف تكشفها — وتعيد للغة موسيقاها.",
+    },
+    body: {
+      en: `<h2>The telltale habits</h2><p>Machine Arabic leans on a small set of connectors — علاوة على ذلك, بالإضافة إلى ذلك, في الختام — and produces suspiciously uniform sentence lengths. It also under-uses the rich verbal morphology that gives Arabic its rhythm.</p><h2>Restore the music</h2><ul><li>Alternate long, flowing sentences with short, decisive ones.</li><li>Prefer strong verbs over noun-heavy constructions.</li><li>Cut filler connectors; Arabic's grammar often links clauses without them.</li></ul><h2>Where Sahihly helps</h2><p>Because our engine reasons about Arabic structure directly, its highlights point to genuinely robotic passages — not just translated English patterns.</p>`,
+      ar: `<h2>العادات الفاضحة</h2><p>تتّكئ العربية الآلية على مجموعة صغيرة من الروابط — علاوة على ذلك، بالإضافة إلى ذلك، في الختام — وتنتج أطوال جمل منتظمة بشكل مريب. كما تُقلّل استخدام الصرف الفعلي الغني الذي يمنح العربية إيقاعها.</p><h2>أعد الموسيقى</h2><ul><li>ناوب بين جمل طويلة منسابة وأخرى قصيرة حاسمة.</li><li>فضّل الأفعال القوية على التراكيب المثقلة بالمصادر.</li><li>احذف روابط الحشو؛ فنحو العربية كثيراً ما يربط الجمل دونها.</li></ul><h2>أين يساعد صحيحلي</h2><p>لأن محرّكنا يستدل على بنية العربية مباشرة، يشير تمييزه إلى الفقرات الآلية فعلاً — لا إلى أنماط إنجليزية مترجمة.</p>`,
+    },
+  }
+);
+
 export function getPost(slug: string): BlogPost | undefined {
   return posts.find((p) => p.slug === slug);
 }
