@@ -42,15 +42,28 @@ export default async function PostPage({
   if (!post) notFound();
   const base = "";
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title[locale],
-    datePublished: post.date,
-    inLanguage: locale,
-    author: { "@type": "Organization", name: "Sahihly" },
-    url: `${SITE_URL}/blog/${slug}`,
-  };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: post.title[locale],
+      datePublished: post.date,
+      inLanguage: locale,
+      author: { "@type": "Organization", name: "Sahihly" },
+      url: `${SITE_URL}/blog/${slug}`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+        { "@type": "ListItem", position: 3, name: post.title[locale], item: `${SITE_URL}/blog/${slug}` },
+      ],
+    },
+  ];
+
+  const related = posts.filter((p) => p.slug !== slug).slice(0, 2);
 
   return (
     <article className="container-x max-w-3xl py-16">
@@ -89,6 +102,29 @@ export default async function PostPage({
           {dict.cta.button}
         </Link>
       </div>
+
+      {related.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-lg font-semibold text-white/80">
+            {locale === "ar" ? "اقرأ أيضاً" : "Keep reading"}
+          </h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {related.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                className="glass tilt group rounded-2xl p-5"
+              >
+                <span className="text-xs text-violet-300">{p.category}</span>
+                <h3 className="mt-1.5 font-semibold transition-colors group-hover:text-violet-200">
+                  {p.title[locale]}
+                </h3>
+                <p className="mt-1.5 text-xs text-white/50">{p.excerpt[locale]}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </article>
   );
 }

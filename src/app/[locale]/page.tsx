@@ -20,6 +20,7 @@ import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
+import StatCounters from "@/components/StatCounters";
 import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
@@ -129,8 +130,33 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ---------------- STATS ---------------- */}
+      <section className="py-12">
+        <div className="container-x max-w-4xl">
+          <Reveal>
+            <StatCounters
+              stats={
+                locale === "ar"
+                  ? [
+                      { value: 2, label: "لغتان بأصالة كاملة" },
+                      { value: 250, label: "كلمة مجاناً لكل محاولة" },
+                      { value: 12000, label: "كلمة لكل محاولة في ألتيميت" },
+                      { value: 0, label: "تسجيل مطلوب للتجربة" },
+                    ]
+                  : [
+                      { value: 2, label: "languages, both native" },
+                      { value: 250, label: "free words per run" },
+                      { value: 12000, label: "words per run on Ultimate" },
+                      { value: 0, label: "signup required to try" },
+                    ]
+              }
+            />
+          </Reveal>
+        </div>
+      </section>
+
       {/* ---------------- TRUST STRIP ---------------- */}
-      <section className="py-10">
+      <section className="py-4 pb-10">
         <div className="container-x">
           <Reveal>
             <div className="flex flex-wrap items-center justify-center gap-3">

@@ -33,8 +33,8 @@ export default function Footer({
     {
       title: dict.footer.product,
       links: [
-        { href: "/#detector", label: dict.nav.detector },
-        { href: "/#humanizer", label: dict.nav.humanizer },
+        { href: "/ai-detector", label: dict.nav.detector },
+        { href: "/ai-humanizer", label: dict.nav.humanizer },
         { href: `${base}/pricing`, label: dict.nav.pricing },
       ],
     },
@@ -42,6 +42,7 @@ export default function Footer({
       title: dict.footer.resources,
       links: [
         { href: `${base}/blog`, label: dict.nav.blog },
+        { href: `${base}/vs`, label: dict.nav.compare },
         { href: `${base}/vs/undetectable-ai`, label: "vs Undetectable.ai" },
         { href: `${base}/vs/quillbot`, label: "vs QuillBot" },
         { href: `${base}/vs/gptzero`, label: "vs GPTZero" },

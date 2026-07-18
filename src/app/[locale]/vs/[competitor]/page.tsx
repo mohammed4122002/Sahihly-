@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Check, X } from "lucide-react";
-import { isLocale, type Locale } from "@/lib/i18n/config";
+import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { competitors, getCompetitor } from "@/content/competitors";
 import Reveal from "@/components/Reveal";
@@ -41,8 +41,22 @@ export default async function ComparePage({
   if (!c) notFound();
   const base = "";
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Compare", item: `${SITE_URL}/vs` },
+      { "@type": "ListItem", position: 3, name: c.title[locale], item: `${SITE_URL}/vs/${c.slug}` },
+    ],
+  };
+
   return (
     <div className="container-x max-w-4xl py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <Reveal>
         <h1 className="text-center text-4xl font-bold sm:text-5xl">{c.title[locale]}</h1>
         <p className="mx-auto mt-4 max-w-2xl text-center text-white/60">{c.intro[locale]}</p>

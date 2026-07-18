@@ -80,11 +80,13 @@ function Gauge({ score, label }: { score: number; label: string }) {
 export default function ToolStudio({
   locale,
   dict,
+  initialTab = "detect",
 }: {
   locale: Locale;
   dict: Dictionary;
+  initialTab?: "detect" | "humanize";
 }) {
-  const [tab, setTab] = useState<"detect" | "humanize">("detect");
+  const [tab, setTab] = useState<"detect" | "humanize">(initialTab);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [detect, setDetect] = useState<DetectResp | null>(null);
@@ -103,10 +105,6 @@ export default function ToolStudio({
     setError(null);
     if (!text.trim()) {
       setError(t.empty);
-      return;
-    }
-    if (words > 250) {
-      setError(t.tooLong);
       return;
     }
     setLoading(true);
@@ -185,6 +183,12 @@ export default function ToolStudio({
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && !loading) {
+                e.preventDefault();
+                run();
+              }
+            }}
             placeholder={t.placeholder}
             rows={9}
             className="min-h-52 flex-1 resize-none rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-relaxed outline-none transition-colors focus:border-violet-400/50"
@@ -196,8 +200,8 @@ export default function ToolStudio({
                   {inputLang}
                 </span>
               )}
-              <span className={words > 250 ? "text-red-400" : ""}>
-                {words} / 250 {t.words}
+              <span className={words > 250 ? "text-amber-300" : ""}>
+                {words} {t.words}
               </span>
               <button
                 onClick={() => setText(SAMPLE[locale])}

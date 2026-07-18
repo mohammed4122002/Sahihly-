@@ -73,17 +73,34 @@ export default async function LocaleLayout({
   const dir = localeDirection[locale];
   const dict = getDictionary(locale);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Sahihly",
-    applicationCategory: "UtilitiesApplication",
-    operatingSystem: "Web",
-    description: dict.meta.description,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    inLanguage: locale === "ar" ? "ar" : "en",
-    url: SITE_URL,
-  };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Sahihly",
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Web",
+      description: dict.meta.description,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      inLanguage: locale === "ar" ? "ar" : "en",
+      url: SITE_URL,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Sahihly",
+      url: SITE_URL,
+      logo: `${SITE_URL}/opengraph-image`,
+      sameAs: [],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Sahihly",
+      url: SITE_URL,
+      inLanguage: ["en", "ar"],
+    },
+  ];
 
   return (
     <html

@@ -28,8 +28,8 @@ export default function Header({
   }, []);
 
   const links = [
-    { href: "/#detector", label: dict.nav.detector },
-    { href: "/#humanizer", label: dict.nav.humanizer },
+    { href: "/ai-detector", label: dict.nav.detector },
+    { href: "/ai-humanizer", label: dict.nav.humanizer },
     { href: `${base}/pricing`, label: dict.nav.pricing },
     { href: `${base}/blog`, label: dict.nav.blog },
     { href: `${base}/about`, label: dict.nav.about },
