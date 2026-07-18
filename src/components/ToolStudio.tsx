@@ -17,15 +17,29 @@ import type { Dictionary } from "@/lib/i18n";
 import { countWords } from "@/lib/utils";
 
 type Sentence = { text: string; score: number };
+type Metrics = {
+  burstiness: number;
+  diversity: number;
+  avgSentenceLen: number;
+  aiTells: number;
+};
 type DetectResp = {
   kind: "detect";
   score: number;
   verdict: "human" | "mixed" | "ai";
   sentences: Sentence[];
+  metrics?: Metrics;
   engine: string;
   words: number;
 };
-type HumanizeResp = { kind: "humanize"; text: string; engine: string; words: number };
+type HumanizeResp = {
+  kind: "humanize";
+  text: string;
+  engine: string;
+  words: number;
+  verify?: { before: number; after: number };
+};
+type HumanizeStyle = "natural" | "academic" | "casual";
 
 const SAMPLE: Record<Locale, string> = {
   en: "In today's world, artificial intelligence plays a crucial role in transforming industries. Furthermore, it is important to note that businesses must leverage these robust tools to remain competitive. Moreover, the seamless integration of AI delivers a holistic solution that underscores the tapestry of modern innovation.",
@@ -36,6 +50,41 @@ function scoreColor(score: number) {
   if (score >= 65) return "#f87171";
   if (score >= 35) return "#fbbf24";
   return "#4ade80";
+}
+
+function MetricBar({
+  label,
+  value,
+  suffix = "%",
+  invert = false,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  invert?: boolean; // true when lower is better (shown neutral)
+}) {
+  const width = Math.min(Math.max(value, 0), 100);
+  const color = invert ? "#97a3bd" : scoreColor(100 - value); // human-like green when high
+  return (
+    <div>
+      <div className="flex items-center justify-between text-[11px] text-white/50">
+        <span>{label}</span>
+        <span className="tabular-nums text-white/75">
+          {value}
+          {suffix}
+        </span>
+      </div>
+      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+        <motion.div
+          className="h-full rounded-full"
+          style={{ background: color }}
+          initial={{ width: 0 }}
+          animate={{ width: `${suffix === "%" ? width : Math.min(width * 4, 100)}%` }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </div>
+    </div>
+  );
 }
 
 function Gauge({ score, label }: { score: number; label: string }) {
@@ -87,6 +136,7 @@ export default function ToolStudio({
   initialTab?: "detect" | "humanize";
 }) {
   const [tab, setTab] = useState<"detect" | "humanize">(initialTab);
+  const [style, setStyle] = useState<HumanizeStyle>("natural");
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [detect, setDetect] = useState<DetectResp | null>(null);
@@ -114,7 +164,7 @@ export default function ToolStudio({
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, kind: tab, locale }),
+        body: JSON.stringify({ text, kind: tab, locale, style }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -176,6 +226,27 @@ export default function ToolStudio({
           </button>
         ))}
       </div>
+
+      {/* Humanizer style presets */}
+      {tab === "humanize" && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-white/45">{t.styleLabel}:</span>
+          {(["natural", "academic", "casual"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setStyle(s)}
+              aria-pressed={style === s}
+              className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                style === s
+                  ? "border-violet-400/60 bg-violet-400/15 text-violet-200"
+                  : "border-white/10 bg-white/[0.03] text-white/55 hover:text-white"
+              }`}
+            >
+              {t.styles[s]}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Input */}
@@ -309,6 +380,34 @@ export default function ToolStudio({
                   ))}
                 </div>
                 <p className="mt-2 text-[11px] text-white/40">{t.highlighted}</p>
+
+                {detect.metrics && (
+                  <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-white/45">
+                        {t.metricsTitle}
+                      </span>
+                      <span className="text-[10px] text-white/30">{t.metricHumanHint}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+                      <MetricBar label={t.metricBurstiness} value={detect.metrics.burstiness} />
+                      <MetricBar label={t.metricDiversity} value={detect.metrics.diversity} />
+                      <MetricBar
+                        label={t.metricAvgLen}
+                        value={detect.metrics.avgSentenceLen}
+                        suffix=""
+                        invert
+                      />
+                      <MetricBar
+                        label={t.metricTells}
+                        value={detect.metrics.aiTells}
+                        suffix=""
+                        invert
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {detect.verdict !== "human" && (
                   <button
                     onClick={() => setTab("humanize")}
@@ -347,6 +446,36 @@ export default function ToolStudio({
                     </button>
                   </div>
                 </div>
+                {human.verify && (
+                  <div
+                    className={`mb-3 flex items-center justify-between rounded-xl border px-3 py-2 ${
+                      human.verify.after < human.verify.before
+                        ? "border-emerald-500/25 bg-emerald-500/10"
+                        : "border-white/15 bg-white/5"
+                    }`}
+                  >
+                    <span
+                      className={`text-xs font-medium ${
+                        human.verify.after < human.verify.before
+                          ? "text-emerald-300"
+                          : "text-white/60"
+                      }`}
+                    >
+                      {human.verify.after < human.verify.before ? "✓ " : ""}
+                      {t.verifyTitle}
+                    </span>
+                    <span className="text-xs text-white/70">
+                      {t.verifyNote}:{" "}
+                      <span className="tabular-nums" style={{ color: scoreColor(human.verify.before) }}>
+                        {human.verify.before}%
+                      </span>
+                      <span className="mx-1.5 inline-block text-white/40 flip-x">→</span>
+                      <span className="tabular-nums font-semibold" style={{ color: scoreColor(human.verify.after) }}>
+                        {human.verify.after}%
+                      </span>
+                    </span>
+                  </div>
+                )}
                 <div className="grid gap-2 sm:grid-cols-2">
                   <div>
                     <span className="mb-1 block text-[10px] uppercase tracking-wider text-white/35">

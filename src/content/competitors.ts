@@ -35,6 +35,21 @@ const commonRows = (extra: Competitor["rows"] = []): Competitor["rows"] => [
     them: true,
   },
   {
+    feature: { en: "Auto verify-after-rewrite loop", ar: "تحقّق تلقائي بعد إعادة الصياغة" },
+    us: true,
+    them: false,
+  },
+  {
+    feature: { en: "Style report (rhythm, vocabulary, AI-tells)", ar: "تقرير أسلوب (إيقاع، مفردات، أنماط آلية)" },
+    us: true,
+    them: false,
+  },
+  {
+    feature: { en: "Arabic-aware rewrite styles", ar: "أنماط إعادة صياغة واعية بالعربية" },
+    us: true,
+    them: false,
+  },
+  {
     feature: { en: "Responsible-use positioning", ar: "موقف استخدام مسؤول" },
     us: true,
     them: false,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { detectAI, humanizeText } from "@/lib/analysis";
+import { detectAI, humanizeText, styleSignalScore, type HumanizeStyle } from "@/lib/analysis";
 import { countWords } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 import { createHash } from "crypto";
@@ -26,7 +26,7 @@ function clientKey(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { text?: string; kind?: string; locale?: string };
+  let body: { text?: string; kind?: string; locale?: string; style?: string };
   try {
     body = await req.json();
   } catch {
@@ -36,6 +36,9 @@ export async function POST(req: NextRequest) {
   const text = (body.text || "").toString();
   const kind = body.kind === "humanize" ? "humanize" : "detect";
   const locale = body.locale === "ar" ? "ar" : "en";
+  const style: HumanizeStyle = ["natural", "academic", "casual"].includes(body.style || "")
+    ? (body.style as HumanizeStyle)
+    : "natural";
 
   if (!text.trim()) {
     return NextResponse.json({ error: "empty" }, { status: 400 });
@@ -92,8 +95,14 @@ export async function POST(req: NextRequest) {
   try {
     let payload: Record<string, unknown>;
     if (kind === "humanize") {
-      const result = await humanizeText(text, locale);
-      payload = { kind, ...result, words, plan };
+      const result = await humanizeText(text, locale, style);
+      // Verify loop: deterministic style-signal score before vs after,
+      // so the user sees the rewrite actually moved the needle.
+      const verify = {
+        before: styleSignalScore(text),
+        after: styleSignalScore(result.text),
+      };
+      payload = { kind, ...result, verify, style, words, plan };
     } else {
       const result = await detectAI(text, locale);
       payload = { kind, ...result, words, plan };

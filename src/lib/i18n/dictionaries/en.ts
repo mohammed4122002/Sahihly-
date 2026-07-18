@@ -57,6 +57,16 @@ const en = {
     confidence: "Confidence",
     disclaimer:
       "Sahihly estimates writing style. No detector is 100% accurate — use results as guidance, not proof.",
+    styleLabel: "Rewrite style",
+    styles: { natural: "Natural", academic: "Academic", casual: "Casual" },
+    metricsTitle: "Style report",
+    metricBurstiness: "Rhythm variety",
+    metricDiversity: "Vocabulary richness",
+    metricAvgLen: "Avg words / sentence",
+    metricTells: "AI-pattern phrases",
+    metricHumanHint: "higher = more human-like",
+    verifyTitle: "Verified rewrite",
+    verifyNote: "AI-style signals",
   },
   trustStrip: [
     "No signup to try",
@@ -80,8 +90,8 @@ const en = {
         desc: "English copy and analysis at native quality, so results feel right to US and EU readers.",
       },
       {
-        title: "Sentence-level insight",
-        desc: "See exactly which sentences trigger AI patterns, highlighted inline for fast review.",
+        title: "Style report, not just a score",
+        desc: "Every check includes rhythm variety, vocabulary richness, and AI-pattern counts — so you know what to fix, not just that something's off.",
       },
       {
         title: "Meaning-safe rewriting",
@@ -92,8 +102,8 @@ const en = {
         desc: "Your text is processed for your request and not sold or used to train third-party models.",
       },
       {
-        title: "Fast & modern",
-        desc: "A responsive, keyboard-friendly studio that works on any device, right from the homepage.",
+        title: "Rewrite, then verify — automatically",
+        desc: "Every humanized result is instantly re-checked, showing AI-style signals before vs after. No other tool closes the loop for you.",
       },
     ],
   },
@@ -178,7 +188,8 @@ const en = {
     rows: [
       { label: "Native Arabic detection & rewriting", us: true, them: false },
       { label: "Native English quality", us: true, them: true },
-      { label: "Sentence-level highlights", us: true, them: true },
+      { label: "Auto verify-after-rewrite loop", us: true, them: false },
+      { label: "Full style report with every check", us: true, them: false },
       { label: "Free tier, no signup", us: true, them: false },
       { label: "Responsible-use positioning", us: true, them: false },
     ],
