@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, Loader2, X, ShieldCheck } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -16,17 +17,26 @@ export default function PricingCards({
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [confirmPlan, setConfirmPlan] = useState<string | null>(null);
   const router = useRouter();
   const p = dict.pricing;
+  const c = dict.checkout;
   const base = "";
 
   const yearlyPrice: Record<string, string> = { pro: "$115", ultimate: "$278" };
 
-  async function choose(planId: string) {
+  function choose(planId: string) {
     if (planId === "free") {
       router.push("/");
       return;
     }
+    // Pre-checkout explainer: Binance Pay is a hosted flow with its own
+    // steps — set expectations before redirecting (spec §6).
+    setNotice(null);
+    setConfirmPlan(planId);
+  }
+
+  async function startCheckout(planId: string) {
     setNotice(null);
     setLoadingPlan(planId);
     try {
@@ -41,6 +51,7 @@ export default function PricingCards({
         return;
       }
       if (res.status === 503) {
+        setConfirmPlan(null);
         setNotice(
           locale === "ar"
             ? "بوابة الدفع قيد الإعداد. اترك بريدك وسنعلمك فور التفعيل."
@@ -52,8 +63,10 @@ export default function PricingCards({
         window.location.href = data.checkoutUrl;
         return;
       }
+      setConfirmPlan(null);
       setNotice(locale === "ar" ? "تعذّر بدء الدفع. حاول لاحقاً." : "Couldn't start checkout. Try again.");
     } catch {
+      setConfirmPlan(null);
       setNotice(locale === "ar" ? "خطأ في الشبكة." : "Network error.");
     } finally {
       setLoadingPlan(null);
@@ -145,6 +158,80 @@ export default function PricingCards({
         </p>
       )}
       <p className="mt-6 text-center text-xs text-white/40">{p.payNote}</p>
+
+      {/* Pre-checkout explainer modal (Binance Pay is a hosted 3-step flow) */}
+      <AnimatePresence>
+        {confirmPlan && (
+          <motion.div
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => !loadingPlan && setConfirmPlan(null)}
+          >
+            <motion.div
+              className="glass-strong glow-card w-full max-w-md rounded-3xl p-7"
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="text-xl font-bold">{c.title}</h3>
+                <button
+                  onClick={() => !loadingPlan && setConfirmPlan(null)}
+                  className="rounded-lg border border-white/10 p-1.5 text-white/60 hover:text-white"
+                  aria-label="Close"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between rounded-xl bg-white/[0.04] px-4 py-3 text-sm">
+                <span className="text-white/60">
+                  {c.plan}:{" "}
+                  <span className="font-semibold capitalize text-white">{confirmPlan}</span>
+                  <span className="text-white/40"> · {cycle === "yearly" ? p.yearly : p.monthly}</span>
+                </span>
+                <span className="font-display text-lg font-bold text-violet-200">
+                  {cycle === "yearly" ? yearlyPrice[confirmPlan] : p.plans.find((x) => x.id === confirmPlan)?.price}
+                </span>
+              </div>
+
+              <ol className="mt-5 space-y-3">
+                {c.steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-white/75">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-400/15 text-xs font-semibold text-violet-300">
+                      {i + 1}
+                    </span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+
+              <p className="mt-4 flex items-start gap-2 text-xs text-white/45">
+                <ShieldCheck size={14} className="mt-0.5 shrink-0 text-violet-300" />
+                {c.note}
+              </p>
+
+              <button
+                onClick={() => startCheckout(confirmPlan)}
+                disabled={Boolean(loadingPlan)}
+                className="btn-primary mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm disabled:opacity-70"
+              >
+                {loadingPlan ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" /> {c.redirecting}
+                  </>
+                ) : (
+                  c.payWithBinance
+                )}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

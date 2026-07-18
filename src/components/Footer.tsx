@@ -56,6 +56,7 @@ export default function Footer({
       title: dict.footer.company,
       links: [
         { href: `${base}/about`, label: dict.nav.about },
+        { href: `${base}/contact`, label: locale === "ar" ? "تواصل معنا" : "Contact" },
         { href: `${base}/about#policy`, label: dict.ethics.link },
       ],
     },

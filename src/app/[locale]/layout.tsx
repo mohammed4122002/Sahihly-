@@ -135,10 +135,16 @@ export default async function LocaleLayout({
         ) : null}
       </head>
       <body className="min-h-full flex flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-violet-400 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-ocean-900"
+        >
+          {locale === "ar" ? "تخطَّ إلى المحتوى" : "Skip to content"}
+        </a>
         <Backgrounds />
         <ScrollProgress />
         <Header locale={locale} dict={dict} />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
       </body>
     </html>
