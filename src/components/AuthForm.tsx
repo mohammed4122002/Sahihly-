@@ -22,6 +22,7 @@ export default function AuthForm({
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get("next") || "/dashboard";
+  const urlError = search.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +30,31 @@ export default function AuthForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+
+  const ar = locale === "ar";
+
+  function friendlyError(message: string): string {
+    const m = message.toLowerCase();
+    if (m.includes("invalid login credentials"))
+      return ar ? "البريد أو كلمة المرور غير صحيحة." : "Incorrect email or password.";
+    if (m.includes("email not confirmed"))
+      return ar
+        ? "بريدك غير مؤكَّد بعد — افتح رسالة التأكيد في بريدك (تفقد المزعج أيضاً)."
+        : "Your email isn't confirmed yet — open the confirmation email (check spam too).";
+    if (m.includes("already registered"))
+      return ar ? "هذا البريد مسجَّل بالفعل — جرّب تسجيل الدخول." : "This email is already registered — try logging in.";
+    if (m.includes("at least 6"))
+      return ar ? "كلمة المرور يجب أن تكون ٦ أحرف على الأقل." : "Password must be at least 6 characters.";
+    if (m.includes("rate limit") || m.includes("too many"))
+      return ar ? "محاولات كثيرة — انتظر دقيقة ثم أعد المحاولة." : "Too many attempts — wait a minute and try again.";
+    if (m.includes("provider is not enabled"))
+      return ar
+        ? "تسجيل Google غير مفعَّل بعد — استخدم البريد وكلمة المرور."
+        : "Google sign-in isn't enabled yet — use email and password.";
+    if (m.includes("fetch") || m.includes("network"))
+      return ar ? "مشكلة اتصال — تحقق من الإنترنت وحاول مجدداً." : "Connection problem — check your internet and retry.";
+    return message;
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,13 +64,24 @@ export default function AuthForm({
     try {
       const supabase = createClient();
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { full_name: name, locale } },
+          options: {
+            data: { full_name: name, locale },
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+              "/dashboard"
+            )}`,
+          },
         });
         if (error) throw error;
-        setInfo(a.checkEmail);
+        // If confirmations are disabled, a session exists — go straight in.
+        if (data.session) {
+          router.push(`${base}${next}`);
+          router.refresh();
+        } else {
+          setInfo(a.checkEmail);
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -52,22 +89,28 @@ export default function AuthForm({
         router.refresh();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error");
+      setError(friendlyError(err instanceof Error ? err.message : "Error"));
     } finally {
       setLoading(false);
     }
   }
 
   async function google() {
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
-          `${base}${next}`
-        )}`,
-      },
-    });
+    setError(null);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+            `${base}${next}`
+          )}`,
+        },
+      });
+      if (error) throw error;
+    } catch (err) {
+      setError(friendlyError(err instanceof Error ? err.message : "Error"));
+    }
   }
 
   return (
@@ -95,9 +138,9 @@ export default function AuthForm({
           required
         />
 
-        {error && (
+        {(error || urlError) && (
           <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">
-            {error}
+            {error ?? friendlyError(urlError!)}
           </p>
         )}
         {info && (

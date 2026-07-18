@@ -1,5 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import { locales, defaultLocale, isLocale } from "@/lib/i18n/config";
+
+/**
+ * Keep the Supabase session fresh on every request. Without this, access
+ * tokens expire and server components silently see the user as logged out.
+ */
+async function refreshSupabaseSession(req: NextRequest, res: NextResponse) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return;
+  try {
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => req.cookies.getAll(),
+        setAll: (cookiesToSet) =>
+          cookiesToSet.forEach(({ name, value, options }) =>
+            res.cookies.set(name, value, options)
+          ),
+      },
+    });
+    await supabase.auth.getUser();
+  } catch {
+    /* never block the request on auth refresh */
+  }
+}
 
 const PUBLIC_FILE = /\.(.*)$/;
 const COOKIE = "sahihly_locale";
@@ -25,7 +50,7 @@ function detectLocale(req: NextRequest): string {
   return defaultLocale;
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (
@@ -59,6 +84,7 @@ export function middleware(req: NextRequest) {
   // Cache/bot hygiene: the response depends on the negotiated language.
   res.headers.set("Vary", "Accept-Language, Cookie");
   res.headers.set("Content-Language", locale);
+  await refreshSupabaseSession(req, res);
   return res;
 }
 
