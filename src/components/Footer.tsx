@@ -43,6 +43,8 @@ export default function Footer({
       links: [
         { href: `${base}/blog`, label: dict.nav.blog },
         { href: `${base}/vs`, label: dict.nav.compare },
+        { href: `${base}/word-counter`, label: locale === "ar" ? "عدّاد الكلمات" : "Word Counter" },
+        { href: `${base}/glossary`, label: locale === "ar" ? "قاموس المصطلحات" : "Glossary" },
         { href: `${base}/vs/undetectable-ai`, label: "vs Undetectable.ai" },
         { href: `${base}/vs/quillbot`, label: "vs QuillBot" },
         { href: `${base}/vs/gptzero`, label: "vs GPTZero" },

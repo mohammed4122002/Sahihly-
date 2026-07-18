@@ -58,6 +58,12 @@ export async function generateMetadata({
       description: dict.meta.description,
     },
     robots: { index: true, follow: true },
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+      : {}),
+    alternates: {
+      types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
+    },
   };
 }
 
@@ -110,6 +116,12 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Sahihly Blog"
+          href={`${SITE_URL}/feed.xml`}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

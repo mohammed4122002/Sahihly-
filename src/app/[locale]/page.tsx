@@ -21,6 +21,7 @@ import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
 import StatCounters from "@/components/StatCounters";
+import { posts } from "@/content/blog";
 import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
@@ -39,6 +40,8 @@ export default async function HomePage({
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
   const base = "";
+
+  const latestPosts = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -320,6 +323,41 @@ export default async function HomePage({
               </Link>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ---------------- FROM THE BLOG ---------------- */}
+      <section className="py-16">
+        <div className="container-x">
+          <Reveal>
+            <div className="text-center">
+              <span className="eyebrow">{locale === "ar" ? "من المدوّنة" : "From the blog"}</span>
+            </div>
+            <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">
+              {dict.blog.title}
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {latestPosts.map((post, i) => (
+              <Reveal key={post.slug} delay={i} as="div">
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="glass tilt group flex h-full flex-col rounded-2xl p-6"
+                >
+                  <span className="w-fit rounded-full bg-violet-400/15 px-2.5 py-0.5 text-xs text-violet-300">
+                    {post.category}
+                  </span>
+                  <h3 className="mt-3 font-semibold transition-colors group-hover:text-violet-200">
+                    {post.title[locale]}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm text-white/50">{post.excerpt[locale]}</p>
+                  <span className="mt-4 text-sm text-violet-300">
+                    {dict.blog.readMore} <span className="inline-block flip-x">→</span>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
