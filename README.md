@@ -34,7 +34,7 @@ languages — with first-class Arabic support and native-quality English.
 | Framework  | Next.js 16 (App Router) · React 19 · TypeScript  |
 | Styling    | Tailwind CSS v4 · Framer Motion · lucide-react   |
 | Auth + DB  | Supabase (PostgreSQL, RLS)                        |
-| AI         | Anthropic API (Claude) + heuristic fallback      |
+| AI         | OpenAI (ChatGPT) or Anthropic (Claude) + heuristic fallback |
 | Payments   | Binance Pay (abstracted `PaymentProvider`)       |
 
 ## 🚀 Getting started
@@ -56,7 +56,8 @@ npm run build && npm run start
 See `.env.example`. Minimum to run: `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Everything else is optional and degrades gracefully:
 
-- **No `ANTHROPIC_API_KEY`** → detector/humanizer use the heuristic engine.
+- **AI engine** — auto-selected: `OPENAI_API_KEY` (ChatGPT) → `ANTHROPIC_API_KEY`
+  (Claude) → built-in heuristic engine. Force one with `AI_PROVIDER=openai|anthropic`.
 - **No Binance keys** → pricing shows a "gateway being set up" notice instead of checkout.
 - **No `SUPABASE_SERVICE_ROLE_KEY`** → webhook/subscription writes are skipped.
 

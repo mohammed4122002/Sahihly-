@@ -1,5 +1,54 @@
 import { getAnthropic, hasAnthropic, MODEL } from "./anthropic";
 
+/* ------------------------------------------------------------------
+   Provider selection: OpenAI (ChatGPT key) → Anthropic → heuristic.
+   Override with AI_PROVIDER=openai|anthropic if both keys are set.
+------------------------------------------------------------------ */
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
+function hasOpenAI(): boolean {
+  return Boolean(process.env.OPENAI_API_KEY);
+}
+
+function pickProvider(): "openai" | "anthropic" | "heuristic" {
+  const pref = process.env.AI_PROVIDER;
+  if (pref === "openai" && hasOpenAI()) return "openai";
+  if (pref === "anthropic" && hasAnthropic()) return "anthropic";
+  if (hasOpenAI()) return "openai";
+  if (hasAnthropic()) return "anthropic";
+  return "heuristic";
+}
+
+async function openaiChat(
+  system: string,
+  user: string,
+  jsonMode: boolean,
+  maxTokens: number
+): Promise<string> {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      max_tokens: maxTokens,
+      ...(jsonMode ? { response_format: { type: "json_object" } } : {}),
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    }),
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`openai_error ${res.status}: ${detail.slice(0, 200)}`);
+  }
+  const json = await res.json();
+  return json.choices?.[0]?.message?.content ?? "";
+}
+
 export type Sentence = { text: string; score: number };
 export type StyleMetrics = {
   burstiness: number; // 0..100, higher = more human-like rhythm variety
@@ -7,17 +56,18 @@ export type StyleMetrics = {
   avgSentenceLen: number; // words per sentence
   aiTells: number; // count of machine-typical phrases found
 };
+export type Engine = "claude" | "openai" | "heuristic";
 export type DetectResult = {
   score: number; // 0..100 probability of AI
   verdict: "human" | "mixed" | "ai";
   sentences: Sentence[];
   metrics: StyleMetrics;
-  engine: "claude" | "heuristic";
+  engine: Engine;
 };
 export type HumanizeStyle = "natural" | "academic" | "casual";
 export type HumanizeResult = {
   text: string;
-  engine: "claude" | "heuristic";
+  engine: Engine;
 };
 
 function splitSentences(text: string): string[] {
@@ -149,30 +199,15 @@ function heuristicDetect(text: string): DetectResult {
 ------------------------------------------------------------------ */
 async function claudeDetect(text: string, locale: string): Promise<DetectResult> {
   const anthropic = getAnthropic();
-  const sys = `You are an expert writing-style analyst for the tool "Sahihly". You assess how likely a passage was AI-generated based on stylistic and structural signals (burstiness, perplexity proxies, uniformity, hedging phrases, generic transitions). You fully understand both Modern Standard Arabic and native English. Never claim certainty; you estimate. Respond with ONLY valid JSON.`;
-  const prompt = `Analyze the following text (language: ${locale}). Return JSON:
-{"score": <int 0-100 probability AI-generated>, "sentences": [{"text": "<sentence>", "score": <int 0-100>}]}
-Split the passage into its sentences and score each. Keep sentence text verbatim.
-
-TEXT:
-"""${text}"""`;
-
   const msg = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 2000,
-    system: sys,
-    messages: [{ role: "user", content: prompt }],
+    system: DETECT_SYSTEM,
+    messages: [{ role: "user", content: detectPrompt(text, locale) }],
   });
   const raw = msg.content.find((c) => c.type === "text");
   const jsonText = raw && "text" in raw ? raw.text : "{}";
-  const parsed = JSON.parse(jsonText.replace(/```json|```/g, "").trim());
-  const score = Math.min(100, Math.max(0, Math.round(parsed.score ?? 50)));
-  const sentences: Sentence[] = Array.isArray(parsed.sentences)
-    ? parsed.sentences.map((s: { text: string; score: number }) => ({
-        text: String(s.text),
-        score: Math.min(100, Math.max(0, Math.round(s.score ?? score))),
-      }))
-    : splitSentences(text).map((t) => ({ text: t, score }));
+  const { score, sentences } = parseDetectJson(jsonText, text);
   return {
     score,
     verdict: verdictFromScore(score),
@@ -182,13 +217,48 @@ TEXT:
   };
 }
 
+const DETECT_SYSTEM = `You are an expert writing-style analyst for the tool "Sahihly". You assess how likely a passage was AI-generated based on stylistic and structural signals (burstiness, perplexity proxies, uniformity, hedging phrases, generic transitions). You fully understand both Modern Standard Arabic and native English. Never claim certainty; you estimate. Respond with ONLY valid JSON.`;
+
+function detectPrompt(text: string, locale: string): string {
+  return `Analyze the following text (language: ${locale}). Return JSON:
+{"score": <int 0-100 probability AI-generated>, "sentences": [{"text": "<sentence>", "score": <int 0-100>}]}
+Split the passage into its sentences and score each. Keep sentence text verbatim.
+
+TEXT:
+"""${text}"""`;
+}
+
+function parseDetectJson(raw: string, text: string): { score: number; sentences: Sentence[] } {
+  const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+  const score = Math.min(100, Math.max(0, Math.round(parsed.score ?? 50)));
+  const sentences: Sentence[] = Array.isArray(parsed.sentences)
+    ? parsed.sentences.map((s: { text: string; score: number }) => ({
+        text: String(s.text),
+        score: Math.min(100, Math.max(0, Math.round(s.score ?? score))),
+      }))
+    : splitSentences(text).map((t) => ({ text: t, score }));
+  return { score, sentences };
+}
+
+async function openaiDetect(text: string, locale: string): Promise<DetectResult> {
+  const raw = await openaiChat(DETECT_SYSTEM, detectPrompt(text, locale), true, 2000);
+  const { score, sentences } = parseDetectJson(raw, text);
+  return {
+    score,
+    verdict: verdictFromScore(score),
+    sentences,
+    metrics: computeMetrics(text),
+    engine: "openai",
+  };
+}
+
 export async function detectAI(text: string, locale: string): Promise<DetectResult> {
-  if (hasAnthropic()) {
-    try {
-      return await claudeDetect(text, locale);
-    } catch {
-      return heuristicDetect(text);
-    }
+  const provider = pickProvider();
+  try {
+    if (provider === "openai") return await openaiDetect(text, locale);
+    if (provider === "anthropic") return await claudeDetect(text, locale);
+  } catch {
+    /* fall through to heuristic */
   }
   return heuristicDetect(text);
 }
@@ -310,13 +380,26 @@ const STYLE_INSTRUCTIONS: Record<HumanizeStyle, string> = {
     "Target register: relaxed, conversational, approachable — contractions and light phrasing welcome. For Arabic: فصحى مبسّطة قريبة من القارئ دون عامية مبتذلة.",
 };
 
+function humanizeSystem(locale: string, style: HumanizeStyle): string {
+  return `You are "Sahihly"'s humanizer. Rewrite AI-sounding text so it reads as natural human writing while preserving the EXACT original meaning, facts, and language (${locale}). Vary sentence length and rhythm, remove robotic transitions and repetition. ${STYLE_INSTRUCTIONS[style]} For Arabic, produce fluent, grammatically correct Modern Standard Arabic. Do NOT add facts, do NOT translate, do NOT add commentary. Output ONLY the rewritten text.`;
+}
+
+async function openaiHumanize(
+  text: string,
+  locale: string,
+  style: HumanizeStyle
+): Promise<string> {
+  const out = await openaiChat(humanizeSystem(locale, style), text, false, 4000);
+  return out.trim() || text;
+}
+
 async function claudeHumanize(
   text: string,
   locale: string,
   style: HumanizeStyle
 ): Promise<string> {
   const anthropic = getAnthropic();
-  const sys = `You are "Sahihly"'s humanizer. Rewrite AI-sounding text so it reads as natural human writing while preserving the EXACT original meaning, facts, and language (${locale}). Vary sentence length and rhythm, remove robotic transitions and repetition. ${STYLE_INSTRUCTIONS[style]} For Arabic, produce fluent, grammatically correct Modern Standard Arabic. Do NOT add facts, do NOT translate, do NOT add commentary. Output ONLY the rewritten text.`;
+  const sys = humanizeSystem(locale, style);
   const msg = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 4000,
@@ -333,12 +416,16 @@ export async function humanizeText(
   style: HumanizeStyle = "natural"
 ): Promise<HumanizeResult> {
   const isArabic = /[؀-ۿ]/.test(text);
-  if (hasAnthropic()) {
-    try {
-      return { text: await claudeHumanize(text, locale, style), engine: "claude" };
-    } catch {
-      return { text: heuristicHumanize(text, isArabic), engine: "heuristic" };
+  const provider = pickProvider();
+  try {
+    if (provider === "openai") {
+      return { text: await openaiHumanize(text, locale, style), engine: "openai" };
     }
+    if (provider === "anthropic") {
+      return { text: await claudeHumanize(text, locale, style), engine: "claude" };
+    }
+  } catch {
+    /* fall through to heuristic */
   }
   return { text: heuristicHumanize(text, isArabic), engine: "heuristic" };
 }
