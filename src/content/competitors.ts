@@ -40,6 +40,11 @@ const commonRows = (extra: Competitor["rows"] = []): Competitor["rows"] => [
     them: false,
   },
   {
+    feature: { en: "Honest confidence rating on every score", ar: "درجة ثقة صادقة مع كل نتيجة" },
+    us: true,
+    them: false,
+  },
+  {
     feature: { en: "Style report (rhythm, vocabulary, AI-tells)", ar: "تقرير أسلوب (إيقاع، مفردات، أنماط آلية)" },
     us: true,
     them: false,

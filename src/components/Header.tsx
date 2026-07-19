@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import type { Locale } from "@/lib/i18n/config";
@@ -60,6 +60,13 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/search"
+            aria-label="Search"
+            className="rounded-full border border-white/10 p-2 text-white/60 transition-colors hover:text-white"
+          >
+            <Search size={16} />
+          </Link>
           <LanguageSwitcher locale={locale} />
           <Link
             href={`${base}/login`}

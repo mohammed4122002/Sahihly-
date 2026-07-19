@@ -68,6 +68,9 @@ const ar: Dictionary = {
     metricHumanHint: "الأعلى = أقرب للبشري",
     verifyTitle: "إعادة صياغة موثَّقة",
     verifyNote: "إشارات الأسلوب الآلي",
+    confidenceLevels: { low: "ثقة منخفضة", medium: "ثقة متوسطة", high: "ثقة عالية" },
+    shortText: "النصوص القصيرة إشارتها ضعيفة — نتائج ما دون ٤٠ كلمة تقديرات خشنة. أضف نصاً أطول لقراءة موثوقة.",
+    hybridBadge: "محرّك هجين: إشارات إحصائية + استدلال ذكاء اصطناعي",
   },
   trustStrip: [
     "تجربة بلا تسجيل",
@@ -190,6 +193,7 @@ const ar: Dictionary = {
       { label: "كشف وإعادة صياغة عربية أصيلة", us: true, them: false },
       { label: "جودة إنجليزية أصيلة", us: true, them: true },
       { label: "تحقّق تلقائي بعد إعادة الصياغة", us: true, them: false },
+      { label: "درجة ثقة صادقة مع كل نتيجة", us: true, them: false },
       { label: "تقرير أسلوب كامل مع كل فحص", us: true, them: false },
       { label: "خطة مجانية بلا تسجيل", us: true, them: false },
       { label: "موقف استخدام مسؤول", us: true, them: false },

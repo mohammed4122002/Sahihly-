@@ -28,6 +28,7 @@ type DetectResp = {
   kind: "detect";
   score: number;
   verdict: "human" | "mixed" | "ai";
+  confidence?: "low" | "medium" | "high";
   sentences: Sentence[];
   metrics?: Metrics;
   engine: string;
@@ -391,18 +392,44 @@ export default function ToolStudio({
                     {shared ? t.copied : locale === "ar" ? "شارك" : "Share"}
                   </button>
                   <Gauge score={detect.score} label={verdictLabel} />
+                  <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
+                    {detect.confidence && (
+                      <span
+                        className={`rounded-full border px-2.5 py-0.5 text-[11px] ${
+                          detect.confidence === "high"
+                            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                            : detect.confidence === "medium"
+                              ? "border-white/15 bg-white/5 text-white/60"
+                              : "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                        }`}
+                      >
+                        {t.confidenceLevels[detect.confidence]}
+                      </span>
+                    )}
+                    {detect.engine === "hybrid" && (
+                      <span className="rounded-full border border-violet-400/30 bg-violet-400/10 px-2.5 py-0.5 text-[11px] text-violet-300">
+                        {t.hybridBadge}
+                      </span>
+                    )}
+                  </div>
+                  {detect.words < 40 && (
+                    <p className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-center text-[11px] text-amber-200/90">
+                      {t.shortText}
+                    </p>
+                  )}
                 </div>
                 <div className="mt-4 max-h-40 overflow-y-auto rounded-xl bg-black/20 p-3 text-sm leading-relaxed">
                   {detect.sentences.map((s, i) => (
                     <span
                       key={i}
+                      title={`${s.score}%`}
                       style={{
                         background:
                           s.score >= 50
                             ? `rgba(248,113,113,${0.12 + (s.score / 100) * 0.25})`
                             : "transparent",
                       }}
-                      className="rounded px-0.5"
+                      className="cursor-help rounded px-0.5"
                     >
                       {s.text}{" "}
                     </span>

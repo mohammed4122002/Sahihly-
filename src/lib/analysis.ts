@@ -56,10 +56,12 @@ export type StyleMetrics = {
   avgSentenceLen: number; // words per sentence
   aiTells: number; // count of machine-typical phrases found
 };
-export type Engine = "claude" | "openai" | "heuristic";
+export type Engine = "claude" | "openai" | "heuristic" | "hybrid";
+export type Confidence = "low" | "medium" | "high";
 export type DetectResult = {
   score: number; // 0..100 probability of AI
   verdict: "human" | "mixed" | "ai";
+  confidence: Confidence;
   sentences: Sentence[];
   metrics: StyleMetrics;
   engine: Engine;
@@ -188,6 +190,7 @@ function heuristicDetect(text: string): DetectResult {
   return {
     score,
     verdict: verdictFromScore(score),
+    confidence: "medium",
     sentences: scored,
     metrics: computeMetrics(text),
     engine: "heuristic",
@@ -199,11 +202,12 @@ function heuristicDetect(text: string): DetectResult {
 ------------------------------------------------------------------ */
 async function claudeDetect(text: string, locale: string): Promise<DetectResult> {
   const anthropic = getAnthropic();
+  const metrics = computeMetrics(text);
   const msg = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 2000,
     system: DETECT_SYSTEM,
-    messages: [{ role: "user", content: detectPrompt(text, locale) }],
+    messages: [{ role: "user", content: detectPrompt(text, locale, metrics) }],
   });
   const raw = msg.content.find((c) => c.type === "text");
   const jsonText = raw && "text" in raw ? raw.text : "{}";
@@ -211,16 +215,25 @@ async function claudeDetect(text: string, locale: string): Promise<DetectResult>
   return {
     score,
     verdict: verdictFromScore(score),
+    confidence: "medium",
     sentences,
-    metrics: computeMetrics(text),
+    metrics,
     engine: "claude",
   };
 }
 
 const DETECT_SYSTEM = `You are an expert writing-style analyst for the tool "Sahihly". You assess how likely a passage was AI-generated based on stylistic and structural signals (burstiness, perplexity proxies, uniformity, hedging phrases, generic transitions). You fully understand both Modern Standard Arabic and native English. Never claim certainty; you estimate. Respond with ONLY valid JSON.`;
 
-function detectPrompt(text: string, locale: string): string {
-  return `Analyze the following text (language: ${locale}). Return JSON:
+function detectPrompt(text: string, locale: string, metrics: StyleMetrics): string {
+  return `Analyze the following text (language: ${locale}).
+
+Precomputed statistical evidence for this exact text (weigh it alongside your own reading):
+- rhythm variety / burstiness: ${metrics.burstiness}/100 (low = machine-flat, high = human-uneven)
+- vocabulary richness: ${metrics.diversity}/100
+- average sentence length: ${metrics.avgSentenceLen} words
+- machine-typical stock phrases found: ${metrics.aiTells}
+
+Return JSON:
 {"score": <int 0-100 probability AI-generated>, "sentences": [{"text": "<sentence>", "score": <int 0-100>}]}
 Split the passage into its sentences and score each. Keep sentence text verbatim.
 
@@ -241,26 +254,71 @@ function parseDetectJson(raw: string, text: string): { score: number; sentences:
 }
 
 async function openaiDetect(text: string, locale: string): Promise<DetectResult> {
-  const raw = await openaiChat(DETECT_SYSTEM, detectPrompt(text, locale), true, 2000);
+  const metrics = computeMetrics(text);
+  const raw = await openaiChat(DETECT_SYSTEM, detectPrompt(text, locale, metrics), true, 2000);
   const { score, sentences } = parseDetectJson(raw, text);
   return {
     score,
     verdict: verdictFromScore(score),
+    confidence: "medium",
     sentences,
-    metrics: computeMetrics(text),
+    metrics,
     engine: "openai",
   };
 }
 
+/**
+ * Honest confidence: short texts carry weak signal, and disagreement
+ * between the statistical and LLM engines means the case is genuinely
+ * ambiguous. Competitors hide this; we surface it.
+ */
+function confidenceFor(wordCount: number, engineGap: number | null): Confidence {
+  let level: Confidence = wordCount < 40 ? "low" : wordCount < 100 ? "medium" : "high";
+  if (engineGap !== null && engineGap > 30 && level !== "low") {
+    level = level === "high" ? "medium" : "low";
+  }
+  if (engineGap === null && level === "high") level = "medium"; // single engine caps at medium
+  return level;
+}
+
+function wordsOf(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+/**
+ * Hybrid ensemble: LLM judgment blended with deterministic statistical
+ * signals (65/35). The metrics are also fed into the LLM prompt as
+ * evidence, so the two views cross-check each other.
+ */
 export async function detectAI(text: string, locale: string): Promise<DetectResult> {
   const provider = pickProvider();
-  try {
-    if (provider === "openai") return await openaiDetect(text, locale);
-    if (provider === "anthropic") return await claudeDetect(text, locale);
-  } catch {
-    /* fall through to heuristic */
+  const statistical = heuristicDetect(text);
+  const words = wordsOf(text);
+
+  if (provider === "heuristic") {
+    return { ...statistical, confidence: confidenceFor(words, null) };
   }
-  return heuristicDetect(text);
+
+  try {
+    const llm =
+      provider === "openai"
+        ? await openaiDetect(text, locale)
+        : await claudeDetect(text, locale);
+
+    const blended = Math.round(llm.score * 0.65 + statistical.score * 0.35);
+    const gap = Math.abs(llm.score - statistical.score);
+
+    return {
+      score: blended,
+      verdict: verdictFromScore(blended),
+      confidence: confidenceFor(words, gap),
+      sentences: llm.sentences,
+      metrics: statistical.metrics,
+      engine: "hybrid",
+    };
+  } catch {
+    return { ...statistical, confidence: confidenceFor(words, null) };
+  }
 }
 
 /* ------------------------------------------------------------------

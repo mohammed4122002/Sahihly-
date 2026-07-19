@@ -67,6 +67,9 @@ const en = {
     metricHumanHint: "higher = more human-like",
     verifyTitle: "Verified rewrite",
     verifyNote: "AI-style signals",
+    confidenceLevels: { low: "Low confidence", medium: "Medium confidence", high: "High confidence" },
+    shortText: "Short texts carry weak signal — results under ~40 words are rough estimates. Add more text for a reliable read.",
+    hybridBadge: "Hybrid engine: statistical signals + AI reasoning",
   },
   trustStrip: [
     "No signup to try",
@@ -189,6 +192,7 @@ const en = {
       { label: "Native Arabic detection & rewriting", us: true, them: false },
       { label: "Native English quality", us: true, them: true },
       { label: "Auto verify-after-rewrite loop", us: true, them: false },
+      { label: "Honest confidence rating on every score", us: true, them: false },
       { label: "Full style report with every check", us: true, them: false },
       { label: "Free tier, no signup", us: true, them: false },
       { label: "Responsible-use positioning", us: true, them: false },

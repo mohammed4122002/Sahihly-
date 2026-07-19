@@ -106,6 +106,14 @@ export default async function LocaleLayout({
       name: "Sahihly",
       url: SITE_URL,
       inLanguage: ["en", "ar"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
     },
   ];
 
