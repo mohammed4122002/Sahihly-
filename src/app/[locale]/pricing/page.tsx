@@ -16,6 +16,15 @@ export async function generateMetadata({
     title: dict.pricing.title,
     description: dict.pricing.subtitle,
     alternates: { canonical: "/pricing" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("Simple Pricing")}&sub=${encodeURIComponent("Free forever tier · Pro $12/mo · Ultimate $29/mo — start without a card")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

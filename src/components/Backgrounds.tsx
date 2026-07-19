@@ -3,6 +3,7 @@ export default function Backgrounds() {
     <>
       <div className="aurora" aria-hidden />
       <div className="grid-field" aria-hidden />
+      <div className="grain" aria-hidden />
     </>
   );
 }

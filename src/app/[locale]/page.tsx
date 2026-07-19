@@ -21,6 +21,7 @@ import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
 import StatCounters from "@/components/StatCounters";
+import HeroTitle from "@/components/HeroTitle";
 import { posts } from "@/content/blog";
 import { LogoMark } from "@/components/Logo";
 
@@ -72,13 +73,7 @@ export default async function HomePage({
             </div>
           </Reveal>
 
-          <Reveal delay={1}>
-            <h1 className="mx-auto max-w-4xl text-center text-4xl font-bold leading-[1.1] sm:text-6xl">
-              {dict.hero.title}
-              <br />
-              <span className="text-gradient">{dict.hero.titleAccent}</span>
-            </h1>
-          </Reveal>
+          <HeroTitle title={dict.hero.title} accent={dict.hero.titleAccent} />
 
           <Reveal delay={2}>
             <p className="mx-auto mt-6 max-w-2xl text-center text-base text-white/60 sm:text-lg">

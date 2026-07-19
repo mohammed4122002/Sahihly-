@@ -24,6 +24,15 @@ export async function generateMetadata({
         ? "هل كُتب هذا النص بـ ChatGPT؟ الصقه واحصل على نسبة الاحتمال مع تمييز الجمل المشبوهة وتقرير أسلوب كامل — بالعربية والإنجليزية، مجاناً وبلا تسجيل."
         : "Was this written by ChatGPT? Paste it and get an AI-likelihood score with suspicious sentences highlighted and a full style report — English and Arabic, free, no signup.",
     alternates: { canonical: "/chatgpt-detector" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("ChatGPT Detector")}&sub=${encodeURIComponent("Check text for the AI fingerprint in seconds — free, English & Arabic")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

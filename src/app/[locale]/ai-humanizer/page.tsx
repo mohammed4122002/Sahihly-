@@ -24,6 +24,15 @@ export async function generateMetadata({
         ? "أعد صياغة النص الآلي بأسلوب بشري طبيعي دون تغيير المعنى، مع مقارنة قبل/بعد. يدعم العربية الفصحى بأصالة والإنجليزية بجودة كاملة — مجاناً وبلا تسجيل."
         : "Rewrite robotic AI text into a natural human voice without changing the meaning, with a before/after comparison. Native Arabic and full-quality English — free, no signup.",
     alternates: { canonical: "/ai-humanizer" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("Free AI Humanizer")}&sub=${encodeURIComponent("Turn AI text into natural writing — meaning-safe, verified, Arabic + English")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

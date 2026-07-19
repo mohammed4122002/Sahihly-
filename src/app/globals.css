@@ -151,12 +151,66 @@ h1, h2, h3, .font-display {
   -webkit-backdrop-filter: blur(24px) saturate(150%);
 }
 
-/* Gradient text */
+/* Gradient text with slow living shimmer */
 .text-gradient {
-  background: linear-gradient(100deg, #ffffff 10%, #c4b3ee 55%, #7c5fd3 100%);
+  background: linear-gradient(100deg, #ffffff 10%, #c4b3ee 45%, #7c5fd3 70%, #c4b3ee 90%);
+  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: shimmer 7s ease-in-out infinite alternate;
+}
+@keyframes shimmer {
+  from { background-position: 0% 0; }
+  to { background-position: 100% 0; }
+}
+
+/* Cursor spotlight on glass surfaces (coords set by CursorGlow) */
+.glass::after,
+.glass-strong::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(184, 166, 232, 0.1),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+.glass,
+.glass-strong {
+  position: relative;
+}
+.glass:hover::after,
+.glass-strong:hover::after {
+  opacity: 1;
+}
+
+/* Film grain for depth */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Focus ring — accessibility with brand color */
+:focus-visible {
+  outline: 2px solid rgba(184, 166, 232, 0.9);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Tactile button press */
+.btn-primary:active,
+.btn-ghost:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Glowing border card */
@@ -239,6 +293,7 @@ h1, h2, h3, .font-display {
   to { transform: translateX(-50%); }
 }
 [dir="rtl"] .marquee { animation-direction: reverse; }
+.marquee:hover { animation-play-state: paused; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }

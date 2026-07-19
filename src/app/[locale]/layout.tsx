@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Backgrounds from "@/components/Backgrounds";
 import ScrollProgress from "@/components/ScrollProgress";
 import ConsentBanner from "@/components/ConsentBanner";
+import CursorGlow from "@/components/CursorGlow";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -145,6 +146,7 @@ export default async function LocaleLayout({
           {locale === "ar" ? "تخطَّ إلى المحتوى" : "Skip to content"}
         </a>
         <Backgrounds />
+        <CursorGlow />
         <ScrollProgress />
         <Header locale={locale} dict={dict} />
         <main id="main" className="flex-1">{children}</main>

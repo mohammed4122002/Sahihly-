@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -18,6 +19,7 @@ export default function Header({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
   const base = "";
 
   useEffect(() => {
@@ -48,15 +50,24 @@ export default function Header({
         </Link>
 
         <div className="hidden items-center gap-6 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-sm text-white/70 transition-colors hover:text-white"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const clean = l.href.split("#")[0] || "/";
+            const active = clean !== "/" && pathname === clean;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative text-sm transition-colors hover:text-white ${
+                  active ? "text-white" : "text-white/70"
+                }`}
+              >
+                {l.label}
+                {active && (
+                  <span className="absolute -bottom-1.5 start-0 end-0 h-px bg-gradient-to-r from-transparent via-violet-400 to-transparent" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-2">

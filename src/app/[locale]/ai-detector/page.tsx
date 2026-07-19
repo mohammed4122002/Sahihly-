@@ -24,6 +24,15 @@ export async function generateMetadata({
         ? "الصق نصك واحصل فوراً على نسبة احتمال كتابته بالذكاء الاصطناعي، مع تمييز الجمل المشبوهة. يدعم العربية بأصالة والإنجليزية بجودة كاملة — مجاناً وبلا تسجيل."
         : "Paste your text and instantly see how likely it was AI-generated, with suspicious sentences highlighted. Native Arabic and full-quality English — free, no signup.",
     alternates: { canonical: "/ai-detector" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("Free AI Detector")}&sub=${encodeURIComponent("Check any text for AI — English & Arabic, sentence highlights, style report")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

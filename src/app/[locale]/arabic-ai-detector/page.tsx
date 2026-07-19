@@ -24,6 +24,15 @@ export async function generateMetadata({
         ? "أول كاشف ذكاء اصطناعي مبني للعربية فعلاً: يفهم الصرف والتشكيل والمستوى اللغوي، يميّز الجمل المشبوهة، ويعطي تقرير أسلوب كامل — مجاناً وبلا تسجيل."
         : "The first AI detector genuinely built for Arabic: it understands morphology, diacritics, and register, highlights suspicious sentences, and gives a full style report — free, no signup.",
     alternates: { canonical: "/arabic-ai-detector" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("Arabic AI Detector")}&sub=${encodeURIComponent("The first detector genuinely built for Arabic — morphology, register, highlights")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 

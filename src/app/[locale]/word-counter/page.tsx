@@ -23,6 +23,15 @@ export async function generateMetadata({
         ? "عدّاد كلمات فوري يعمل بالعربية والإنجليزية: كلمات، أحرف مع/بدون مسافات، جمل، فقرات، وقت القراءة والإلقاء — مجاناً وبلا تسجيل، ويعمل مباشرة في متصفحك."
         : "Instant word counter for English and Arabic: words, characters with/without spaces, sentences, paragraphs, reading and speaking time — free, no signup, runs entirely in your browser.",
     alternates: { canonical: "/word-counter" },
+    openGraph: {
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent("Free Word Counter")}&sub=${encodeURIComponent("Words, characters, sentences & reading time — private, in your browser")}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 
