@@ -25,6 +25,8 @@ docs say so explicitly.
 ## Tools
 
 - [AI Detector](${SITE_URL}/ai-detector): free AI-likelihood checker for English & Arabic
+- [Arabic AI Detector](${SITE_URL}/arabic-ai-detector): the first detector genuinely built for Arabic morphology and register
+- [ChatGPT Detector](${SITE_URL}/chatgpt-detector): checks text for the stylistic fingerprint of ChatGPT-class models
 - [AI Humanizer](${SITE_URL}/ai-humanizer): meaning-safe rewriting with Natural/Academic/Casual styles
 - [Word Counter](${SITE_URL}/word-counter): private in-browser word/character/reading-time counter
 

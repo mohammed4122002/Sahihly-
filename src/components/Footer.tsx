@@ -35,6 +35,8 @@ export default function Footer({
       links: [
         { href: "/ai-detector", label: dict.nav.detector },
         { href: "/ai-humanizer", label: dict.nav.humanizer },
+        { href: "/arabic-ai-detector", label: locale === "ar" ? "كاشف النصوص العربية" : "Arabic AI Detector" },
+        { href: "/chatgpt-detector", label: locale === "ar" ? "كاشف ChatGPT" : "ChatGPT Detector" },
         { href: `${base}/pricing`, label: dict.nav.pricing },
       ],
     },

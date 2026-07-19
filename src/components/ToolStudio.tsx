@@ -11,6 +11,7 @@ import {
   Trash2,
   Loader2,
   ShieldAlert,
+  Share2,
 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n";
@@ -188,6 +189,26 @@ export default function ToolStudio({
     setTimeout(() => setCopied(false), 1600);
   }
 
+  const [shared, setShared] = useState(false);
+  async function shareResult(score: number) {
+    const text =
+      locale === "ar"
+        ? `فحصت نصي على صحيحلي وطلع ${score}٪ ذكاء اصطناعي 🔍 — كاشف مجاني يدعم العربية:`
+        : `My text scored ${score}% AI-likelihood on Sahihly 🔍 — free bilingual AI detector:`;
+    const url = window.location.origin;
+    try {
+      if (navigator.share) {
+        await navigator.share({ text, url });
+      } else {
+        await navigator.clipboard.writeText(`${text} ${url}`);
+        setShared(true);
+        setTimeout(() => setShared(false), 1600);
+      }
+    } catch {
+      /* user dismissed the share sheet */
+    }
+  }
+
   function download(value: string) {
     const blob = new Blob([value], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -357,10 +378,18 @@ export default function ToolStudio({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
               >
-                <div className="flex flex-col items-center">
+                <div className="relative flex flex-col items-center">
                   <span className="mb-1 text-xs uppercase tracking-wider text-white/40">
                     {t.resultTitle}
                   </span>
+                  <button
+                    onClick={() => shareResult(detect.score)}
+                    className="btn-ghost absolute end-0 top-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs"
+                    aria-label="Share result"
+                  >
+                    {shared ? <Check size={13} /> : <Share2 size={13} />}
+                    {shared ? t.copied : locale === "ar" ? "شارك" : "Share"}
+                  </button>
                   <Gauge score={detect.score} label={verdictLabel} />
                 </div>
                 <div className="mt-4 max-h-40 overflow-y-auto rounded-xl bg-black/20 p-3 text-sm leading-relaxed">

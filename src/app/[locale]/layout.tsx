@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Backgrounds from "@/components/Backgrounds";
 import ScrollProgress from "@/components/ScrollProgress";
+import ConsentBanner from "@/components/ConsentBanner";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -126,13 +127,7 @@ export default async function LocaleLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT ? (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
-            crossOrigin="anonymous"
-          />
-        ) : null}
+        {/* AdSense loads client-side only after cookie consent (ConsentBanner) */}
       </head>
       <body className="min-h-full flex flex-col">
         <a
@@ -146,6 +141,7 @@ export default async function LocaleLayout({
         <Header locale={locale} dict={dict} />
         <main id="main" className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
+        <ConsentBanner locale={locale} />
       </body>
     </html>
   );

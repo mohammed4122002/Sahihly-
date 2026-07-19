@@ -124,6 +124,81 @@ posts.push(
   }
 );
 
+posts.push(
+  {
+    slug: "chatgpt-writing-tells",
+    date: "2026-07-16",
+    readingTime: 8,
+    category: "Guides",
+    title: {
+      en: "10 Tells That Text Came From ChatGPT (With Fixes)",
+      ar: "١٠ علامات تكشف أن النص من ChatGPT (مع الإصلاحات)",
+    },
+    excerpt: {
+      en: "From \"furthermore\" chains to suspiciously balanced paragraphs — the patterns to spot, and how to rewrite each one.",
+      ar: "من سلاسل «علاوة على ذلك» إلى الفقرات المتوازنة بشكل مريب — الأنماط التي تلتقطها وكيف تعيد صياغة كل منها.",
+    },
+    body: {
+      en: `<h2>The big ten</h2><ul><li><strong>Transition chains</strong> — furthermore, moreover, additionally stacked across paragraphs. Fix: delete most; let ideas connect themselves.</li><li><strong>Uniform sentences</strong> — every sentence 15–20 words. Fix: cut one to five words; let another run long.</li><li><strong>The rule of three</strong> — endless triplets ("clear, concise, and compelling"). Fix: keep one triplet per page, break the rest.</li><li><strong>Hedged everything</strong> — "can potentially help to". Fix: commit — "helps".</li><li><strong>Empty openers</strong> — "In today's fast-paced world". Fix: start with the actual point.</li><li><strong>Corporate glosses</strong> — seamless, robust, holistic, leverage. Fix: plain words.</li><li><strong>Symmetrical paragraphs</strong> — each exactly 3–4 sentences. Fix: one-sentence paragraph somewhere.</li><li><strong>Restating the question</strong> before answering it. Fix: answer first.</li><li><strong>Zero specifics</strong> — no numbers, names, or examples. Fix: add one concrete detail per claim.</li><li><strong>The tidy summary</strong> — "In conclusion" repeating everything. Fix: end on your strongest point instead.</li></ul><h2>Check your work</h2><p>Run your revised draft through a detector with sentence-level highlights — if the flags cluster on lines you didn't rewrite, you know where to go next.</p>`,
+      ar: `<h2>العلامات العشر</h2><ul><li><strong>سلاسل الروابط</strong> — علاوة على ذلك، بالإضافة إلى ذلك، متراصة عبر الفقرات. الإصلاح: احذف معظمها ودع الأفكار تترابط بنفسها.</li><li><strong>جمل متساوية</strong> — كل جملة ١٥–٢٠ كلمة. الإصلاح: اقطع واحدة لخمس كلمات ودع أخرى تمتد.</li><li><strong>قاعدة الثلاثيات</strong> — ثلاثيات لا تنتهي («واضح وموجز ومقنع»). الإصلاح: أبقِ ثلاثية واحدة بالصفحة واكسر الباقي.</li><li><strong>التحوّط الدائم</strong> — «يمكن أن يساعد جزئياً في». الإصلاح: احسمها — «يساعد».</li><li><strong>افتتاحيات فارغة</strong> — «في عالمنا سريع الخطى». الإصلاح: ابدأ بالفكرة نفسها.</li><li><strong>كلمات الشركات</strong> — سلس، شامل, قوي. الإصلاح: كلمات بسيطة.</li><li><strong>فقرات متناظرة</strong> — كل فقرة ٣–٤ جمل بالضبط. الإصلاح: فقرة من جملة واحدة في مكان ما.</li><li><strong>إعادة صياغة السؤال</strong> قبل إجابته. الإصلاح: أجب أولاً.</li><li><strong>صفر تفاصيل</strong> — لا أرقام ولا أسماء ولا أمثلة. الإصلاح: تفصيلة ملموسة لكل ادعاء.</li><li><strong>الخاتمة المرتّبة</strong> — «في الختام» تكرر كل شيء. الإصلاح: اختم بأقوى نقطة لديك.</li></ul><h2>افحص عملك</h2><p>مرّر مسودتك المنقّحة عبر كاشف يميّز الجمل — إن تجمّعت الإشارات على سطور لم تُعد صياغتها، عرفت وجهتك التالية.</p>`,
+    },
+  },
+  {
+    slug: "students-guide-ai-writing-tools",
+    date: "2026-07-17",
+    readingTime: 7,
+    category: "Guides",
+    title: {
+      en: "A Student's Honest Guide to AI Writing Tools in 2026",
+      ar: "دليل الطالب الصادق لأدوات الكتابة الذكية في ٢٠٢٦",
+    },
+    excerpt: {
+      en: "What's allowed, what's risky, and how to use AI to become a better writer instead of a dependent one.",
+      ar: "ما المسموح، وما الخطر، وكيف تستخدم الذكاء الاصطناعي لتصبح كاتباً أفضل لا كاتباً تابعاً.",
+    },
+    body: {
+      en: `<h2>Start with your syllabus</h2><p>Policies now range from "AI banned entirely" to "AI encouraged with disclosure". Nothing in any tool overrides what your course allows — read the policy before you paste a single word.</p><h2>The three safe uses almost everyone allows</h2><ul><li><strong>Brainstorming</strong> — generating angles you then research yourself.</li><li><strong>Feedback</strong> — asking what's unclear in a draft you wrote.</li><li><strong>Style review</strong> — running your own writing through a detector to catch accidental machine-flavored patterns before your professor does.</li></ul><h2>The line you shouldn't cross</h2><p>Submitting generated work as yours where disclosure is required. Beyond the integrity risk, you lose the skill the assignment exists to build — and interviews have no AI assist.</p><h2>Grow from it</h2><p>Compare your original with a humanized version and study the differences: rhythm, transitions, specificity. That gap is your personal writing curriculum.</p>`,
+      ar: `<h2>ابدأ من خطة المساق</h2><p>تتراوح السياسات اليوم بين «الذكاء الاصطناعي ممنوع كلياً» و«مشجَّع مع الإفصاح». لا شيء في أي أداة يتجاوز ما يسمح به مساقك — اقرأ السياسة قبل لصق كلمة واحدة.</p><h2>الاستخدامات الآمنة الثلاثة المسموحة غالباً</h2><ul><li><strong>العصف الذهني</strong> — توليد زوايا تبحثها أنت بنفسك.</li><li><strong>الملاحظات</strong> — سؤاله عمّا هو غامض في مسودة كتبتها أنت.</li><li><strong>مراجعة الأسلوب</strong> — تمرير كتابتك أنت عبر كاشف لالتقاط الأنماط الآلية العَرَضية قبل أن يلتقطها أستاذك.</li></ul><h2>الخط الذي لا تتجاوزه</h2><p>تقديم عمل مولَّد باسمك حيث يُشترط الإفصاح. وراء خطر النزاهة، تخسر المهارة التي وُجد الواجب لبنائها — والمقابلات لا مساعد ذكي فيها.</p><h2>انمُ منه</h2><p>قارن أصلك بنسخة منسَّنة وادرس الفروق: الإيقاع، الروابط، التفاصيل. تلك الفجوة هي منهجك الشخصي في الكتابة.</p>`,
+    },
+  },
+  {
+    slug: "ai-content-seo-google",
+    date: "2026-07-18",
+    readingTime: 8,
+    category: "Writing",
+    title: {
+      en: "Does Google Penalize AI Content? What Actually Matters for SEO",
+      ar: "هل يعاقب جوجل محتوى الذكاء الاصطناعي؟ ما المهم فعلاً للـ SEO",
+    },
+    excerpt: {
+      en: "Google's official position, what the helpful-content system really measures, and a workflow that keeps AI-assisted articles ranking.",
+      ar: "موقف جوجل الرسمي، وما يقيسه نظام المحتوى المفيد حقاً، وسير عمل يُبقي المقالات المدعومة بالذكاء الاصطناعي في الصدارة.",
+    },
+    body: {
+      en: `<h2>Google's actual position</h2><p>Google has said plainly: it rewards helpful content "however it is produced". There is no AI-detection penalty. What gets demoted is <em>unhelpful</em> content — thin, generic, made for rankings instead of readers — which mass-produced AI text tends to be.</p><h2>Why raw AI articles still underperform</h2><ul><li>No first-hand experience or original information — the core of E-E-A-T.</li><li>Interchangeable phrasing readers bounce from, and engagement signals follow.</li><li>Occasional confident errors that damage trust and earn corrections, not links.</li></ul><h2>A workflow that works</h2><p>Draft with AI if you like — then add what only you can: real examples, data, opinions, local knowledge. Run a style pass so it reads like a person (rhythm variety matters for readers, and readers matter for rankings). Fact-check every claim. Publish under a real identity with a real about page.</p><h2>The takeaway</h2><p>Optimize for the reader's problem, not for "undetectability". Detection scores are a style diagnostic — Google's systems measure usefulness.</p>`,
+      ar: `<h2>موقف جوجل الفعلي</h2><p>قالها جوجل صراحة: يكافئ المحتوى المفيد «كيفما أُنتج». لا توجد عقوبة لكشف الذكاء الاصطناعي. ما يُخفَّض هو المحتوى <em>غير المفيد</em> — الرقيق العام المصنوع للترتيب لا للقارئ — وهو ما يميل إليه النص الآلي المنتَج بالجملة.</p><h2>لماذا تتعثر المقالات الآلية الخام</h2><ul><li>لا خبرة مباشرة ولا معلومات أصلية — جوهر E-E-A-T.</li><li>صياغة متشابهة يهجرها القرّاء، وإشارات التفاعل تتبعهم.</li><li>أخطاء واثقة متفرقة تهدم الثقة وتجلب تصحيحات لا روابط.</li></ul><h2>سير عمل ينجح</h2><p>سوّد بالذكاء الاصطناعي إن شئت — ثم أضف ما لا يستطيعه غيرك: أمثلة حقيقية، بيانات، آراء، معرفة محلية. مرّر تمريرة أسلوب ليُقرأ كإنسان (تنوّع الإيقاع مهم للقارئ، والقارئ مهم للترتيب). دقّق كل معلومة. وانشر بهوية حقيقية وصفحة تعريف حقيقية.</p><h2>الخلاصة</h2><p>حسّن لمشكلة القارئ لا لـ«عدم الانكشاف». نتائج الكشف تشخيص أسلوبي — وأنظمة جوجل تقيس الفائدة.</p>`,
+    },
+  },
+  {
+    slug: "humanizer-styles-when-to-use",
+    date: "2026-07-19",
+    readingTime: 6,
+    category: "Writing",
+    title: {
+      en: "Natural, Academic, or Casual? Choosing the Right Rewrite Style",
+      ar: "طبيعي أم أكاديمي أم مبسّط؟ اختيار نمط إعادة الصياغة الصحيح",
+    },
+    excerpt: {
+      en: "The same paragraph lands differently in each register. Here's how to pick — with Arabic register notes included.",
+      ar: "الفقرة نفسها تصل مختلفة بكل مستوى. إليك كيف تختار — مع ملاحظات المستوى العربي.",
+    },
+    body: {
+      en: `<h2>Natural</h2><p>Your default. It aims for the voice of a competent writer addressing peers: varied rhythm, plain words, no performance. Use it for blogs, reports, emails — anything without a dress code.</p><h2>Academic</h2><p>Measured and precise, but still human — real academic prose varies its rhythm too, which is exactly what separates it from AI's fake formality. Use it for papers, proposals, and formal reviews. In Arabic this maps to فصحى رصينة: full grammatical agreement, careful connectors, no colloquial drift.</p><h2>Casual</h2><p>Relaxed and direct, contractions welcome. Use it for social posts, newsletters, and landing pages that need warmth. The Arabic equivalent is الفصحى المبسّطة — friendly and modern without slipping into slang that would undercut credibility.</p><h2>The test</h2><p>Read the result aloud imagining your actual reader across the table. If you'd be embarrassed to say it to them, switch styles and run it again.</p>`,
+      ar: `<h2>طبيعي</h2><p>خيارك الافتراضي. يستهدف صوت كاتب متمكّن يخاطب أقرانه: إيقاع متنوع وكلمات بسيطة بلا استعراض. استخدمه للمدونات والتقارير والرسائل — كل ما لا يفرض زياً رسمياً.</p><h2>أكاديمي</h2><p>متزن ودقيق لكنه بشري — فالنثر الأكاديمي الحقيقي ينوّع إيقاعه أيضاً، وهذا بالضبط ما يفصله عن الرسمية الزائفة للذكاء الاصطناعي. استخدمه للأبحاث والمقترحات والمراجعات الرسمية. وفي العربية يقابله الفصحى الرصينة: مطابقة نحوية تامة وروابط محسوبة بلا انزلاق عامي.</p><h2>مبسّط</h2><p>مسترخٍ ومباشر. استخدمه لمنشورات التواصل والنشرات وصفحات الهبوط التي تحتاج دفئاً. مقابله العربي الفصحى المبسّطة — ودودة عصرية دون انزلاق لعامية تهدم المصداقية.</p><h2>الاختبار</h2><p>اقرأ النتيجة بصوت عالٍ متخيلاً قارئك الفعلي أمامك. إن كنت ستخجل من قولها له، بدّل النمط وأعد التشغيل.</p>`,
+    },
+  }
+);
+
 export function getPost(slug: string): BlogPost | undefined {
   return posts.find((p) => p.slug === slug);
 }
