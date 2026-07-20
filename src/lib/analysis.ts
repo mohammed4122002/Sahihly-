@@ -285,10 +285,52 @@ function wordsOf(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
+/** Split long text into ~maxWords chunks at sentence boundaries. */
+function chunkText(text: string, maxWords = 600): string[] {
+  const sentences = splitSentences(text);
+  const chunks: string[] = [];
+  let current: string[] = [];
+  let count = 0;
+  for (const s of sentences) {
+    const w = s.split(/\s+/).length;
+    if (count + w > maxWords && current.length > 0) {
+      chunks.push(current.join(" "));
+      current = [];
+      count = 0;
+    }
+    current.push(s);
+    count += w;
+  }
+  if (current.length > 0) chunks.push(current.join(" "));
+  return chunks;
+}
+
+/** One hybrid pass over a single chunk. */
+async function detectChunk(
+  text: string,
+  locale: string,
+  provider: "openai" | "anthropic"
+): Promise<{ score: number; gap: number; sentences: Sentence[]; words: number }> {
+  const statistical = heuristicDetect(text);
+  const llm =
+    provider === "openai"
+      ? await openaiDetect(text, locale)
+      : await claudeDetect(text, locale);
+  const blended = Math.round(llm.score * 0.65 + statistical.score * 0.35);
+  return {
+    score: blended,
+    gap: Math.abs(llm.score - statistical.score),
+    sentences: llm.sentences,
+    words: wordsOf(text),
+  };
+}
+
 /**
  * Hybrid ensemble: LLM judgment blended with deterministic statistical
- * signals (65/35). The metrics are also fed into the LLM prompt as
- * evidence, so the two views cross-check each other.
+ * signals (65/35), with the metrics fed into the LLM prompt as evidence.
+ * Long texts are chunked at sentence boundaries and analyzed in parallel,
+ * then merged with a word-weighted average — per-sentence quality stays
+ * sharp even at Ultimate-plan lengths.
  */
 export async function detectAI(text: string, locale: string): Promise<DetectResult> {
   const provider = pickProvider();
@@ -300,19 +342,22 @@ export async function detectAI(text: string, locale: string): Promise<DetectResu
   }
 
   try {
-    const llm =
-      provider === "openai"
-        ? await openaiDetect(text, locale)
-        : await claudeDetect(text, locale);
+    const chunks = chunkText(text);
+    const results = await Promise.all(
+      chunks.map((c) => detectChunk(c, locale, provider))
+    );
 
-    const blended = Math.round(llm.score * 0.65 + statistical.score * 0.35);
-    const gap = Math.abs(llm.score - statistical.score);
+    const totalWords = results.reduce((s, r) => s + r.words, 0) || 1;
+    const score = Math.round(
+      results.reduce((s, r) => s + r.score * r.words, 0) / totalWords
+    );
+    const maxGap = Math.max(...results.map((r) => r.gap));
 
     return {
-      score: blended,
-      verdict: verdictFromScore(blended),
-      confidence: confidenceFor(words, gap),
-      sentences: llm.sentences,
+      score,
+      verdict: verdictFromScore(score),
+      confidence: confidenceFor(words, maxGap),
+      sentences: results.flatMap((r) => r.sentences),
       metrics: statistical.metrics,
       engine: "hybrid",
     };

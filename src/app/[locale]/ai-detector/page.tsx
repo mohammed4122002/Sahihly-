@@ -6,6 +6,7 @@ import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
+import EmbedSnippet from "@/components/EmbedSnippet";
 
 export async function generateMetadata({
   params,
@@ -182,6 +183,12 @@ export default async function AIDetectorPage({
             <Link href="/ai-humanizer" className="font-medium text-violet-300 hover:text-violet-200">
               {c.ctaHumanizer}
             </Link>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-10">
+            <EmbedSnippet locale={locale} />
           </div>
         </Reveal>
 

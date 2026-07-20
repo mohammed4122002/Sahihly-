@@ -30,7 +30,7 @@ const PUBLIC_FILE = /\.(.*)$/;
 const COOKIE = "sahihly_locale";
 
 // Paths served outside the [locale] tree — never rewrite these.
-const BYPASS_PREFIXES = ["/_next", "/api", "/auth", "/opengraph-image", "/og"];
+const BYPASS_PREFIXES = ["/_next", "/api", "/auth", "/opengraph-image", "/og", "/embed"];
 const BYPASS_EXACT = ["/favicon.ico", "/robots.txt", "/sitemap.xml", "/ads.txt", "/manifest.webmanifest"];
 
 function detectLocale(req: NextRequest): string {

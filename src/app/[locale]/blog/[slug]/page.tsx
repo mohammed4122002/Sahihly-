@@ -26,7 +26,18 @@ export async function generateMetadata({
     title: post.title[loc],
     description: post.excerpt[loc],
     alternates: { canonical: `/blog/${slug}` },
-    openGraph: { title: post.title[loc], description: post.excerpt[loc], type: "article" },
+    openGraph: {
+      title: post.title[loc],
+      description: post.excerpt[loc],
+      type: "article",
+      images: [
+        {
+          url: `/og?title=${encodeURIComponent(post.title.en)}&sub=${encodeURIComponent("Sahihly Blog · " + post.category)}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
   };
 }
 
@@ -92,6 +103,23 @@ export default async function PostPage({
         {post.title[locale]}
       </h1>
       <p className="mt-4 text-lg text-white/60">{post.excerpt[locale]}</p>
+
+      {/* byline — E-E-A-T signal */}
+      <div className="mt-5 flex items-center gap-3 border-b border-white/10 pb-5">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-400/15 font-display text-sm font-bold text-violet-300">
+          S
+        </span>
+        <div className="text-sm">
+          <Link href="/about" className="font-medium text-white/85 hover:text-violet-200">
+            {locale === "ar" ? "فريق صحيحلي" : "The Sahihly Team"}
+          </Link>
+          <p className="text-xs text-white/40">
+            {locale === "ar"
+              ? "نبني أدوات جودة الكتابة ثنائية اللغة"
+              : "Building bilingual writing-quality tools"}
+          </p>
+        </div>
+      </div>
 
       <div
         className="prose-sahihly mt-8"

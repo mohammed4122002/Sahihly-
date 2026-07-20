@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { detectAI, humanizeText, styleSignalScore, type HumanizeStyle } from "@/lib/analysis";
 import { countWords } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { createHash } from "crypto";
 
 export const runtime = "nodejs";
@@ -14,8 +14,38 @@ const PLAN_LIMITS: Record<string, { words: number; dailyRuns: number | null }> =
   ultimate: { words: 12000, dailyRuns: null },
 };
 
-// Best-effort in-memory limiter (per warm instance) for anonymous users.
+// Fallback in-memory limiter (per warm instance) when the DB isn't configured.
 const memory = new Map<string, { day: string; count: number }>();
+
+/**
+ * Daily limit check. Prefers the atomic DB counter (accurate across all
+ * serverless instances); falls back to per-instance memory.
+ * Returns true when the run is allowed.
+ */
+async function allowRun(identifier: string, kind: string, limit: number): Promise<boolean> {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const svc = createServiceClient();
+      const { data, error } = await svc.rpc("usage_increment", {
+        p_identifier: identifier,
+        p_kind: kind,
+        p_limit: limit,
+      });
+      if (!error) return data === true;
+    } catch {
+      /* fall through to memory */
+    }
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const entry = memory.get(identifier);
+  if (entry && entry.day === today) {
+    if (entry.count >= limit) return false;
+    entry.count += 1;
+    return true;
+  }
+  memory.set(identifier, { day: today, count: 1 });
+  return true;
+}
 
 function clientKey(req: NextRequest): string {
   const ip =
@@ -77,18 +107,12 @@ export async function POST(req: NextRequest) {
   // Daily run limit — only for plans that have one.
   if (limits.dailyRuns !== null) {
     const key = userId ?? clientKey(req);
-    const today = new Date().toISOString().slice(0, 10);
-    const entry = memory.get(key);
-    if (entry && entry.day === today) {
-      if (entry.count >= limits.dailyRuns) {
-        return NextResponse.json(
-          { error: "limit_reached", limit: limits.dailyRuns, plan },
-          { status: 429 }
-        );
-      }
-      entry.count += 1;
-    } else {
-      memory.set(key, { day: today, count: 1 });
+    const allowed = await allowRun(key, kind, limits.dailyRuns);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "limit_reached", limit: limits.dailyRuns, plan },
+        { status: 429 }
+      );
     }
   }
 

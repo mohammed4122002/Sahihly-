@@ -13,7 +13,19 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      {
+        // The embeddable widget must be frameable by third-party sites.
+        // CSP frame-ancestors takes precedence over X-Frame-Options in
+        // all modern browsers.
+        source: "/embed",
+        headers: [
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+          { key: "X-Frame-Options", value: "" },
+        ],
+      },
+    ];
   },
 };
 
