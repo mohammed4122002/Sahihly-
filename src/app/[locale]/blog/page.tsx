@@ -2,9 +2,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
-import { posts } from "@/content/blog";
+import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 import Reveal from "@/components/Reveal";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -29,6 +31,7 @@ export default async function BlogPage({
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
   const base = "";
+  const posts = await getAllPosts();
 
   return (
     <div className="container-x py-16">

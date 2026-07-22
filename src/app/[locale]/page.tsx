@@ -22,7 +22,9 @@ import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
 import StatCounters from "@/components/StatCounters";
 import HeroTitle from "@/components/HeroTitle";
-import { posts } from "@/content/blog";
+import { getAllPosts } from "@/lib/blog";
+
+export const dynamic = "force-dynamic";
 import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
@@ -42,7 +44,7 @@ export default async function HomePage({
   const dict = getDictionary(locale);
   const base = "";
 
-  const latestPosts = [...posts].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
+  const latestPosts = (await getAllPosts()).slice(0, 3);
 
   const faqJsonLd = {
     "@context": "https://schema.org",

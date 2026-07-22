@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { detectAI, humanizeText, styleSignalScore, type HumanizeStyle } from "@/lib/analysis";
 import { countWords } from "@/lib/utils";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { resolveAdmin } from "@/lib/admin";
 import { createHash } from "crypto";
 
 export const runtime = "nodejs";
@@ -12,6 +13,7 @@ const PLAN_LIMITS: Record<string, { words: number; dailyRuns: number | null }> =
   free: { words: 250, dailyRuns: 3 },
   pro: { words: 3000, dailyRuns: null }, // null = unlimited
   ultimate: { words: 12000, dailyRuns: null },
+  admin: { words: 100000, dailyRuns: null }, // staff: effectively unlimited
 };
 
 // Fallback in-memory limiter (per warm instance) when the DB isn't configured.
@@ -86,10 +88,14 @@ export async function POST(req: NextRequest) {
       userId = user.id;
       const { data: profile } = await supabase
         .from("profiles")
-        .select("plan")
+        .select("plan, role")
         .eq("id", user.id)
         .maybeSingle();
-      if (profile?.plan && PLAN_LIMITS[profile.plan]) plan = profile.plan;
+      if (resolveAdmin(user.email, profile?.role)) {
+        plan = "admin"; // staff bypass every limit
+      } else if (profile?.plan && PLAN_LIMITS[profile.plan]) {
+        plan = profile.plan;
+      }
     }
   } catch {
     /* treat as anonymous */

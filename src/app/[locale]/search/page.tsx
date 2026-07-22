@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
-import { posts } from "@/content/blog";
+import { getAllPosts } from "@/lib/blog";
 import { competitors } from "@/content/competitors";
+import { roundups } from "@/content/tools";
 import { TERMS } from "@/content/glossary";
+
+export const dynamic = "force-dynamic";
 import SearchClient, { type SearchItem } from "@/components/SearchClient";
 import Reveal from "@/components/Reveal";
 
@@ -67,11 +70,19 @@ export default async function SearchPage({
     },
   ];
 
+  const posts = await getAllPosts();
   const articles: SearchItem[] = posts.map((p) => ({
     title: p.title[locale],
     desc: p.excerpt[locale],
     href: `/blog/${p.slug}`,
     type: "article" as const,
+  }));
+
+  const bestLists: SearchItem[] = roundups.map((r) => ({
+    title: r.h1[locale],
+    desc: r.intro[locale],
+    href: `/best/${r.slug}`,
+    type: "compare" as const,
   }));
 
   const terms: SearchItem[] = TERMS.map((t) => ({
@@ -88,7 +99,7 @@ export default async function SearchPage({
     type: "compare" as const,
   }));
 
-  const items = [...tools, ...articles, ...compares, ...terms];
+  const items = [...tools, ...bestLists, ...articles, ...compares, ...terms];
 
   return (
     <div className="container-x max-w-3xl py-16">

@@ -11,6 +11,7 @@ const en = {
     pricing: "Pricing",
     blog: "Blog",
     compare: "Compare",
+    best: "Best Tools",
     about: "About",
     login: "Log in",
     signup: "Get started",

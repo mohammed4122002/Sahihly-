@@ -32,9 +32,9 @@ export default function Header({
   const links = [
     { href: "/ai-detector", label: dict.nav.detector },
     { href: "/ai-humanizer", label: dict.nav.humanizer },
+    { href: `${base}/best`, label: dict.nav.best },
     { href: `${base}/pricing`, label: dict.nav.pricing },
     { href: `${base}/blog`, label: dict.nav.blog },
-    { href: `${base}/about`, label: dict.nav.about },
   ];
 
   return (

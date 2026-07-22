@@ -3,15 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
-import { posts, getPost } from "@/content/blog";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 
-export function generateStaticParams() {
-  return posts.flatMap((p) =>
-    ["en", "ar"].map((locale) => ({ locale, slug: p.slug }))
-  );
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -20,7 +16,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const loc: Locale = isLocale(locale) ? locale : "en";
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
   return {
     title: post.title[loc],
@@ -49,7 +45,8 @@ export default async function PostPage({
   const { locale: raw, slug } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
-  const post = getPost(slug);
+  const all = await getAllPosts();
+  const post = all.find((p) => p.slug === slug);
   if (!post) notFound();
   const base = "";
 
@@ -76,7 +73,7 @@ export default async function PostPage({
     },
   ];
 
-  const related = posts.filter((p) => p.slug !== slug).slice(0, 2);
+  const related = all.filter((p) => p.slug !== slug).slice(0, 2);
 
   return (
     <article className="container-x max-w-3xl py-16">

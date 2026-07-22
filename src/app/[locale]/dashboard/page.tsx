@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/utils";
 import SignOutButton from "@/components/SignOutButton";
 import HistoryList, { type HistoryRow } from "@/components/HistoryList";
 import { AreaChart } from "@/components/admin/Charts";
-import { isAdminEmail } from "@/lib/admin";
+import { resolveAdmin } from "@/lib/admin";
 import {
   CreditCard,
   History,
@@ -70,7 +70,7 @@ export default async function DashboardPage({
 
   const [{ data: profile }, { data: sub }, { data: history }, { data: series }] =
     await Promise.all([
-      supabase.from("profiles").select("plan, full_name").eq("id", user.id).maybeSingle(),
+      supabase.from("profiles").select("plan, full_name, role").eq("id", user.id).maybeSingle(),
       supabase
         .from("subscriptions")
         .select("plan, status, current_period_end")
@@ -126,7 +126,7 @@ export default async function DashboardPage({
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          {isAdminEmail(user.email) && (
+          {resolveAdmin(user.email, profile?.role) && (
             <Link
               href="/admin"
               className="btn-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"

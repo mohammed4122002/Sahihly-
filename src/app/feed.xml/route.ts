@@ -1,7 +1,7 @@
 import { SITE_URL } from "@/lib/i18n/config";
-import { posts } from "@/content/blog";
+import { getAllPosts } from "@/lib/blog";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 function esc(s: string): string {
   return s
@@ -11,9 +11,9 @@ function esc(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-export function GET() {
-  const items = [...posts]
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+export async function GET() {
+  const posts = await getAllPosts();
+  const items = posts
     .map(
       (p) => `    <item>
       <title>${esc(p.title.en)}</title>

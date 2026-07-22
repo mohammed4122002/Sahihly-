@@ -13,6 +13,7 @@ const ar: Dictionary = {
     pricing: "الأسعار",
     blog: "المدوّنة",
     compare: "المقارنات",
+    best: "أفضل الأدوات",
     about: "من نحن",
     login: "تسجيل الدخول",
     signup: "ابدأ الآن",

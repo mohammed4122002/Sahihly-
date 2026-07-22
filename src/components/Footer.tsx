@@ -44,6 +44,7 @@ export default function Footer({
       title: dict.footer.resources,
       links: [
         { href: `${base}/blog`, label: dict.nav.blog },
+        { href: `${base}/best`, label: dict.nav.best },
         { href: `${base}/vs`, label: dict.nav.compare },
         { href: `${base}/word-counter`, label: locale === "ar" ? "عدّاد الكلمات" : "Word Counter" },
         { href: `${base}/glossary`, label: locale === "ar" ? "قاموس المصطلحات" : "Glossary" },

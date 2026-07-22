@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
   Users,
@@ -10,9 +10,10 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
-import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { isAdminEmail } from "@/lib/admin";
+import { createServiceClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/admin";
 import { AreaChart, StackedBars } from "@/components/admin/Charts";
+import AdminNav from "@/components/admin/AdminNav";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -214,13 +215,8 @@ export default async function AdminPage({
   const locale: Locale = isLocale(raw) ? raw : "en";
   const t = T[locale];
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect("/login?next=/admin");
-  if (!isAdminEmail(user.email)) notFound();
+  const admin = await requireAdmin();
+  if (!admin) notFound();
 
   const d = await loadData();
   const dayLabels = d.days.map((day) => day.slice(5)); // MM-DD
@@ -247,6 +243,8 @@ export default async function AdminPage({
           {t.backToDashboard}
         </Link>
       </div>
+
+      <AdminNav ar={locale === "ar"} />
 
       {!d.configured && (
         <div className="mt-6 flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5">
