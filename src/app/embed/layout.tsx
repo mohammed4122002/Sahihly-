@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { inter, spaceGrotesk, plexArabic } from "@/lib/fonts";
 
 export const metadata: Metadata = {
@@ -13,7 +14,10 @@ export default function EmbedLayout({ children }: { children: React.ReactNode })
       lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable} ${plexArabic.variable}`}
     >
-      <body className="min-h-screen bg-[#050b16] p-3 text-white sm:p-4">{children}</body>
+      <body className="min-h-screen bg-[#050b16] p-3 text-white sm:p-4">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
