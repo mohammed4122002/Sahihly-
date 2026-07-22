@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { locales, isLocale, localeDirection, SITE_URL, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { inter, spaceGrotesk, plexArabic } from "@/lib/fonts";
@@ -152,6 +153,7 @@ export default async function LocaleLayout({
         <main id="main" className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
         <ConsentBanner locale={locale} />
+        <Analytics />
       </body>
     </html>
   );
