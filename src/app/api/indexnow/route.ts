@@ -3,6 +3,7 @@ import { SITE_URL } from "@/lib/i18n/config";
 import { getAllPosts } from "@/lib/blog";
 import { competitors } from "@/content/competitors";
 import { roundups } from "@/content/tools";
+import { alternatives } from "@/content/alternatives";
 
 export const runtime = "nodejs";
 
@@ -19,13 +20,15 @@ export async function POST() {
 
   const staticPaths = [
     "", "/ai-detector", "/ai-humanizer", "/arabic-ai-detector",
-    "/chatgpt-detector", "/word-counter", "/glossary", "/pricing",
-    "/blog", "/vs", "/best", "/about", "/contact", "/privacy", "/terms",
+    "/chatgpt-detector", "/word-counter", "/readability-checker", "/glossary", "/pricing",
+    "/blog", "/vs", "/best", "/alternatives", "/methodology",
+    "/about", "/contact", "/privacy", "/terms",
   ];
   const posts = await getAllPosts();
   const urlList = [
     ...staticPaths.map((p) => `${SITE_URL}${p}`),
     ...roundups.map((r) => `${SITE_URL}/best/${r.slug}`),
+    ...alternatives.map((a) => `${SITE_URL}/alternatives/${a.slug}`),
     ...posts.map((p) => `${SITE_URL}/blog/${p.slug}`),
     ...competitors.map((c) => `${SITE_URL}/vs/${c.slug}`),
   ];

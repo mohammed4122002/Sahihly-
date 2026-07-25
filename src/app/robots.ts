@@ -15,6 +15,7 @@ export default function robots(): MetadataRoute.Robots {
       `${SITE_URL}/sitemap-blog.xml`,
       `${SITE_URL}/sitemap-best.xml`,
       `${SITE_URL}/sitemap-vs.xml`,
+      `${SITE_URL}/sitemap-alternatives.xml`,
     ],
     host: SITE_URL,
   };

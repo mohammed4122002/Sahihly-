@@ -11,6 +11,7 @@ export function GET() {
     { loc: `${SITE_URL}/arabic-ai-detector`, lastmod, changefreq: "weekly", priority: 0.9 },
     { loc: `${SITE_URL}/chatgpt-detector`, lastmod, changefreq: "weekly", priority: 0.9 },
     { loc: `${SITE_URL}/word-counter`, lastmod, changefreq: "monthly", priority: 0.8 },
+    { loc: `${SITE_URL}/readability-checker`, lastmod, changefreq: "monthly", priority: 0.8 },
   ];
   return xmlResponse(urlsetXml(entries));
 }

@@ -4,6 +4,7 @@ import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getAllPosts } from "@/lib/blog";
 import { competitors } from "@/content/competitors";
 import { roundups } from "@/content/tools";
+import { alternatives } from "@/content/alternatives";
 import { TERMS } from "@/content/glossary";
 
 export const revalidate = 600;
@@ -68,6 +69,12 @@ export default async function SearchPage({
       href: "/word-counter",
       type: "tool",
     },
+    {
+      title: ar ? "فاحص سهولة القراءة" : "Readability Checker",
+      desc: ar ? "درجة القراءة ومستوى الجمهور والجمل الطويلة — داخل متصفحك." : "Readability score, audience level, and long sentences — in your browser.",
+      href: "/readability-checker",
+      type: "tool",
+    },
   ];
 
   const posts = await getAllPosts();
@@ -99,7 +106,14 @@ export default async function SearchPage({
     type: "compare" as const,
   }));
 
-  const items = [...tools, ...bestLists, ...articles, ...compares, ...terms];
+  const altPages: SearchItem[] = alternatives.map((a) => ({
+    title: ar ? `أفضل بدائل ${a.target}` : `Best ${a.target} alternatives`,
+    desc: a.reasons[locale][0],
+    href: `/alternatives/${a.slug}`,
+    type: "compare" as const,
+  }));
+
+  const items = [...tools, ...bestLists, ...altPages, ...articles, ...compares, ...terms];
 
   return (
     <div className="container-x max-w-3xl py-16">

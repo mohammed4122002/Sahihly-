@@ -12,6 +12,7 @@ export function GET() {
     "sitemap-blog.xml",
     "sitemap-best.xml",
     "sitemap-vs.xml",
+    "sitemap-alternatives.xml",
   ].map((f) => ({ loc: `${SITE_URL}/${f}`, lastmod }));
 
   return xmlResponse(sitemapIndexXml(maps));
