@@ -50,8 +50,49 @@ function detectLocale(req: NextRequest): string {
   return defaultLocale;
 }
 
+/**
+ * Canonical host enforcement. Two hosts serving identical content (www vs
+ * apex, or the *.vercel.app URL alongside the custom domain) splits ranking
+ * signals and can get the wrong one indexed. Always fold www into the apex;
+ * fold the deployment URL into the custom domain when ENFORCE_CANONICAL_HOST=1
+ * (kept opt-in so preview deployments stay reachable).
+ */
+function canonicalHostRedirect(req: NextRequest): NextResponse | null {
+  const host = req.headers.get("host");
+  if (!host) return null;
+
+  // CANONICAL_HOST is read at runtime; NEXT_PUBLIC_SITE_URL is inlined at
+  // build time, so it's only the fallback.
+  let canonicalHost: string | null = process.env.CANONICAL_HOST?.trim() || null;
+  if (!canonicalHost) {
+    try {
+      canonicalHost = new URL(
+        process.env.NEXT_PUBLIC_SITE_URL || "https://sahihly.com"
+      ).host;
+    } catch {
+      return null;
+    }
+  }
+  if (host === canonicalHost) return null;
+
+  const isWww = host === `www.${canonicalHost}`;
+  const isDeploymentUrl =
+    process.env.ENFORCE_CANONICAL_HOST === "1" && host.endsWith(".vercel.app");
+
+  if (!isWww && !isDeploymentUrl) return null;
+
+  const url = req.nextUrl.clone();
+  url.host = canonicalHost;
+  url.port = "";
+  url.protocol = "https:";
+  return NextResponse.redirect(url, 308);
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const hostRedirect = canonicalHostRedirect(req);
+  if (hostRedirect) return hostRedirect;
 
   if (
     BYPASS_PREFIXES.some((p) => pathname.startsWith(p)) ||
