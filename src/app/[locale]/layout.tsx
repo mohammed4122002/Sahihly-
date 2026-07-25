@@ -9,6 +9,7 @@ import Backgrounds from "@/components/Backgrounds";
 import ScrollProgress from "@/components/ScrollProgress";
 import ConsentBanner from "@/components/ConsentBanner";
 import CursorGlow from "@/components/CursorGlow";
+import { Analytics } from "@vercel/analytics/next";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -152,6 +153,7 @@ export default async function LocaleLayout({
         <main id="main" className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
         <ConsentBanner locale={locale} />
+        <Analytics />
       </body>
     </html>
   );
