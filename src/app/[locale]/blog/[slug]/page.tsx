@@ -7,7 +7,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,

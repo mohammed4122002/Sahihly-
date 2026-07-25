@@ -6,7 +6,7 @@ import { competitors } from "@/content/competitors";
 import { roundups } from "@/content/tools";
 import { TERMS } from "@/content/glossary";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 import SearchClient, { type SearchItem } from "@/components/SearchClient";
 import Reveal from "@/components/Reveal";
 

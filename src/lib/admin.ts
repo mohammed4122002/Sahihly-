@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
+export type Role = "user" | "editor" | "admin";
+
 /** Env-based owner bootstrap — comma-separated emails in ADMIN_EMAILS. */
 export function getAdminEmails(): string[] {
   return (process.env.ADMIN_EMAILS || "pombut777@gmail.com")
@@ -18,19 +20,19 @@ export function resolveAdmin(email?: string | null, role?: string | null): boole
   return isAdminEmail(email) || role === "admin";
 }
 
-/**
- * Server-side guard: returns the authenticated admin user, or null.
- * Use at the top of every admin page and server action.
- */
-export async function requireAdmin() {
+/** Editors can manage articles only; admins can do everything. */
+export function resolveStaff(email?: string | null, role?: string | null): boolean {
+  return resolveAdmin(email, role) || role === "editor";
+}
+
+async function currentUserWithRole() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return null;
+  if (!user) return { user: null, role: null as Role | null };
 
-  // Env owners are always admin, even before a profile row exists.
-  if (isAdminEmail(user.email)) return user;
+  if (isAdminEmail(user.email)) return { user, role: "admin" as Role };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -38,5 +40,19 @@ export async function requireAdmin() {
     .eq("id", user.id)
     .maybeSingle();
 
-  return profile?.role === "admin" ? user : null;
+  return { user, role: (profile?.role ?? "user") as Role };
+}
+
+/** Full admin guard — users, payments, everything. */
+export async function requireAdmin() {
+  const { user, role } = await currentUserWithRole();
+  if (!user) return null;
+  return role === "admin" ? user : null;
+}
+
+/** Staff guard — admins and editors (article management). */
+export async function requireStaff() {
+  const { user, role } = await currentUserWithRole();
+  if (!user) return null;
+  return role === "admin" || role === "editor" ? { user, role } : null;
 }

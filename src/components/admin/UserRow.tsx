@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, ShieldCheck, ShieldOff, Ban, CircleCheck, Trash2 } from "lucide-react";
+import { Loader2, Ban, CircleCheck, Trash2 } from "lucide-react";
 import { setUserPlan, setUserRole, setUserStatus, deleteUser } from "@/app/[locale]/admin/actions";
+
+const ROLE_STYLES: Record<string, string> = {
+  admin: "border-violet-400/40 bg-violet-400/15 text-violet-200",
+  editor: "border-sky-400/40 bg-sky-400/15 text-sky-200",
+  user: "border-white/15 text-white/50",
+};
 
 export type AdminUser = {
   id: string;
@@ -27,7 +33,6 @@ export default function UserRow({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const suspended = user.status === "suspended";
-  const isAdmin = user.role === "admin";
 
   return (
     <tr className="border-t border-white/5">
@@ -48,15 +53,18 @@ export default function UserRow({
         </select>
       </td>
       <td className="px-4 py-3">
-        <span
-          className={`rounded-full border px-2 py-0.5 text-[11px] ${
-            isAdmin
-              ? "border-violet-400/40 bg-violet-400/15 text-violet-200"
-              : "border-white/15 text-white/50"
+        <select
+          defaultValue={user.role}
+          disabled={pending || isOwnerEmail}
+          onChange={(e) => start(() => setUserRole(user.id, e.target.value))}
+          className={`rounded-full border bg-black/30 px-2 py-1 text-[11px] outline-none ${
+            ROLE_STYLES[user.role] ?? ROLE_STYLES.user
           }`}
         >
-          {isAdmin ? (ar ? "أدمن" : "admin") : ar ? "مستخدم" : "user"}
-        </span>
+          <option value="user">{ar ? "مستخدم" : "user"}</option>
+          <option value="editor">{ar ? "محرّر" : "editor"}</option>
+          <option value="admin">{ar ? "أدمن" : "admin"}</option>
+        </select>
       </td>
       <td className="px-4 py-3">
         <span
@@ -76,13 +84,6 @@ export default function UserRow({
             <span className="text-[11px] text-white/30">{ar ? "المالك" : "owner"}</span>
           ) : (
             <>
-              <button
-                title={isAdmin ? "Demote" : "Promote to admin"}
-                onClick={() => start(() => setUserRole(user.id, isAdmin ? "user" : "admin"))}
-                className="rounded-lg p-1.5 text-white/40 hover:bg-white/5 hover:text-violet-300"
-              >
-                {isAdmin ? <ShieldOff size={15} /> : <ShieldCheck size={15} />}
-              </button>
               <button
                 title={suspended ? "Reactivate" : "Suspend"}
                 onClick={() => start(() => setUserStatus(user.id, suspended ? "active" : "suspended"))}

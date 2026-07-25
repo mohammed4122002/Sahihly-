@@ -6,7 +6,7 @@ import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 import Reveal from "@/components/Reveal";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,

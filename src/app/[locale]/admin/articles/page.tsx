@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/lib/i18n/config";
-import { requireAdmin } from "@/lib/admin";
+import { requireStaff } from "@/lib/admin";
 import { createServiceClient } from "@/lib/supabase/server";
 import AdminNav from "@/components/admin/AdminNav";
 import ArticleEditor, { type DbPost } from "@/components/admin/ArticleEditor";
@@ -16,8 +16,8 @@ export default async function AdminArticlesPage({
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
 
-  const admin = await requireAdmin();
-  if (!admin) notFound();
+  const staff = await requireStaff();
+  if (!staff) notFound();
 
   let posts: DbPost[] = [];
   try {
@@ -44,7 +44,7 @@ export default async function AdminArticlesPage({
             : "Add articles that appear instantly in the blog, sitemap, and search."}
         </p>
       </div>
-      <AdminNav ar={ar} />
+      <AdminNav ar={ar} role={staff.role} />
 
       <div className="mt-6">
         <ArticleEditor posts={posts} ar={ar} />

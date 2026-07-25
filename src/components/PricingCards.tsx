@@ -30,47 +30,15 @@ export default function PricingCards({
       router.push("/");
       return;
     }
-    // Pre-checkout explainer: Binance Pay is a hosted flow with its own
-    // steps — set expectations before redirecting (spec §6).
+    // Pre-checkout explainer: payment is a manual two-step flow, so set
+    // expectations before sending the visitor to /checkout.
     setNotice(null);
     setConfirmPlan(planId);
   }
 
-  async function startCheckout(planId: string) {
-    setNotice(null);
+  function startCheckout(planId: string) {
     setLoadingPlan(planId);
-    try {
-      const res = await fetch("/api/payments/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId, cycle, locale }),
-      });
-      const data = await res.json();
-      if (res.status === 401) {
-        router.push(`${base}/login?next=/pricing`);
-        return;
-      }
-      if (res.status === 503) {
-        setConfirmPlan(null);
-        setNotice(
-          locale === "ar"
-            ? "بوابة الدفع قيد الإعداد. اترك بريدك وسنعلمك فور التفعيل."
-            : "The payment gateway is being set up. Leave your email and we'll notify you."
-        );
-        return;
-      }
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-        return;
-      }
-      setConfirmPlan(null);
-      setNotice(locale === "ar" ? "تعذّر بدء الدفع. حاول لاحقاً." : "Couldn't start checkout. Try again.");
-    } catch {
-      setConfirmPlan(null);
-      setNotice(locale === "ar" ? "خطأ في الشبكة." : "Network error.");
-    } finally {
-      setLoadingPlan(null);
-    }
+    router.push(`/checkout?plan=${planId}&cycle=${cycle}`);
   }
 
   return (

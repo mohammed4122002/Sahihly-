@@ -159,7 +159,7 @@ const en = {
     mostPopular: "Most popular",
     cta: "Choose plan",
     ctaFree: "Start free",
-    payNote: "Payment via Binance Pay (USDT). More gateways coming soon.",
+    payNote: "Pay in USDT (any wallet or exchange) — no card or account with a payment provider required.",
     plans: [
       {
         id: "free",
@@ -269,14 +269,14 @@ const en = {
     title: "Complete your subscription",
     plan: "Plan",
     total: "Total",
-    payWithBinance: "Pay with Binance Pay",
+    payWithBinance: "Continue to payment",
     steps: [
-      "Log in to (or create) your Binance account.",
-      "Top up your balance with a card if needed.",
-      "Confirm the payment on Binance's secure page.",
+      "Send the exact amount in USDT to the address we show you.",
+      "Copy the transaction ID (TxID) from your wallet or exchange.",
+      "Paste it in the form — we verify and activate your plan.",
     ],
-    note: "You'll be redirected to Binance to finish securely. Your subscription activates once payment is confirmed.",
-    redirecting: "Preparing secure checkout…",
+    note: "No card or merchant account needed. We review each payment manually, usually within a few hours.",
+    redirecting: "Opening checkout…",
   },
   notFound: {
     title: "Page not found",

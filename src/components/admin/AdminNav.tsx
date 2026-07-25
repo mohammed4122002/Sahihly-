@@ -2,15 +2,25 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, FileText } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Wallet } from "lucide-react";
 
-export default function AdminNav({ ar }: { ar: boolean }) {
+export default function AdminNav({ ar, role = "admin" }: { ar: boolean; role?: string }) {
   const pathname = usePathname();
+  const isAdmin = role === "admin";
+
   const tabs = [
-    { href: "/admin", label: ar ? "نظرة عامة" : "Overview", icon: LayoutDashboard },
-    { href: "/admin/users", label: ar ? "المستخدمون" : "Users", icon: Users },
+    ...(isAdmin
+      ? [{ href: "/admin", label: ar ? "نظرة عامة" : "Overview", icon: LayoutDashboard }]
+      : []),
     { href: "/admin/articles", label: ar ? "المقالات" : "Articles", icon: FileText },
+    ...(isAdmin
+      ? [
+          { href: "/admin/payments", label: ar ? "الاشتراكات" : "Payments", icon: Wallet },
+          { href: "/admin/users", label: ar ? "المستخدمون" : "Users", icon: Users },
+        ]
+      : []),
   ];
+
   return (
     <div className="mt-6 inline-flex flex-wrap gap-1 rounded-full border border-white/10 bg-white/5 p-1">
       {tabs.map((t) => {

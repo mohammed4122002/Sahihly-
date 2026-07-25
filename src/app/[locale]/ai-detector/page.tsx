@@ -187,7 +187,18 @@ export default async function AIDetectorPage({
         </Reveal>
 
         <Reveal>
-          <div className="mt-10">
+          <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-center text-sm">
+            <span className="text-white/55">
+              {locale === "ar" ? "تريد معرفة كيف نحسب النتيجة بالضبط؟ " : "Want to know exactly how the score is computed? "}
+            </span>
+            <Link href="/methodology" className="font-medium text-violet-300 hover:text-violet-200">
+              {locale === "ar" ? "اقرأ منهجيتنا الكاملة" : "Read our full methodology"}
+            </Link>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-6">
             <EmbedSnippet locale={locale} />
           </div>
         </Reveal>

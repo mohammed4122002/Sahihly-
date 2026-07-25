@@ -24,7 +24,8 @@ import StatCounters from "@/components/StatCounters";
 import HeroTitle from "@/components/HeroTitle";
 import { getAllPosts } from "@/lib/blog";
 
-export const dynamic = "force-dynamic";
+// ISR: fast static delivery, refreshed on publish via revalidatePath.
+export const revalidate = 600;
 import { LogoMark } from "@/components/Logo";
 
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
