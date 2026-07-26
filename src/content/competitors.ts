@@ -1,6 +1,9 @@
 import type { Locale } from "@/lib/i18n/config";
+import { deepContent, type DeepFields } from "./competitors-deep";
 
-export type Competitor = {
+export type Competitor = BaseCompetitor & DeepFields;
+
+type BaseCompetitor = {
   slug: string;
   name: string;
   title: Record<Locale, string>;
@@ -62,7 +65,7 @@ const commonRows = (extra: Competitor["rows"] = []): Competitor["rows"] => [
   ...extra,
 ];
 
-export const competitors: Competitor[] = [
+const baseCompetitors: BaseCompetitor[] = [
   {
     slug: "undetectable-ai",
     name: "Undetectable.ai",
@@ -110,7 +113,7 @@ export const competitors: Competitor[] = [
   },
 ];
 
-competitors.push(
+baseCompetitors.push(
   {
     slug: "copyleaks",
     name: "Copyleaks",
@@ -140,6 +143,12 @@ competitors.push(
     },
   }
 );
+
+/** Base entry + its long-form sections, composed once at module load. */
+export const competitors: Competitor[] = baseCompetitors.map((c) => ({
+  ...c,
+  ...deepContent[c.slug],
+}));
 
 export function getCompetitor(slug: string): Competitor | undefined {
   return competitors.find((c) => c.slug === slug);
