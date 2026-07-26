@@ -8,7 +8,7 @@ import { savePost, deletePost, type PostInput } from "@/app/[locale]/admin/actio
 
 export type DbPost = PostInput & { id: string; created_at: string };
 
-const empty: PostInput = {
+const emptyBase: PostInput = {
   slug: "",
   category: "Guides",
   title_en: "",
@@ -19,6 +19,7 @@ const empty: PostInput = {
   body_ar: "",
   reading_time: 5,
   published: true,
+  author_name: "",
 };
 
 const CATEGORIES = ["Guides", "Writing", "Arabic", "SEO", "News"];
@@ -98,7 +99,16 @@ function normalizeHtml(input: string): string {
     .join("\n");
 }
 
-export default function ArticleEditor({ posts, ar }: { posts: DbPost[]; ar: boolean }) {
+export default function ArticleEditor({
+  posts,
+  ar,
+  defaultAuthor,
+}: {
+  posts: DbPost[];
+  ar: boolean;
+  defaultAuthor: string;
+}) {
+  const empty: PostInput = { ...emptyBase, author_name: defaultAuthor };
   const [form, setForm] = useState<PostInput>(empty);
   const [editId, setEditId] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
@@ -339,6 +349,24 @@ export default function ArticleEditor({ posts, ar }: { posts: DbPost[]; ar: bool
                 </>
               )}
             </div>
+
+            <label className="block">
+              <span className="mb-1 block text-xs text-white/50">
+                {ar ? "اسم الكاتب (يظهر في المقال)" : "Author name (shown on the article)"}
+              </span>
+              <input
+                dir="ltr"
+                value={form.author_name ?? ""}
+                onChange={(e) => set("author_name", e.target.value)}
+                placeholder={defaultAuthor || (ar ? "اسمك" : "Your name")}
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm outline-none focus:border-violet-400/50"
+              />
+              <span className="mt-1 block text-[11px] text-white/35">
+                {ar
+                  ? "يظهر هذا الاسم بدلاً من «فريق صحيحلي» — اتركه فارغاً ليُستخدم اسمك تلقائياً."
+                  : "This name replaces \"The Sahihly Team\" on the byline — leave blank to use your own name automatically."}
+              </span>
+            </label>
 
             <div className="grid gap-3 sm:grid-cols-3">
               <label className="block">

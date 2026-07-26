@@ -13,7 +13,8 @@ async function guardAdmin() {
 async function guardStaff() {
   const staff = await requireStaff();
   if (!staff) throw new Error("not_authorized");
-  return createServiceClient();
+  const svc = createServiceClient();
+  return { svc, user: staff.user };
 }
 
 /* ---------------- Users ---------------- */
@@ -122,6 +123,7 @@ export type PostInput = {
   body_ar: string;
   reading_time: number;
   published: boolean;
+  author_name?: string;
 };
 
 function slugify(s: string) {
@@ -135,8 +137,22 @@ function slugify(s: string) {
 }
 
 export async function savePost(input: PostInput, id?: string) {
-  const svc = await guardStaff();
+  const { svc, user } = await guardStaff();
   const slug = slugify(input.slug || input.title_en || String(Date.now()));
+
+  // The byline should always show a real person, not the anonymous "team" —
+  // fall back to the publishing staff member's own name/email if the field
+  // was left blank in the editor.
+  let authorName = (input.author_name || "").trim();
+  if (!authorName) {
+    const { data: profile } = await svc
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .maybeSingle();
+    authorName = profile?.full_name?.trim() || user.email?.split("@")[0] || "";
+  }
+
   const row = {
     slug,
     category: input.category || "Guides",
@@ -148,6 +164,7 @@ export async function savePost(input: PostInput, id?: string) {
     body_ar: input.body_ar,
     reading_time: input.reading_time || 5,
     published: input.published,
+    author_name: authorName,
     updated_at: new Date().toISOString(),
   };
 
@@ -167,7 +184,7 @@ export async function savePost(input: PostInput, id?: string) {
 }
 
 export async function deletePost(id: string) {
-  const svc = await guardStaff();
+  const { svc } = await guardStaff();
   await svc.from("blog_posts").delete().eq("id", id);
   revalidatePath("/admin/articles");
   revalidatePath("/blog");

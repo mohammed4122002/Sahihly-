@@ -20,13 +20,18 @@ export default async function AdminArticlesPage({
   if (!staff) notFound();
 
   let posts: DbPost[] = [];
+  let defaultAuthor = staff.user.email?.split("@")[0] || "";
   try {
     const svc = createServiceClient();
-    const { data } = await svc
-      .from("blog_posts")
-      .select("id, slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, published, created_at")
-      .order("created_at", { ascending: false });
+    const [{ data }, { data: profile }] = await Promise.all([
+      svc
+        .from("blog_posts")
+        .select("id, slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, published, created_at")
+        .order("created_at", { ascending: false }),
+      svc.from("profiles").select("full_name").eq("id", staff.user.id).maybeSingle(),
+    ]);
     posts = (data ?? []) as DbPost[];
+    if (profile?.full_name) defaultAuthor = profile.full_name;
   } catch {
     /* service key not set */
   }
@@ -47,7 +52,7 @@ export default async function AdminArticlesPage({
       <AdminNav ar={ar} role={staff.role} />
 
       <div className="mt-6">
-        <ArticleEditor posts={posts} ar={ar} />
+        <ArticleEditor posts={posts} ar={ar} defaultAuthor={defaultAuthor} />
       </div>
     </div>
   );

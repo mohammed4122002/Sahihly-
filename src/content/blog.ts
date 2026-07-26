@@ -8,6 +8,8 @@ export type BlogPost = {
   title: Record<Locale, string>;
   excerpt: Record<Locale, string>;
   body: Record<Locale, string>; // simple HTML
+  /** Real writer's name, shown on the byline instead of "The Sahihly Team". */
+  author?: string;
 };
 
 export const posts: BlogPost[] = [

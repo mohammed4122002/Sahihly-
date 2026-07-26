@@ -59,7 +59,9 @@ export default async function PostPage({
       datePublished: post.date,
       dateModified: post.date,
       inLanguage: locale,
-      author: { "@type": "Organization", name: "Sahihly" },
+      author: post.author
+        ? { "@type": "Person", name: post.author }
+        : { "@type": "Organization", name: "Sahihly" },
       url: `${SITE_URL}/blog/${slug}`,
     },
     {
@@ -104,16 +106,24 @@ export default async function PostPage({
       {/* byline — E-E-A-T signal */}
       <div className="mt-5 flex items-center gap-3 border-b border-white/10 pb-5">
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-400/15 font-display text-sm font-bold text-violet-300">
-          S
+          {(post.author || "S").trim().charAt(0).toUpperCase()}
         </span>
         <div className="text-sm">
-          <Link href="/about" className="font-medium text-white/85 hover:text-violet-200">
-            {locale === "ar" ? "فريق صحيحلي" : "The Sahihly Team"}
-          </Link>
+          {post.author ? (
+            <span className="font-medium text-white/85">{post.author}</span>
+          ) : (
+            <Link href="/about" className="font-medium text-white/85 hover:text-violet-200">
+              {locale === "ar" ? "فريق صحيحلي" : "The Sahihly Team"}
+            </Link>
+          )}
           <p className="text-xs text-white/40">
-            {locale === "ar"
-              ? "نبني أدوات جودة الكتابة ثنائية اللغة"
-              : "Building bilingual writing-quality tools"}
+            {post.author
+              ? locale === "ar"
+                ? "كاتب في صحيحلي"
+                : "Writer at Sahihly"
+              : locale === "ar"
+                ? "نبني أدوات جودة الكتابة ثنائية اللغة"
+                : "Building bilingual writing-quality tools"}
           </p>
         </div>
       </div>

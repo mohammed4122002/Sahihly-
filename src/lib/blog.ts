@@ -11,6 +11,7 @@ type DbRow = {
   body_en: string | null;
   body_ar: string | null;
   reading_time: number;
+  author_name: string | null;
   created_at: string;
 };
 
@@ -23,6 +24,7 @@ function rowToPost(r: DbRow): BlogPost {
     title: { en: r.title_en, ar: r.title_ar },
     excerpt: { en: r.excerpt_en || "", ar: r.excerpt_ar || "" },
     body: { en: r.body_en || "", ar: r.body_ar || "" },
+    author: r.author_name || undefined,
   };
 }
 
@@ -31,7 +33,7 @@ async function dbPosts(): Promise<BlogPost[]> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, created_at")
+      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, created_at")
       .eq("published", true)
       .order("created_at", { ascending: false });
     if (error || !data) return [];

@@ -70,7 +70,7 @@ export default async function DashboardPage({
 
   const [{ data: profile }, { data: sub }, { data: history }, { data: series }] =
     await Promise.all([
-      supabase.from("profiles").select("plan, full_name, role").eq("id", user.id).maybeSingle(),
+      supabase.from("profiles").select("plan, full_name, role, avatar_url").eq("id", user.id).maybeSingle(),
       supabase
         .from("subscriptions")
         .select("plan, status, current_period_end")
@@ -119,13 +119,30 @@ export default async function DashboardPage({
   return (
     <div className="container-x max-w-5xl py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-white/50">{d.welcome}</p>
-          <h1 className="text-3xl font-bold">
-            {profile?.full_name || user.email?.split("@")[0]}
-          </h1>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/account"
+            aria-label={ar ? "الملف الشخصي" : "Account"}
+            className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-violet-400/15 text-lg font-bold text-violet-200 transition-colors hover:border-violet-400/40"
+          >
+            {profile?.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+            ) : (
+              (profile?.full_name || user.email || "?").trim().charAt(0).toUpperCase()
+            )}
+          </Link>
+          <div>
+            <p className="text-sm text-white/50">{d.welcome}</p>
+            <h1 className="text-3xl font-bold">
+              {profile?.full_name || user.email?.split("@")[0]}
+            </h1>
+          </div>
         </div>
         <div className="flex items-center gap-2">
+          <Link href="/account" className="btn-ghost inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+            {ar ? "تعديل الملف الشخصي" : "Edit profile"}
+          </Link>
           {resolveAdmin(user.email, profile?.role) && (
             <Link
               href="/admin"
