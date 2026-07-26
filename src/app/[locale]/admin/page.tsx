@@ -231,12 +231,12 @@ export default async function AdminPage({
   ];
 
   return (
-    <div className="container-x py-12">
+    <div className="container-x py-8 sm:py-12">
       {/* header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <span className="eyebrow">{t.eyebrow}</span>
-          <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{t.title}</h1>
+          <h1 className="mt-2 text-2xl font-bold sm:text-4xl">{t.title}</h1>
           <p className="mt-1 text-sm text-white/40">{t.updated}</p>
         </div>
         <Link href="/dashboard" className="btn-ghost rounded-full px-4 py-2 text-sm">
@@ -257,11 +257,11 @@ export default async function AdminPage({
       )}
 
       {/* KPI tiles */}
-      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
         {kpis.map((k) => (
-          <div key={k.label} className="glass glow-card rounded-2xl p-4">
+          <div key={k.label} className="glass glow-card rounded-2xl p-3.5 sm:p-4">
             <k.icon size={16} className="text-violet-300" />
-            <p className="font-display mt-3 text-2xl font-bold tabular-nums">{k.value}</p>
+            <p className="font-display mt-3 text-xl font-bold tabular-nums sm:text-2xl">{k.value}</p>
             <p className="mt-1 text-xs text-white/50">{k.label}</p>
           </div>
         ))}

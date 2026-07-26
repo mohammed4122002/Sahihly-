@@ -37,7 +37,7 @@ export default async function AdminPaymentsPage({
   const handled = rows.filter((r) => r.status !== "pending");
 
   return (
-    <div className="container-x max-w-4xl py-12">
+    <div className="container-x max-w-4xl py-8 sm:py-12">
       <div>
         <span className="eyebrow">{ar ? "الاشتراكات" : "Subscriptions"}</span>
         <h1 className="mt-2 text-3xl font-bold sm:text-4xl">

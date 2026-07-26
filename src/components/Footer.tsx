@@ -77,7 +77,7 @@ export default function Footer({
 
   return (
     <footer className="mt-24 border-t border-white/10">
-      <div className="container-x grid gap-10 py-14 md:grid-cols-3 lg:grid-cols-6">
+      <div className="container-x grid grid-cols-1 gap-10 py-14 md:grid-cols-3 lg:grid-cols-6">
         <div className="lg:col-span-2">
           <Logo />
           <p className="mt-4 max-w-xs text-sm text-white/50">

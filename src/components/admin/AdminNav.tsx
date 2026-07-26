@@ -22,22 +22,24 @@ export default function AdminNav({ ar, role = "admin" }: { ar: boolean; role?: s
   ];
 
   return (
-    <div className="mt-6 inline-flex flex-wrap gap-1 rounded-full border border-white/10 bg-white/5 p-1">
-      {tabs.map((t) => {
-        const active = pathname === t.href;
-        return (
-          <Link
-            key={t.href}
-            href={t.href}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors ${
-              active ? "bg-violet-400 text-ocean-900" : "text-white/60 hover:text-white"
-            }`}
-          >
-            <t.icon size={15} />
-            {t.label}
-          </Link>
-        );
-      })}
+    <div className="mt-6 overflow-x-auto">
+      <div className="inline-flex w-max gap-1 rounded-full border border-white/10 bg-white/5 p-1">
+        {tabs.map((t) => {
+          const active = pathname === t.href;
+          return (
+            <Link
+              key={t.href}
+              href={t.href}
+              className={`inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm whitespace-nowrap transition-colors ${
+                active ? "bg-violet-400 text-ocean-900" : "text-white/60 hover:text-white"
+              }`}
+            >
+              <t.icon size={15} />
+              {t.label}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

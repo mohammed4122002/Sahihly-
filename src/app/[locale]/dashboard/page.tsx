@@ -117,51 +117,50 @@ export default async function DashboardPage({
   ];
 
   return (
-    <div className="container-x max-w-5xl py-16">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/account"
-            aria-label={ar ? "الملف الشخصي" : "Account"}
-            className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-violet-400/15 text-lg font-bold text-violet-200 transition-colors hover:border-violet-400/40"
-          >
-            {profile?.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
-            ) : (
-              (profile?.full_name || user.email || "?").trim().charAt(0).toUpperCase()
-            )}
-          </Link>
-          <div>
-            <p className="text-sm text-white/50">{d.welcome}</p>
-            <h1 className="text-3xl font-bold">
-              {profile?.full_name || user.email?.split("@")[0]}
-            </h1>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/account" className="btn-ghost inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
-            {ar ? "تعديل الملف الشخصي" : "Edit profile"}
-          </Link>
-          {resolveAdmin(user.email, profile?.role) && (
-            <Link
-              href="/admin"
-              className="btn-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
-            >
-              <ShieldCheck size={15} />
-              {ar ? "لوحة الإدارة" : "Admin Console"}
-            </Link>
+    <div className="container-x max-w-5xl py-10 sm:py-16">
+      <div className="flex items-center gap-3">
+        <Link
+          href="/account"
+          aria-label={ar ? "الملف الشخصي" : "Account"}
+          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-violet-400/15 text-lg font-bold text-violet-200 transition-colors hover:border-violet-400/40"
+        >
+          {profile?.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            (profile?.full_name || user.email || "?").trim().charAt(0).toUpperCase()
           )}
-          <SignOutButton locale={locale} label={d.signOut} />
+        </Link>
+        <div className="min-w-0">
+          <p className="text-sm text-white/50">{d.welcome}</p>
+          <h1 className="truncate text-2xl font-bold sm:text-3xl">
+            {profile?.full_name || user.email?.split("@")[0]}
+          </h1>
         </div>
       </div>
 
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <Link href="/account" className="btn-ghost inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+          {ar ? "تعديل الملف الشخصي" : "Edit profile"}
+        </Link>
+        {resolveAdmin(user.email, profile?.role) && (
+          <Link
+            href="/admin"
+            className="btn-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+          >
+            <ShieldCheck size={15} />
+            {ar ? "لوحة الإدارة" : "Admin Console"}
+          </Link>
+        )}
+        <SignOutButton locale={locale} label={d.signOut} />
+      </div>
+
       {/* stat tiles */}
-      <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="glass glow-card rounded-2xl p-4">
+          <div key={s.label} className="glass glow-card rounded-2xl p-3.5 sm:p-4">
             <s.icon size={16} className="text-violet-300" />
-            <p className="font-display mt-3 text-2xl font-bold tabular-nums">{s.value}</p>
+            <p className="font-display mt-3 text-xl font-bold tabular-nums sm:text-2xl">{s.value}</p>
             <p className="mt-1 text-xs text-white/50">{s.label}</p>
           </div>
         ))}

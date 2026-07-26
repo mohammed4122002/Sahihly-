@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 import AccountForm from "@/components/AccountForm";
@@ -47,12 +48,19 @@ export default async function AccountPage({
     .maybeSingle();
 
   return (
-    <div className="container-x max-w-lg py-16">
+    <div className="container-x max-w-lg py-10 sm:py-16">
       <Reveal>
-        <h1 className="text-center text-3xl font-bold sm:text-4xl">
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white"
+        >
+          <ArrowLeft size={15} className="flip-x" />
+          {ar ? "لوحتي" : "Dashboard"}
+        </Link>
+        <h1 className="mt-4 text-3xl font-bold sm:text-4xl">
           {ar ? "الملف الشخصي" : "Account"}
         </h1>
-        <p className="mx-auto mt-2 max-w-sm text-center text-sm text-white/55">
+        <p className="mt-2 max-w-sm text-sm text-white/55">
           {ar
             ? "غيّر صورتك واسمك الظاهر لحسابك."
             : "Update your photo and display name."}
@@ -68,14 +76,6 @@ export default async function AccountPage({
             initialFullName={profile?.full_name ?? ""}
             initialAvatarUrl={profile?.avatar_url ?? null}
           />
-        </div>
-      </Reveal>
-
-      <Reveal delay={2}>
-        <div className="mt-6 text-center">
-          <Link href="/dashboard" className="text-sm text-violet-300 hover:text-violet-200">
-            ← {ar ? "العودة للوحتي" : "Back to dashboard"}
-          </Link>
         </div>
       </Reveal>
     </div>

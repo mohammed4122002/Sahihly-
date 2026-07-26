@@ -12,7 +12,7 @@ export default async function SignupPage({
   const locale: Locale = isLocale(raw) ? raw : "en";
   const dict = getDictionary(locale);
   return (
-    <div className="container-x flex min-h-[70vh] items-center justify-center py-16">
+    <div className="container-x flex min-h-[80vh] items-center justify-center py-10 sm:py-16">
       <Suspense>
         <AuthForm mode="signup" locale={locale} dict={dict} />
       </Suspense>

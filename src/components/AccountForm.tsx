@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, Loader2, Save, Trash2, CheckCircle2 } from "lucide-react";
+import { Camera, Loader2, Save, Trash2, CheckCircle2, Mail, User } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -184,21 +184,27 @@ export default function AccountForm({
       <form onSubmit={saveName} className="mt-6 space-y-4">
         <label className="block">
           <span className="mb-1.5 block text-xs text-white/50">{ar ? "البريد الإلكتروني" : "Email"}</span>
-          <input
-            dir="ltr"
-            value={email}
-            disabled
-            className="w-full rounded-xl border border-white/10 bg-black/10 px-4 py-2.5 text-sm text-white/50"
-          />
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/10 px-3.5">
+            <Mail size={15} className="shrink-0 text-white/30" />
+            <input
+              dir="ltr"
+              value={email}
+              disabled
+              className="w-full min-w-0 bg-transparent py-2.5 text-sm text-white/50 outline-none"
+            />
+          </div>
         </label>
 
         <label className="block">
           <span className="mb-1.5 block text-xs text-white/50">{ar ? "الاسم الكامل" : "Full name"}</span>
-          <input
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-2.5 text-sm outline-none focus:border-violet-400/50"
-          />
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3.5 transition-colors focus-within:border-violet-400/50">
+            <User size={15} className="shrink-0 text-white/35" />
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full min-w-0 bg-transparent py-2.5 text-sm outline-none"
+            />
+          </div>
         </label>
 
         <button

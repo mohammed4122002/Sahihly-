@@ -38,7 +38,7 @@ export default async function AdminUsersPage({
   const owners = getAdminEmails();
 
   return (
-    <div className="container-x py-12">
+    <div className="container-x py-8 sm:py-12">
       <div>
         <span className="eyebrow">{ar ? "الإدارة" : "Administration"}</span>
         <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
