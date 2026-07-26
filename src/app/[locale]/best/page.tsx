@@ -60,7 +60,7 @@ export default async function BestHubPage({
         </p>
       </Reveal>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-2">
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {roundups.map((r, i) => (
           <Reveal key={r.slug} delay={i} as="div">
             <Link

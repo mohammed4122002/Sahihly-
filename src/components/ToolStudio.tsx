@@ -270,7 +270,7 @@ export default function ToolStudio({
         </div>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Input */}
         <div className="flex flex-col">
           <textarea
@@ -532,7 +532,7 @@ export default function ToolStudio({
                     </span>
                   </div>
                 )}
-                <div className="grid gap-2 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <div>
                     <span className="mb-1 block text-[10px] uppercase tracking-wider text-white/35">
                       {t.before}

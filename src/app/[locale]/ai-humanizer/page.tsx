@@ -165,7 +165,7 @@ export default async function AIHumanizerPage({
       </div>
 
       <div className="container-x mt-20 max-w-4xl">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {c.sections.map((s, i) => (
             <Reveal key={s.h} delay={i} as="div">
               <div className="glass tilt h-full rounded-2xl p-6">

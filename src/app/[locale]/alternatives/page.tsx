@@ -63,7 +63,7 @@ export default async function AlternativesHub({
         </p>
       </Reveal>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-2">
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {alternatives.map((a, i) => (
           <Reveal key={a.slug} delay={i} as="div">
             <Link

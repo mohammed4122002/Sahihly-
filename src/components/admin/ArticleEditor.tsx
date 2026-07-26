@@ -191,7 +191,7 @@ export default function ArticleEditor({
   const setBody = (v: string) => set(tab === "en" ? "body_en" : "body_ar", v);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[380px_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[380px_1fr]">
       {/* list */}
       <div className="glass glow-card h-fit overflow-hidden rounded-2xl">
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
@@ -368,7 +368,7 @@ export default function ArticleEditor({
               </span>
             </label>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="block">
                 <span className="mb-1 block text-xs text-white/50">{ar ? "التصنيف" : "Category"}</span>
                 <select

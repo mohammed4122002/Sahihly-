@@ -96,7 +96,7 @@ export default function ManualCheckout({
     });
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* Step 1: pay */}
       <div className="glass-strong glow-card rounded-3xl p-6">
         <div className="flex items-center gap-2">

@@ -189,7 +189,7 @@ export default async function HomePage({
               {dict.features.subtitle}
             </p>
           </Reveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {dict.features.items.map((f, i) => {
               const Icon = featureIcons[i] ?? Sparkles;
               return (
@@ -217,7 +217,7 @@ export default async function HomePage({
             </div>
             <h2 className="mt-3 text-center text-3xl font-bold sm:text-4xl">{dict.how.title}</h2>
           </Reveal>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {dict.how.steps.map((s, i) => (
               <Reveal key={s.title} delay={i} as="div">
                 <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6">
@@ -249,7 +249,7 @@ export default async function HomePage({
               {dict.useCases.subtitle}
             </p>
           </Reveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {dict.useCases.items.map((u, i) => {
               const Icon = useCaseIcons[i] ?? Users;
               return (
@@ -335,7 +335,7 @@ export default async function HomePage({
               {dict.blog.title}
             </h2>
           </Reveal>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
             {latestPosts.map((post, i) => (
               <Reveal key={post.slug} delay={i} as="div">
                 <Link

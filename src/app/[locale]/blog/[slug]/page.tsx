@@ -145,7 +145,7 @@ export default async function PostPage({
           <h2 className="text-lg font-semibold text-white/80">
             {locale === "ar" ? "اقرأ أيضاً" : "Keep reading"}
           </h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {related.map((p) => (
               <Link
                 key={p.slug}

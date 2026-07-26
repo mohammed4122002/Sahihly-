@@ -55,7 +55,7 @@ export default async function AdminUsersPage({
         </p>
       )}
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_340px]">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_340px]">
         <div className="glass glow-card overflow-hidden rounded-2xl">
           <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
             <h2 className="text-sm font-semibold text-white/80">

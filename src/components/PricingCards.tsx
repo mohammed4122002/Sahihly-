@@ -66,7 +66,7 @@ export default function PricingCards({
         </button>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {p.plans.map((plan) => {
           const popular = plan.id === "pro";
           const price =

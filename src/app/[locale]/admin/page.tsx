@@ -268,7 +268,7 @@ export default async function AdminPage({
       </div>
 
       {/* charts */}
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="glass glow-card rounded-2xl p-5">
           <h2 className="text-sm font-semibold text-white/80">{t.charts.signups}</h2>
           <div className="mt-4">
@@ -290,7 +290,7 @@ export default async function AdminPage({
       </div>
 
       {/* tables */}
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="glass glow-card overflow-hidden rounded-2xl">
           <h2 className="border-b border-white/10 px-5 py-4 text-sm font-semibold text-white/80">
             {t.tables.recentOrders}

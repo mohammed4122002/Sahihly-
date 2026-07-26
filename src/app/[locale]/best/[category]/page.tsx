@@ -136,7 +136,7 @@ export default async function RoundupPage({
                 {t.bestFor[locale]}
               </p>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <ul className="space-y-1.5">
                   {t.pros[locale].map((p) => (
                     <li key={p} className="flex items-start gap-2 text-sm text-white/70">

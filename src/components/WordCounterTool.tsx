@@ -50,7 +50,7 @@ export default function WordCounterTool({ labels }: { labels: Labels }) {
 
   return (
     <div className="glow-card glass-strong rounded-3xl p-4 sm:p-6">
-      <div className="grid gap-4 lg:grid-cols-[1fr_260px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_260px]">
         <div className="flex flex-col">
           <textarea
             value={text}

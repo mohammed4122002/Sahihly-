@@ -68,7 +68,7 @@ export default async function AboutPage({
         <p className="mt-4 leading-relaxed text-white/55">{c.story}</p>
       </Reveal>
 
-      <div className="mt-12 grid gap-4 sm:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {c.values.map((v, i) => {
           const Icon = icons[v.icon as keyof typeof icons];
           return (

@@ -166,7 +166,7 @@ export default async function DashboardPage({
         ))}
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* activity chart */}
         <div className="glass glow-card rounded-2xl p-5 lg:col-span-2">
           <h2 className="text-sm font-semibold text-white/80">
