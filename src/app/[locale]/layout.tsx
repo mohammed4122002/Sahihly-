@@ -123,7 +123,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${spaceGrotesk.variable} ${plexArabic.variable} h-full`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${plexArabic.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -139,7 +139,7 @@ export default async function LocaleLayout({
         />
         {/* AdSense loads client-side only after cookie consent (ConsentBanner) */}
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-screen flex-col">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-violet-400 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-ocean-900"

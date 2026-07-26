@@ -50,9 +50,18 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* A visually-hidden skip link is 1px wide with a -1px margin, which parks it
+   just past the inline edge. That single pixel is enough to make the whole
+   document horizontally pannable on touch devices, so anchor it inside the
+   viewport while it is hidden. The focus styles still position it normally. */
+a.sr-only:not(:focus) {
+  margin: 0;
+  top: 0;
+  inset-inline-start: 0;
 }
 
 /* Arabic / RTL typography */
@@ -181,9 +190,16 @@ h1, h2, h3, .font-display {
   transition: opacity 0.35s;
   pointer-events: none;
 }
-.glass,
-.glass-strong {
-  position: relative;
+/* Declared inside the components layer on purpose. Unlayered CSS outranks
+   anything in @layer regardless of specificity, so as a plain rule this beat
+   Tailwind's own position utilities: the header gains .glass-strong as soon
+   as you scroll, which flipped `sticky` to `relative` and let the navbar
+   scroll away instead of staying pinned. In this layer the utilities win. */
+@layer components {
+  .glass,
+  .glass-strong {
+    position: relative;
+  }
 }
 .glass:hover::after,
 .glass-strong:hover::after {

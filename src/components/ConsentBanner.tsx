@@ -58,33 +58,41 @@ export default function ConsentBanner({ locale }: { locale: Locale }) {
   return (
     <AnimatePresence>
       {visible && (
+        // Anchored to the top so it is seen immediately instead of hiding
+        // below the fold. Positioned with a centred max-width inside a
+        // full-width wrapper rather than start/end insets: a fixed element
+        // is not clipped by the page's overflow rules, so any inset that
+        // resolves wider than the viewport leaves the whole page draggable
+        // sideways on phones.
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
+          exit={{ opacity: 0, y: -40 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="glass-strong glow-card fixed bottom-4 start-4 end-4 z-[75] mx-auto max-w-lg rounded-2xl p-5 sm:start-auto sm:end-6"
+          className="fixed inset-x-0 top-0 z-[75] flex w-full justify-center p-3 sm:p-4"
           role="dialog"
           aria-live="polite"
         >
-          <div className="flex items-start gap-3">
-            <Cookie size={18} className="mt-0.5 shrink-0 text-violet-300" />
-            <p className="text-sm leading-relaxed text-white/75">
-              {ar
-                ? "نستخدم كوكيز أساسية لتشغيل الموقع، وكوكيز إعلانات (Google AdSense) فقط بموافقتك. "
-                : "We use essential cookies to run the site, and advertising cookies (Google AdSense) only with your consent. "}
-              <a href="/privacy" className="text-violet-300 underline hover:text-violet-200">
-                {ar ? "سياسة الخصوصية" : "Privacy Policy"}
-              </a>
-            </p>
-          </div>
-          <div className="mt-4 flex gap-2">
-            <button onClick={accept} className="btn-primary flex-1 rounded-full px-4 py-2 text-sm">
-              {ar ? "موافق" : "Accept"}
-            </button>
-            <button onClick={decline} className="btn-ghost flex-1 rounded-full px-4 py-2 text-sm">
-              {ar ? "الأساسية فقط" : "Essential only"}
-            </button>
+          <div className="glass-strong glow-card w-full max-w-lg rounded-2xl p-5">
+            <div className="flex items-start gap-3">
+              <Cookie size={18} className="mt-0.5 shrink-0 text-violet-300" />
+              <p className="text-sm leading-relaxed text-white/75">
+                {ar
+                  ? "نستخدم كوكيز أساسية لتشغيل الموقع، وكوكيز إعلانات (Google AdSense) فقط بموافقتك. "
+                  : "We use essential cookies to run the site, and advertising cookies (Google AdSense) only with your consent. "}
+                <a href="/privacy" className="text-violet-300 underline hover:text-violet-200">
+                  {ar ? "سياسة الخصوصية" : "Privacy Policy"}
+                </a>
+              </p>
+            </div>
+            <div className="mt-4 flex gap-2">
+              <button onClick={accept} className="btn-primary flex-1 rounded-full px-4 py-2 text-sm">
+                {ar ? "موافق" : "Accept"}
+              </button>
+              <button onClick={decline} className="btn-ghost flex-1 rounded-full px-4 py-2 text-sm">
+                {ar ? "الأساسية فقط" : "Essential only"}
+              </button>
+            </div>
           </div>
         </motion.div>
       )}

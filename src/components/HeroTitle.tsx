@@ -25,20 +25,25 @@ export default function HeroTitle({
           {line.words.map((word) => {
             const i = index++;
             return (
-              <motion.span
-                key={i}
-                className="inline-block"
-                initial={{ opacity: 0, y: 18, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{
-                  duration: 0.55,
-                  delay: 0.15 + i * 0.07,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              >
-                {word}
-                {" "}
-              </motion.span>
+              // The separator has to be an ordinary breakable space sitting
+              // BETWEEN the spans. A non-breaking space (or one tucked inside
+              // an inline-block) gives the line no wrap opportunity, so the
+              // long Arabic headline ran past the viewport and left the whole
+              // page draggable sideways on phones.
+              <span key={i}>
+                <motion.span
+                  className="inline-block"
+                  initial={{ opacity: 0, y: 18, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  transition={{
+                    duration: 0.55,
+                    delay: 0.15 + i * 0.07,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  {word}
+                </motion.span>{" "}
+              </span>
             );
           })}
         </span>
