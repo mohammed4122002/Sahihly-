@@ -33,14 +33,23 @@ export default function UserRow({
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const suspended = user.status === "suspended";
+  // Mirrors the <th> headings so each cell can label itself once the
+  // table collapses into stacked cards on phones (see .stack-table).
+  const L = {
+    email: ar ? "البريد" : "Email",
+    plan: ar ? "الخطة" : "Plan",
+    role: ar ? "الدور" : "Role",
+    status: ar ? "الحالة" : "Status",
+    actions: ar ? "إجراءات" : "Actions",
+  };
 
   return (
     <tr className="border-t border-white/5">
-      <td className="px-4 py-3">
+      <td data-label={L.email} className="px-4 py-3">
         <div className="text-white/85">{user.email}</div>
         {user.full_name && <div className="text-xs text-white/40">{user.full_name}</div>}
       </td>
-      <td className="px-4 py-3">
+      <td data-label={L.plan} className="px-4 py-3">
         <select
           defaultValue={user.plan}
           disabled={pending}
@@ -52,7 +61,7 @@ export default function UserRow({
           <option value="ultimate">ultimate</option>
         </select>
       </td>
-      <td className="px-4 py-3">
+      <td data-label={L.role} className="px-4 py-3">
         <select
           defaultValue={user.role}
           disabled={pending || isOwnerEmail}
@@ -66,7 +75,7 @@ export default function UserRow({
           <option value="admin">{ar ? "أدمن" : "admin"}</option>
         </select>
       </td>
-      <td className="px-4 py-3">
+      <td data-label={L.status} className="px-4 py-3">
         <span
           className={`rounded-full border px-2 py-0.5 text-[11px] ${
             suspended
@@ -77,7 +86,7 @@ export default function UserRow({
           {suspended ? (ar ? "موقوف" : "suspended") : ar ? "نشط" : "active"}
         </span>
       </td>
-      <td className="px-4 py-3">
+      <td data-label={L.actions} className="px-4 py-3">
         <div className="flex items-center justify-end gap-1">
           {pending && <Loader2 size={14} className="animate-spin text-white/40" />}
           {isOwnerEmail ? (

@@ -298,8 +298,8 @@ export default async function AdminPage({
           {d.recentOrders.length === 0 ? (
             <p className="px-5 py-10 text-center text-sm text-white/40">{t.tables.empty}</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="sm:overflow-x-auto">
+              <table className="stack-table w-full text-sm">
                 <thead>
                   <tr className="text-start text-xs text-white/40">
                     {t.tables.orderCols.map((c) => (
@@ -310,19 +310,19 @@ export default async function AdminPage({
                 <tbody>
                   {d.recentOrders.map((o) => (
                     <tr key={o.merchant_trade_no} className="border-t border-white/5">
-                      <td className="px-5 py-3 font-mono text-xs text-white/60">
+                      <td data-label={t.tables.orderCols[0]} className="px-5 py-3 font-mono text-xs text-white/60">
                         {o.merchant_trade_no.slice(0, 12)}…
                       </td>
-                      <td className="px-5 py-3 capitalize">{o.plan}</td>
-                      <td className="px-5 py-3 tabular-nums">${Number(o.amount).toFixed(0)}</td>
-                      <td className="px-5 py-3">
+                      <td data-label={t.tables.orderCols[1]} className="px-5 py-3 capitalize">{o.plan}</td>
+                      <td data-label={t.tables.orderCols[2]} className="px-5 py-3 tabular-nums">${Number(o.amount).toFixed(0)}</td>
+                      <td data-label={t.tables.orderCols[3]} className="px-5 py-3">
                         <span
                           className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] ${STATUS_STYLES[o.status] ?? STATUS_STYLES.created}`}
                         >
                           {t.status[o.status as keyof typeof t.status] ?? o.status}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-xs text-white/50">
+                      <td data-label={t.tables.orderCols[4]} className="px-5 py-3 text-xs text-white/50">
                         {formatDate(o.created_at, locale)}
                       </td>
                     </tr>
@@ -340,8 +340,8 @@ export default async function AdminPage({
           {d.recentUsers.length === 0 ? (
             <p className="px-5 py-10 text-center text-sm text-white/40">{t.tables.empty}</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="sm:overflow-x-auto">
+              <table className="stack-table w-full text-sm">
                 <thead>
                   <tr className="text-xs text-white/40">
                     {t.tables.userCols.map((c) => (
@@ -352,9 +352,9 @@ export default async function AdminPage({
                 <tbody>
                   {d.recentUsers.map((u) => (
                     <tr key={u.email ?? u.created_at} className="border-t border-white/5">
-                      <td className="px-5 py-3 text-white/80">{u.email}</td>
-                      <td className="px-5 py-3 capitalize">{u.plan}</td>
-                      <td className="px-5 py-3 text-xs text-white/50">
+                      <td data-label={t.tables.userCols[0]} className="px-5 py-3 break-all text-white/80">{u.email}</td>
+                      <td data-label={t.tables.userCols[1]} className="px-5 py-3 capitalize">{u.plan}</td>
+                      <td data-label={t.tables.userCols[2]} className="px-5 py-3 text-xs text-white/50">
                         {formatDate(u.created_at, locale)}
                       </td>
                     </tr>

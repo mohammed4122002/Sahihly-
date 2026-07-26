@@ -62,8 +62,8 @@ export default async function AdminUsersPage({
               {ar ? "كل المستخدمين" : "All users"} ({users.length})
             </h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="sm:overflow-x-auto">
+            <table className="stack-table w-full text-sm">
               <thead>
                 <tr className="text-xs text-white/40">
                   <th className="px-4 py-2.5 text-start font-medium">{ar ? "البريد" : "Email"}</th>
