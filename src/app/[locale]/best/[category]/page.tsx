@@ -108,6 +108,54 @@ export default async function RoundupPage({
         </p>
       </Reveal>
 
+      <Reveal delay={1}>
+        <section className="mt-12 space-y-8">
+          {(ar
+            ? [
+                {
+                  h: "كيف اختبرنا هذه الأدوات",
+                  p: "مرّرنا على كل أداة هنا نصوصاً حقيقية بالعربية والإنجليزية: مقاطع كتبها بشر، ومخرجات نماذج غير محرَّرة، ومخرجات حُرِّرت بكثافة — وهي الفئة الأصعب على كل كاشف. ونظرنا إلى ما تفعله الأداة عند الحدود لا في الحالة السهلة: كيف تتصرّف تحت ٢٠٠ كلمة، وهل تُبلّغ عن ثقتها، وهل تشرح نتيجتها بما يكفي لتتصرّف به. ولم نعتمد على صفحات الميزات في تقييم أي أداة.",
+                },
+                {
+                  h: "لماذا الترتيب ليس ترتيباً واحداً",
+                  p: "أفضل أداة تعتمد على من يسأل. فقسم جامعي يشتري تكاملات وإدارة مقاعد يحتاج منتجاً مختلفاً كلياً عن كاتب مستقلّ يريد فحص فقرة الآن. ولذلك يذكر كل مُدخل لمن يصلح تحديداً، وقد تكون الأداة الأولى هنا خياراً سيئاً لحالتك بينما تكون الرابعة صحيحة تماماً. ابدأ من قيدك أنت: اللغة، والميزانية، وما تحتاجه بعد النتيجة.",
+                },
+                {
+                  h: "الإفصاح: نحن طرف في هذه القائمة",
+                  p: "صحيحلي أداتنا، وهي مدرجة هنا. لا نأخذ عمولة عن أي ترشيح ولا توجد روابط إحالة أو مواضع مدفوعة في هذه الصفحة — وهذا يستحق الذكر في مجال تُرتَّب فيه حصة كبيرة من محتوى «الأفضل» حسب العائد لا الجودة. ومع ذلك فنحن لسنا محايدين، فاقرأ ما نقوله عن أنفسنا بحذر أكبر مما تقرأ به بقية الصفحة، وتحقّق من الأدوات الأخرى بنفسك.",
+                },
+                {
+                  h: "ما لا تستطيعه أي أداة في هذه القائمة",
+                  p: "لا واحدة منها تُثبت التأليف. فكلها تُعيد احتمالاً مشتقاً من مدى قابلية النص للتوقّع، وكلها أقل موثوقية في المقاطع القصيرة، وكلها تُخطئ في حقّ الكاتبين بلغة ثانية أكثر من الناطقين الأصليين. وأي أداة تَعِد بكشف مضمون أو تهرّب مضمون أو بتسمية النموذج الذي كتب نصاً تدّعي ما لا يستطيعه أحد.",
+                },
+              ]
+            : [
+                {
+                  h: "How we tested these tools",
+                  p: "Every tool here was run against real text in both Arabic and English: passages written by people, unedited model output, and heavily edited model output — the hardest category for any detector. We looked at what each tool does at the edges rather than in the easy case: how it behaves under 200 words, whether it reports its own confidence, and whether it explains a result well enough to act on. No tool here was assessed from its feature page.",
+                },
+                {
+                  h: "Why there is no single ranking",
+                  p: "The best tool depends on who is asking. A university department buying integrations and seat management needs a completely different product from a freelance writer who wants a paragraph checked right now. So each entry says who it is specifically for, and the first tool here may be a poor choice for your situation while the fourth is exactly right. Start from your own constraint: language, budget, and what you need after the score.",
+                },
+                {
+                  h: "Disclosure: we are in this list",
+                  p: "Sahihly is our tool and it is listed here. We take no commission on any recommendation and there are no affiliate links or paid placements on this page — worth stating in a category where a large share of best-of content is ordered by payout rather than quality. We are still not neutral, so read what we say about ourselves more sceptically than the rest of the page, and check the other tools yourself.",
+                },
+                {
+                  h: "What no tool in this list can do",
+                  p: "None of them proves authorship. All return a probability derived from how predictable the text is, all are less reliable on short passages, and all misjudge second-language writers more often than native speakers. Any tool promising guaranteed detection, guaranteed evasion, or the ability to name which model wrote something is claiming what nobody can deliver.",
+                },
+              ]
+          ).map((sec) => (
+            <div key={sec.h}>
+              <h2 className="text-xl font-bold">{sec.h}</h2>
+              <p className="mt-3 leading-relaxed text-white/65">{sec.p}</p>
+            </div>
+          ))}
+        </section>
+      </Reveal>
+
       <div className="mt-10 space-y-4">
         {r.tools.map((t, i) => (
           <Reveal key={t.name} delay={Math.min(i, 5)} as="div">

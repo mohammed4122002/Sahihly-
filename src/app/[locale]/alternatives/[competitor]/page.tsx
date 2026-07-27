@@ -79,6 +79,14 @@ export default async function AlternativePage({
           q: `هل أنقل بياناتي من ${a.target}؟`,
           a: `لا حاجة. الأدوات لا تحتفظ بمشاريع مترابطة — الصق نصّك مباشرة في صحيحلي وابدأ فوراً.`,
         },
+        {
+          q: `لماذا يعطيني ${a.target} وأداة أخرى نتيجتين مختلفتين؟`,
+          a: `لأنهما نموذجان مختلفان بتدريب وعتبات مختلفة يقدّران الخاصية الغامضة نفسها. والاختلاف الواسع بين أداتين إشارة إلى أن النص يقع في منطقة ملتبسة، لا إلى أن إحداهما معطّلة.`,
+        },
+        {
+          q: `هل يضمن أي بديل تجاوز الكشف؟`,
+          a: `لا، وتعامل مع أي ضمان كهذا كإشارة تحذير. فالكواشف تُحدّث نماذجها باستمرار، ولا يستطيع أحد ضمان نتيجة عند طرف ثالث. نحن لا نقدّم هذا الوعد.`,
+        },
       ]
     : [
         {
@@ -92,6 +100,47 @@ export default async function AlternativePage({
         {
           q: `Do I need to migrate my data from ${a.target}?`,
           a: `No. These tools don't hold linked projects — just paste your text into Sahihly and start immediately.`,
+        },
+        {
+          q: `Why do ${a.target} and another tool give me different scores?`,
+          a: `Because they are different models with different training and thresholds, all estimating the same fuzzy property. Wide disagreement between two tools signals that the text sits in an ambiguous zone — not that one of them is broken.`,
+        },
+        {
+          q: `Does any alternative guarantee it will pass detection?`,
+          a: `No, and treat any such guarantee as a warning sign. Detectors update their models continuously and nobody can guarantee an outcome at a third party. We do not make that promise.`,
+        },
+      ];
+
+
+  // Applies to every alternatives page: the questions someone mid-switch is
+  // actually weighing, rather than another restatement of the ranking above.
+  const guide = ar
+    ? [
+        {
+          h: "كيف رتّبنا هذه الخيارات",
+          p: `لا يوجد ترتيب واحد صحيح لبدائل ${a.target}، لأن سبب مغادرتك يحدّد ما يناسبك. فمن يغادر بسبب التكلفة يحتاج شيئاً آخر تماماً عمّن يغادر لأن الأداة لم تدعم لغته. ولذلك يذكر كل خيار أدناه لمن يصلح تحديداً بدل ادعاء تفوّق عام. ونحن أحد الخيارات المدرجة، فاقرأ ترشيحنا لأنفسنا بالشكّ الذي يستحقّه — وتحقّق من الباقي بنفسك.`,
+        },
+        {
+          h: "ما الذي تخسره حين تبدّل",
+          p: "تحقّق من هذا قبل الانتقال لا بعده. فالسجلّ المحفوظ والتقارير السابقة لا تنتقل بين هذه الأدوات. والتكاملات مع معالج النصوص أو نظام التعلّم قد تحتاج موافقة جديدة من قسم آخر. والأهم: الأداة الجديدة ستصنّف النص نفسه بدرجة مختلفة، لأن كل كاشف يستخدم نموذجاً وعتبات مختلفة — فأي عتبة داخلية عايرتها على الأرقام القديمة صارت بلا معنى وتحتاج ضبطاً من جديد.",
+        },
+        {
+          h: "متى يكون البقاء هو القرار الصحيح",
+          p: `إن كنت تحتاج مطابقة انتحال أمام مصادر منشورة، أو تكاملات مؤسسية وإدارة مقاعد، أو تغطية عبر لغات كثيرة، فقد يظل ${a.target} أو منافس مؤسسي أنسب لك منّا. نحن نغطي لغتين بعمق ولا ندّعي اتساعاً لا نملكه. والتوصية التي لا تقول لك «ابقَ» حين ينبغي ذلك لا تستحق الثقة حين تقول «بدّل».`,
+        },
+      ]
+    : [
+        {
+          h: "How we ordered these options",
+          p: `There is no single correct ranking of ${a.target} alternatives, because the reason you are leaving decides what suits you. Someone leaving over cost needs something quite different from someone leaving because the tool never really supported their language. So each option below says who it is specifically for rather than claiming to be best overall. We are one of the listed options, so read our recommendation of ourselves with the scepticism it deserves — and check the others yourself.`,
+        },
+        {
+          h: "What you lose when you switch",
+          p: "Check this before you move rather than after. Saved history and past reports do not transfer between these tools. Integrations into a word processor or an LMS may need fresh approval from another department. And most importantly, the new tool will score the same text differently, because every detector uses a different model and different thresholds — so any internal threshold you had calibrated against the old numbers is now meaningless and needs setting again.",
+        },
+        {
+          h: "When staying is the right call",
+          p: `If you need plagiarism matching against published sources, institutional integrations and seat management, or coverage across many languages, then ${a.target} or an enterprise competitor may still fit you better than we do. We cover two languages in depth and do not claim breadth we lack. A recommendation that will not tell you to stay when it should is not worth trusting when it tells you to switch.`,
         },
       ];
 
@@ -158,6 +207,17 @@ export default async function AlternativePage({
             ))}
           </ul>
         </div>
+      </Reveal>
+
+      <Reveal delay={1}>
+        <section className="mt-12 space-y-8">
+          {guide.map((g) => (
+            <div key={g.h}>
+              <h2 className="text-xl font-bold">{g.h}</h2>
+              <p className="mt-3 leading-relaxed text-white/65">{g.p}</p>
+            </div>
+          ))}
+        </section>
       </Reveal>
 
       {/* options */}
