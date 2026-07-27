@@ -26,6 +26,30 @@ const C = {
     h1: "Contact us",
     sub: "Questions, feedback, partnership ideas, or a problem to report — we read everything and reply fast.",
     email: "Or email us directly:",
+    routesTitle: "What to write to us about",
+    routes: [
+      {
+        h: "Support and account problems",
+        p: "Anything that stops you using the product — a run that fails, a payment that went through but did not upgrade your plan, a login you cannot recover. Include the email address on the account and roughly when it happened; that is usually enough for us to find it without a back-and-forth. We aim to reply within one business day and we do not use a ticket queue that swallows messages.",
+      },
+      {
+        h: "Billing, refunds, and cancellation",
+        p: "Write to us before disputing a charge and we will almost always sort it out faster than your bank will. If a subscription was activated in error, if you were charged after cancelling, or if the tool clearly did not do what the pricing page said it would, say so plainly and we will refund it. Cancelling is self-serve from your dashboard and takes effect at the end of the paid period.",
+      },
+      {
+        h: "Reporting a wrong result",
+        p: "This one genuinely helps us. If the detector flagged writing you know is your own — particularly if you write in Arabic or in a second language — send us the passage and tell us what it got wrong. Calibration improves from real examples of false positives far more than from anything else, and we would rather hear about them than not.",
+      },
+      {
+        h: "Press, partnerships, and API access",
+        p: "For interviews, research collaboration, integration requests, or bulk and institutional use, describe what you have in mind and the scale involved. We are a small team, so we answer honestly about what we can and cannot support rather than scheduling a call to find out.",
+      },
+      {
+        h: "Privacy and data requests",
+        p: "Requests to export or delete your data, questions about how something is processed, or anything else covered by our privacy policy should go to privacy@sahihly.com so they are handled on the right track. You do not need to explain why, and we respond within one month at the outside — usually far sooner.",
+      },
+    ],
+
     labels: {
       name: "Name",
       email: "Email",
@@ -41,6 +65,30 @@ const C = {
     h1: "تواصل معنا",
     sub: "أسئلة، ملاحظات، أفكار شراكة، أو مشكلة تبلّغ عنها — نقرأ كل شيء ونرد بسرعة.",
     email: "أو راسلنا مباشرة:",
+    routesTitle: "بماذا تراسلنا",
+    routes: [
+      {
+        h: "الدعم ومشاكل الحساب",
+        p: "أي شيء يمنعك من استخدام المنتج — محاولة تفشل، أو دفعة تمّت ولم تُرقّ خطتك، أو تسجيل دخول لا تستطيع استعادته. أرفق البريد المرتبط بالحساب ووقت الحدوث تقريباً؛ فهذا يكفينا عادةً لإيجاده دون أخذ وردّ. ونهدف للردّ خلال يوم عمل واحد، ولا نستخدم طابور تذاكر يبتلع الرسائل.",
+      },
+      {
+        h: "الفوترة والاسترداد والإلغاء",
+        p: "راسلنا قبل الاعتراض على أي خصم وسنحلّها غالباً أسرع من بنكك. فإن فُعِّل اشتراك بالخطأ، أو خُصِم منك بعد الإلغاء، أو كانت الأداة بوضوح لم تفعل ما وعدت به صفحة الأسعار، فقل ذلك صراحةً وسنُعيد المبلغ. والإلغاء ذاتي من لوحتك ويسري بنهاية المدة المدفوعة.",
+      },
+      {
+        h: "الإبلاغ عن نتيجة خاطئة",
+        p: "هذه تساعدنا فعلاً. إن صنّف الكاشف كتابةً تعرف أنها لك — خاصة إن كنت تكتب بالعربية أو بلغة ثانية — فأرسل لنا المقطع وأخبرنا بما أخطأ فيه. فالمعايرة تتحسّن من أمثلة حقيقية للنتائج الخاطئة أكثر بكثير من أي شيء آخر، ونفضّل أن نسمع عنها على ألا نسمع.",
+      },
+      {
+        h: "الصحافة والشراكات والوصول البرمجي",
+        p: "للمقابلات أو التعاون البحثي أو طلبات التكامل أو الاستخدام المؤسسي وبالجملة، صِف ما تفكّر فيه والحجم المطلوب. نحن فريق صغير، فنجيب بصدق عمّا نستطيع دعمه وما لا نستطيع بدل جدولة مكالمة لنكتشف ذلك.",
+      },
+      {
+        h: "الخصوصية وطلبات البيانات",
+        p: "طلبات تصدير بياناتك أو حذفها، والأسئلة عن كيفية معالجة شيء ما، وكل ما تغطّيه سياسة الخصوصية، تُرسَل إلى privacy@sahihly.com لتُعالَج في المسار الصحيح. ولست مضطراً لشرح السبب، ونردّ خلال شهر كحدّ أقصى — وغالباً أسرع بكثير.",
+      },
+    ],
+
     labels: {
       name: "الاسم",
       email: "البريد الإلكتروني",
@@ -88,7 +136,21 @@ export default async function ContactPage({
       </Reveal>
 
       <Reveal delay={2}>
-        <p className="mt-6 flex items-center justify-center gap-2 text-sm text-white/50">
+        <section className="mt-14">
+          <h2 className="text-2xl font-bold">{c.routesTitle}</h2>
+          <div className="mt-6 space-y-6">
+            {c.routes.map((r) => (
+              <div key={r.h}>
+                <h3 className="font-semibold text-white/90">{r.h}</h3>
+                <p className="mt-2 leading-relaxed text-white/65">{r.p}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal delay={2}>
+        <p className="mt-10 flex items-center justify-center gap-2 text-sm text-white/50">
           <Mail size={15} className="text-violet-300" />
           {c.email}{" "}
           <a href="mailto:hello@sahihly.com" className="text-violet-300 hover:text-violet-200">

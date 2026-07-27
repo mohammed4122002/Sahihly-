@@ -29,6 +29,33 @@ const content = {
       { icon: "shield", title: "Honest about limits", body: "No detector is perfect. We show scores as guidance, never as accusations." },
       { icon: "heart", title: "Built with care", body: "Crafted from Gaza for the world, with an obsession for quality and fairness." },
     ],
+    sectionsTitle: "How we work",
+    sections: [
+      {
+        h: "What we actually build",
+        p: "Sahihly is a two-part tool. The detector estimates how machine-like a passage reads and shows you the specific sentences producing that judgement, alongside a style report covering rhythm variance, vocabulary range, and the filler phrases models overuse. The humanizer then loosens that rhythm without touching your terminology, and re-checks the result automatically. Both halves run on the same engine in Arabic and English, and both are free to try without an account.",
+      },
+      {
+        h: "How the engine reaches a score",
+        p: "We combine deterministic statistical analysis with a language-model judgement and blend the two, rather than relying on either alone. The statistical half measures things that can be counted — sentence-length variance, lexical diversity, average length, known machine-typical phrasing. The model half reads the passage the way a person would. Where the two disagree sharply, that disagreement is itself information, and it feeds the confidence rating we publish with every result. Long texts are split into chunks, analysed in parallel, and merged.",
+      },
+      {
+        h: "Why we publish a confidence rating",
+        p: "Because a bare percentage hides how much the tool actually knows. Under roughly three hundred words there is not enough variation to measure reliably, and a score on a short passage deserves far less weight than the same score on a long one. Most tools present both identically. We would rather tell you when we are guessing, even though it makes the product look less certain than competitors that do not.",
+      },
+      {
+        h: "Where we know we fall short",
+        p: "Dialectal Arabic is harder for us than Modern Standard Arabic, because the training material is thinner and conventions vary widely by region. Heavily edited generated text evades detection here as it does everywhere. Very short passages are unreliable. And like every detector, we are more likely to misjudge writing by second-language authors — a bias we work to reduce and cannot claim to have eliminated. We would rather list these than let a confident interface imply precision we do not have.",
+      },
+      {
+        h: "Who is behind this",
+        p: "A small independent team, building from Gaza. We are not venture-funded and we answer support email ourselves. That shapes the product: we ship narrow features properly rather than broad ones badly, and we decline the parts of this market — surveillance tooling, guarantees of beating detectors — that we think do more harm than good.",
+      },
+      {
+        h: "How we make money",
+        p: "Subscriptions, and advertising on some pages. That is the whole list. We do not sell your data, we do not train models on the text you submit, and we do not take commissions for recommending other tools — including in our comparison pages, where we say plainly where competitors beat us. If that ever changes, it will be stated here before it happens.",
+      },
+    ],
     policyTitle: "Usage Policy",
     policyBody:
       "Sahihly is a style- and quality-review tool for improving your own writing. It is not designed, sold, or endorsed as a way to defeat academic-integrity systems such as Turnitin, or to misrepresent authorship. Detection scores are probabilistic estimates and must not be used as sole evidence of misconduct. By using Sahihly you agree to follow your institution's and employer's policies, and to use the tool responsibly and honestly. We may refuse service for misuse.",
@@ -42,6 +69,33 @@ const content = {
       { icon: "globe", title: "ثنائي اللغة بالتصميم", body: "العربية والإنجليزية متساويتان هنا — نفس المحرّك ونفس الجودة." },
       { icon: "shield", title: "صادقون حول الحدود", body: "لا كاشف مثالي. نعرض النتائج كإرشاد، لا كاتهامات." },
       { icon: "heart", title: "صُنع بعناية", body: "مصنوع من غزة للعالم، بشغفٍ للجودة والإنصاف." },
+    ],
+    sectionsTitle: "كيف نعمل",
+    sections: [
+      {
+        h: "ما الذي نبنيه فعلاً",
+        p: "صحيحلي أداة من شقّين. الكاشف يقدّر كم يبدو المقطع آلياً ويعرض لك الجمل المحدّدة التي أنتجت ذلك الحكم، إلى جانب تقرير أسلوب يغطّي تباين الإيقاع ومدى المفردات وعبارات الحشو التي تُفرط النماذج في استخدامها. ثم يليّن المُنسّن ذلك الإيقاع دون المساس بمصطلحاتك، ويعيد فحص النتيجة تلقائياً. ويعمل الشقّان على المحرّك نفسه بالعربية والإنجليزية، وكلاهما مجاني للتجربة بلا حساب.",
+      },
+      {
+        h: "كيف يصل المحرّك إلى النتيجة",
+        p: "نجمع تحليلاً إحصائياً حتمياً مع حكم نموذج لغوي ونمزج الاثنين، بدل الاعتماد على أحدهما وحده. فالشقّ الإحصائي يقيس ما يمكن عدّه — تباين أطوال الجمل والتنوّع المعجمي ومتوسّط الطول والصياغات الآلية المعروفة. والشقّ النموذجي يقرأ المقطع كما يقرؤه إنسان. وحيث يختلف الاثنان بحدّة، فذلك الاختلاف نفسه معلومة، ويغذّي تقييم الثقة الذي ننشره مع كل نتيجة. والنصوص الطويلة تُقسَّم وتُحلَّل بالتوازي ثم تُدمَج.",
+      },
+      {
+        h: "لماذا ننشر تقييماً للثقة",
+        p: "لأن النسبة المجرّدة تُخفي كم تعرف الأداة فعلاً. فتحت ثلاثمئة كلمة تقريباً لا يوجد تباين كافٍ للقياس الموثوق، والنتيجة على مقطع قصير تستحقّ وزناً أقل بكثير من النتيجة نفسها على نصّ طويل. ومعظم الأدوات تعرض الحالتين بالشكل ذاته. ونحن نفضّل إخبارك حين نخمّن، وإن جعل ذلك المنتج يبدو أقل يقيناً من منافسين لا يفعلون.",
+      },
+      {
+        h: "أين نعرف أننا نقصّر",
+        p: "العربية العامّية أصعب علينا من الفصحى، لأن المادة التدريبية أرقّ والأعراف تتباين بشدة بين المناطق. والنص المولّد المحرَّر بكثافة يفلت من الكشف هنا كما يفلت في كل مكان. والمقاطع القصيرة جداً غير موثوقة. وككل كاشف، احتمال خطئنا أعلى مع كتابة أصحاب اللغة الثانية — انحياز نعمل على تقليله ولا ندّعي أننا أزلناه. ونفضّل سرد هذه على أن توحي واجهة واثقة بدقة لا نملكها.",
+      },
+      {
+        h: "من خلف هذا",
+        p: "فريق صغير مستقل، يبني من غزة. لسنا مموَّلين استثمارياً ونردّ على بريد الدعم بأنفسنا. وهذا يشكّل المنتج: نُطلق ميزات ضيّقة بإتقان بدل واسعة برداءة، ونرفض من هذا السوق أجزاءه — أدوات المراقبة وضمانات هزيمة الكواشف — التي نراها تضرّ أكثر مما تنفع.",
+      },
+      {
+        h: "كيف نكسب المال",
+        p: "الاشتراكات، وإعلانات على بعض الصفحات. هذه القائمة كاملة. لا نبيع بياناتك، ولا ندرّب نماذج على النص الذي ترسله، ولا نأخذ عمولات مقابل ترشيح أدوات أخرى — بما في ذلك في صفحات المقارنة، حيث نقول بوضوح أين يتفوّق المنافسون علينا. وإن تغيّر ذلك يوماً، فسيُذكر هنا قبل أن يحدث.",
+      },
     ],
     policyTitle: "سياسة الاستخدام",
     policyBody:
@@ -82,6 +136,20 @@ export default async function AboutPage({
           );
         })}
       </div>
+
+      <Reveal>
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold">{c.sectionsTitle}</h2>
+          <div className="mt-6 space-y-7">
+            {c.sections.map((sec) => (
+              <div key={sec.h}>
+                <h3 className="font-semibold text-white/90">{sec.h}</h3>
+                <p className="mt-2 leading-relaxed text-white/65">{sec.p}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Reveal>
 
       <Reveal>
         <div
