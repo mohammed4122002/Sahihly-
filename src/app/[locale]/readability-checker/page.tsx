@@ -77,8 +77,23 @@ const C = {
         h: "Readability and AI-sounding text",
         p: "AI-generated writing often scores in a narrow middle band, because it produces uniformly medium-length sentences. Human writing varies. If your readability is fine but your text still feels robotic, run it through the AI detector — the style report shows rhythm variety, which readability alone doesn't capture.",
       },
+      {
+        h: "Where readability formulas come from — and what they miss",
+        p: "Scores of this kind descend from mid-century formulas built to grade school textbooks, and they measure exactly two proxies: sentence length and word weight. That is all. They cannot see whether your argument is coherent, whether the paragraph order makes sense, or whether a technical term was the right choice. A page of well-formed nonsense can score beautifully. Use the number to catch sentences that have run away from you, not as a verdict on whether the writing is good.",
+      },
+      {
+        h: "Why a low score is sometimes correct",
+        p: "Academic papers, legal writing, and technical documentation legitimately score low, because precision requires the long qualified sentences and specialist vocabulary the formula penalises. Optimising a methods section up to 70 would mean stripping out the qualifications that make it accurate. Match the target to the audience: general web writing between 50 and 70, instructions and health information higher, scholarly work lower and unapologetically so.",
+      },
+      {
+        h: "Readability in Arabic works differently",
+        p: "The classic formulas count English syllables, which does not transfer. Arabic packs meaning into root-and-pattern morphology, so a single word can carry what English needs three or four to say, and syllable counting on an unvowelled text is guesswork. We estimate word weight from Arabic letter structure instead and detect sentences using Arabic punctuation. The result is a usable relative signal — good for comparing two drafts of your own — rather than a grade-level equivalent imported from English.",
+      },
     ],
     faq: [
+      { q: "Is a higher score always better?", a: "No. Above roughly 80 the writing often reads as clipped and simplistic for an adult audience, and specialist subjects legitimately sit lower. Aim for the band your readers expect rather than the highest number you can reach." },
+      { q: "Does readability affect search rankings?", a: "Not as a direct ranking factor. It affects whether people stay and finish reading, which does matter. Write for comprehension, not for the meter." },
+      { q: "Why did my score drop after I added a heading?", a: "Short fragments like headings are counted as sentences by most formulas, which shifts the averages. Judge the score on the body text, and re-check after any structural change." },
       { q: "Does the readability checker work in Arabic?", a: "Yes. Sentence detection understands Arabic punctuation and word weight is estimated from Arabic vowel letters, so Arabic text gets a meaningful score rather than a broken one." },
       { q: "Is my text uploaded anywhere?", a: "No. The entire calculation runs in your browser with JavaScript — nothing is sent to a server." },
       { q: "What score should I aim for?", a: "For blogs, marketing, and general web writing, aim for 50–70. Academic writing naturally scores lower and that's appropriate for its audience." },
@@ -127,8 +142,23 @@ const C = {
         h: "سهولة القراءة والنص الآلي",
         p: "غالباً ما تقع الكتابة الآلية في نطاق أوسط ضيّق، لأنها تنتج جملاً متوسطة الطول بانتظام، بينما الكتابة البشرية تتنوّع. إن كانت سهولة قراءتك جيدة لكن النص ما زال يبدو روبوتياً، مرّره عبر كاشف الذكاء الاصطناعي — فتقرير الأسلوب يُظهر تنوّع الإيقاع الذي لا تلتقطه سهولة القراءة وحدها.",
       },
+      {
+        h: "من أين جاءت معادلات القراءة — وما الذي تُغفله",
+        p: "تنحدر نتائج من هذا النوع من معادلات منتصف القرن الماضي التي بُنيت لتصنيف كتب المدارس، وهي تقيس مؤشّرين اثنين فقط: طول الجملة وثقل الكلمة. هذا كل شيء. فهي لا ترى ما إذا كانت حجّتك متماسكة، ولا إن كان ترتيب الفقرات منطقياً، ولا إن كان المصطلح التقني اختياراً صائباً. وصفحة من الهراء حسن الصياغة قد تحصل على نتيجة ممتازة. استخدم الرقم لالتقاط الجمل التي أفلتت منك، لا حُكماً على جودة الكتابة.",
+      },
+      {
+        h: "لماذا تكون النتيجة المنخفضة صحيحة أحياناً",
+        p: "الأوراق الأكاديمية والكتابة القانونية والتوثيق التقني تحصل على نتائج منخفضة بحقّ، لأن الدقة تستلزم الجمل الطويلة المقيّدة والمفردات المتخصّصة التي تعاقبها المعادلة. ورفع قسم المنهجية إلى ٧٠ يعني نزع القيود التي تجعله دقيقاً. طابق الهدف مع الجمهور: الكتابة العامة على الويب بين ٥٠ و٧٠، والتعليمات والمعلومات الصحية أعلى، والعمل الأكاديمي أدنى وبلا اعتذار.",
+      },
+      {
+        h: "سهولة القراءة بالعربية تعمل بشكل مختلف",
+        p: "المعادلات الكلاسيكية تعدّ المقاطع الإنجليزية، وهذا لا ينتقل. فالعربية تحزم المعنى في صرف الجذر والوزن، فقد تحمل كلمة واحدة ما تحتاج الإنجليزية ثلاثاً أو أربعاً لقوله، وعدّ المقاطع في نص غير مشكول تخمين. ونحن نقدّر ثقل الكلمة من بنية الحروف العربية بدلاً من ذلك، ونكشف الجمل بالترقيم العربي. والنتيجة إشارة نسبية صالحة للاستخدام — جيدة لمقارنة مسودّتين لك — لا مكافئ لمستوى دراسي مستورد من الإنجليزية.",
+      },
     ],
     faq: [
+      { q: "هل النتيجة الأعلى أفضل دائماً؟", a: "لا. فوق ٨٠ تقريباً تُقرأ الكتابة غالباً مبتورة ومبسّطة لجمهور بالغ، والمواضيع المتخصّصة تقع أدنى بحقّ. استهدف النطاق الذي يتوقّعه قرّاؤك لا أعلى رقم تبلغه." },
+      { q: "هل تؤثّر سهولة القراءة في ترتيب البحث؟", a: "ليست عامل ترتيب مباشراً. لكنها تؤثّر في بقاء الناس وإكمالهم القراءة، وهذا يهمّ فعلاً. اكتب للفهم لا للمؤشّر." },
+      { q: "لماذا انخفضت نتيجتي بعد إضافة عنوان؟", a: "الشذرات القصيرة كالعناوين تُحسب جملاً في معظم المعادلات، فتُزيح المتوسّطات. احكم على النتيجة من متن النص، وأعد الفحص بعد أي تغيير هيكلي." },
       { q: "هل يعمل فاحص سهولة القراءة بالعربية؟", a: "نعم. كاشف الجمل يفهم علامات الترقيم العربية، ويُقدَّر ثقل الكلمة من حروف العلة العربية، فيحصل النص العربي على درجة ذات معنى لا درجة مكسورة." },
       { q: "هل يُرفع نصّي إلى أي مكان؟", a: "لا. كل الحساب يجري داخل متصفحك بجافاسكربت — ولا شيء يُرسل لأي خادم." },
       { q: "ما الدرجة التي أستهدفها؟", a: "للمدوّنات والتسويق والكتابة العامة على الويب استهدف ٥٠–٧٠. الكتابة الأكاديمية تسجّل أقل بطبيعتها وهذا مناسب لجمهورها." },

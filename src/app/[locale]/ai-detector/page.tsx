@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ScanLine, Languages, AlignLeft, ShieldCheck } from "lucide-react";
+import { ScanLine, Languages, AlignLeft, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
@@ -62,11 +62,30 @@ const C = {
         h: "Read scores responsibly",
         p: "No detector on the market is 100% accurate, including this one. Treat every score as guidance for improving style — never as proof of authorship, and never as sole evidence in an academic or professional dispute.",
       },
+      {
+        icon: Gauge,
+        h: "Why length changes how much you should trust it",
+        p: "Every signal the detector reads is statistical, and statistics need volume. Under roughly 300 words there simply is not enough variation in sentence length or vocabulary to measure reliably, so short passages produce noisy results in both directions. That is why we return a confidence rating next to the score instead of a bare percentage: a 70% on 120 words and a 70% on 1,500 words are not the same claim, and a tool that presents them identically is hiding the part you needed to know.",
+      },
+      {
+        icon: Users,
+        h: "Why honest writing sometimes scores high",
+        p: "Detectors measure uniformity, not authorship, so certain kinds of genuine human writing land in the same statistical space as machine text. Second-language writers lean on reliable structures and a narrower vocabulary. Rigid academic formats — five-paragraph essays, lab reports, standard legal templates — are supposed to be uniform. Careful editors polish away the very unevenness that reads as human. None of that is cheating; it is prose that happens to sit in an inconvenient place, and it is the single biggest reason a score must never stand alone as evidence.",
+      },
+      {
+        icon: FileWarning,
+        h: "What the score cannot tell you",
+        p: "It cannot identify which model produced a text, prove that a person did or did not write something, or distinguish AI-assisted editing from AI-generated drafting. It also cannot see intent. What it can do is tell you that a passage reads as mechanically even, and show you the sentences responsible — which is genuinely useful if your goal is to write better, and dangerously insufficient if your goal is to accuse someone.",
+      },
     ],
     faq: [
       { q: "How accurate is the AI detector?", a: "It provides a well-calibrated estimate based on stylistic signals, and shows its reasoning through sentence highlights. Like every detector, it can be wrong — treat results as guidance, not proof." },
       { q: "How many words can I check for free?", a: "Up to 250 words per run and 3 runs per day, no account needed. Pro raises this to 3,000 words per run with unlimited runs." },
       { q: "Does it detect ChatGPT, Claude, and Gemini text?", a: "It detects the stylistic patterns common to AI-generated text in general rather than fingerprinting one specific model — which also makes it robust to new models." },
+      { q: "Why do two detectors give different results for the same text?", a: "Because they are different models with different training data and thresholds, all estimating the same fuzzy property. Wide disagreement usually means the text sits in an ambiguous zone — which is exactly when any single confident-looking percentage is most misleading." },
+      { q: "Can a teacher use this as proof a student cheated?", a: "No, and we ask that you do not. Every detector returns a probability, not a finding, and false positives fall hardest on students writing in a second language. Treat a high score as a reason to have a conversation about the work, never as the conclusion of one." },
+      { q: "Does editing AI text lower the score?", a: "Usually, yes — substantial rewriting breaks up the uniform rhythm the detector keys on. That is also why detection catches unedited output far more reliably than edited output, and another reason scores should be read as guidance about style rather than verdicts about origin." },
+      { q: "Do you store the text I check?", a: "Text submitted anonymously is processed for the analysis and not retained. If you are signed in, analyses are saved to your dashboard history so you can revisit them, and you can delete any entry yourself." },
     ],
     ctaHumanizer: "Text scored high? Rewrite it naturally with the AI Humanizer",
   },
@@ -94,11 +113,30 @@ const C = {
         h: "اقرأ النتائج بمسؤولية",
         p: "لا يوجد كاشف في السوق دقيق ١٠٠٪، بما فيه هذا. اعتبر كل نتيجة إرشاداً لتحسين الأسلوب — لا دليلاً على هوية الكاتب، ولا بيّنة وحيدة في أي نزاع أكاديمي أو مهني.",
       },
+      {
+        icon: Gauge,
+        h: "لماذا يغيّر الطول مقدار ثقتك بالنتيجة",
+        p: "كل إشارة يقرأها الكاشف إحصائية، والإحصاء يحتاج حجماً. فتحت ثلاثمئة كلمة تقريباً لا يوجد ببساطة تباين كافٍ في أطوال الجمل أو المفردات ليُقاس بموثوقية، ولذلك تُنتج المقاطع القصيرة نتائج مضطربة في الاتجاهين. ولهذا نعرض تقييماً للثقة بجانب النتيجة بدل نسبة مجرّدة: فـ٧٠٪ على ١٢٠ كلمة و٧٠٪ على ١٥٠٠ كلمة ليستا الادعاء نفسه، والأداة التي تعرضهما بالشكل ذاته تُخفي عنك الجزء الذي كنت تحتاجه.",
+      },
+      {
+        icon: Users,
+        h: "لماذا تحصل الكتابة النزيهة أحياناً على نتيجة عالية",
+        p: "الكواشف تقيس الانتظام لا التأليف، ولذلك تقع أنواع من الكتابة البشرية الحقيقية في المساحة الإحصائية نفسها للنص الآلي. فالكاتب بلغة ثانية يعتمد على تراكيب مضمونة ومفردات أضيق. والقوالب الأكاديمية الصارمة — مقالات الفقرات الخمس والتقارير المخبرية والصيغ القانونية المعيارية — يُفترض أن تكون منتظمة. والمحرّر الدقيق يصقل تحديداً ذلك التفاوت الذي يُقرأ كعلامة بشرية. لا شيء من ذلك غشّ؛ إنه نثر وقع مصادفةً في موضع غير مريح، وهو أكبر سبب منفرد لألا تقوم النتيجة وحدها دليلاً.",
+      },
+      {
+        icon: FileWarning,
+        h: "ما لا تستطيع النتيجة إخبارك به",
+        p: "لا تستطيع تحديد أي نموذج أنتج النص، ولا إثبات أن شخصاً كتب شيئاً أو لم يكتبه، ولا التمييز بين تحرير مدعوم بالذكاء الاصطناعي وصياغة مولّدة بالكامل. ولا ترى النيّة أصلاً. أما ما تستطيعه فهو إخبارك بأن مقطعاً يُقرأ منتظماً بشكل آلي، وعرض الجمل المسؤولة عن ذلك — وهذا مفيد فعلاً إن كان هدفك أن تكتب أفضل، وناقص بشكل خطير إن كان هدفك أن تتّهم أحداً.",
+      },
     ],
     faq: [
       { q: "ما مدى دقة الكاشف؟", a: "يقدّم تقديراً مدروساً مبنياً على إشارات أسلوبية، ويُظهر منطقه عبر تمييز الجمل. وككل كاشف قد يخطئ — اعتبر النتائج إرشادية لا قاطعة." },
       { q: "كم كلمة أفحص مجاناً؟", a: "حتى ٢٥٠ كلمة لكل محاولة و٣ محاولات يومياً بلا حساب. خطة برو ترفعها إلى ٣٬٠٠٠ كلمة لكل محاولة بمحاولات غير محدودة." },
       { q: "هل يكشف نصوص ChatGPT وClaude وGemini؟", a: "يكشف الأنماط الأسلوبية الشائعة في نصوص الذكاء الاصطناعي عموماً بدل بصمة نموذج بعينه — وهذا يجعله صامداً أمام النماذج الجديدة أيضاً." },
+      { q: "لماذا يعطي كاشفان نتيجتين مختلفتين للنص نفسه؟", a: "لأنهما نموذجان مختلفان ببيانات تدريب وعتبات مختلفة، يقدّران الخاصية الغامضة نفسها. والاختلاف الواسع يعني عادةً أن النص يقع في منطقة ملتبسة — وهي تحديداً الحالة التي تكون فيها أي نسبة واثقة المظهر أشدّ تضليلاً." },
+      { q: "هل يستطيع معلّم استخدام هذا دليلاً على غشّ طالب؟", a: "لا، ونرجو ألا تفعل. فكل كاشف يُعيد احتمالاً لا نتيجة قاطعة، والأخطاء تقع أثقل ما تقع على الطلاب الكاتبين بلغة ثانية. اعتبر النتيجة العالية سبباً لمحادثة حول العمل، لا خلاصةً لها." },
+      { q: "هل يخفض تحرير النص الآلي النتيجة؟", a: "غالباً نعم — فإعادة الكتابة الجوهرية تكسر الإيقاع المنتظم الذي يعتمد عليه الكاشف. ولهذا أيضاً يلتقط الكشف المخرجات غير المحرَّرة بموثوقية أعلى بكثير من المحرَّرة، وهذا سبب إضافي لقراءة النتائج كإرشاد عن الأسلوب لا كأحكام على المصدر." },
+      { q: "هل تحتفظون بالنص الذي أفحصه؟", a: "النص المُرسَل دون تسجيل دخول يُعالَج للتحليل ولا يُحفَظ. وإن كنت مسجّلاً، تُحفَظ التحليلات في سجلّ لوحتك لتعود إليها، وتستطيع حذف أي مُدخل بنفسك." },
     ],
     ctaHumanizer: "طلعت النتيجة عالية؟ أعد صياغته طبيعياً بمُنسّن النص",
   },

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Sparkles, Repeat, FileCheck2, HeartHandshake } from "lucide-react";
+import { Sparkles, Repeat, FileCheck2, HeartHandshake, Gauge, ShieldAlert, Users } from "lucide-react";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
@@ -61,8 +61,27 @@ const C = {
         h: "Use it with integrity",
         p: "This tool improves the style of writing you have the right to work on. It is not for disguising authorship where disclosure is required. Follow your institution's rules — our usage policy is explicit about this.",
       },
+      {
+        icon: Gauge,
+        h: "Rhythm is what gives machine text away — not vocabulary",
+        p: "The instinct when a draft reads robotic is to swap words for fancier synonyms. That is the wrong lever, and it is why paraphrasing tools so often make things worse. What marks text as machine-written is structural: sentences clustering around one length, paragraphs opening with the same construction, and connective filler like \"furthermore\" and \"it is important to note that\" doing work no human writer asks of it. Our humanizer targets that structure and deliberately leaves your terminology alone, because a synonym swap in a technical sentence changes what you said.",
+      },
+      {
+        icon: ShieldAlert,
+        h: "What we will not help you do",
+        p: "We do not market this as a way to defeat an academic integrity check, and we would rather lose the sale than pretend otherwise. Deliberately disguising AI authorship to pass a check is misconduct at most institutions regardless of which tool produced the text. If your institution permits assisted work, disclose it; if it does not, do not submit it. The legitimate use of a humanizer is making your own writing read the way you actually sound.",
+      },
+      {
+        icon: Users,
+        h: "Who this is genuinely built for",
+        p: "Writers who drafted with a model and want the delivery to sound like them. Non-native speakers whose grammar is fine but whose rhythm is flat. Teams publishing content who need it to read like a person wrote it rather than like the average of everything already published on the topic. In every one of those cases the substance is already yours — what is missing is cadence, and that is a fixable, purely stylistic problem.",
+      },
     ],
     faq: [
+      { q: "Will humanizing change what my text means?", a: "It is tuned not to. We alter sentence rhythm and connective phrasing rather than substituting vocabulary, and the result is re-checked automatically after rewriting. Still read technical terms, figures, and dates afterwards — that is where meaning drift shows up first in any rewriting tool." },
+      { q: "Can I use this for academic work?", a: "Only where your institution permits assisted writing, and disclose it when it does. Using a humanizer to disguise AI authorship from an integrity check is misconduct almost everywhere. Using it to improve the rhythm of writing you are permitted to produce is not." },
+      { q: "Does it work as well in Arabic as in English?", a: "Arabic runs on Arabic-tuned rewriting rather than a translated English pipeline, because Arabic rhythm and connective conventions differ substantially. Try a paragraph on the free tier and judge the output yourself before paying anything." },
+      { q: "Why does my rewritten text still score as AI?", a: "Usually because the underlying structure is still uniform, or because the passage is too short for either the humanizer or the detector to work with reliably. It can also mean the reasoning itself is generic — no rewriting tool makes vague thinking specific." },
       { q: "Will it change my meaning?", a: "No — it's engineered as a style-only pass. Sentence rhythm, transitions, and repetition change; facts, claims, and intent stay. The before/after split view lets you verify every line." },
       { q: "Does it work in Arabic?", a: "Yes, natively. It produces fluent Modern Standard Arabic with correct grammar — not machine-translated phrasing." },
       { q: "Is the humanizer free?", a: "Up to 250 words per run and 3 runs a day, no account needed. Paid plans raise the word limit and remove the daily cap." },
@@ -93,8 +112,27 @@ const C = {
         h: "استخدمه بنزاهة",
         p: "تحسّن هذه الأداة أسلوب كتابةٍ تملك حق العمل عليها. ليست لإخفاء هوية الكاتب حيث يُشترط الإفصاح. التزم بقواعد مؤسستك — وسياسة استخدامنا صريحة في هذا.",
       },
+      {
+        icon: Gauge,
+        h: "الإيقاع هو ما يفضح النص الآلي — لا المفردات",
+        p: "الغريزة حين تبدو المسودّة آليةً أن تستبدل الكلمات بمرادفات أفخم. وهذه الرافعة الخاطئة، ولهذا كثيراً ما تزيد أدوات إعادة الصياغة الأمر سوءاً. فما يَسِم النص كآلي بنيوي: جمل تتكتّل حول طول واحد، وفقرات تبدأ بالتركيب نفسه، وحشو رابط مثل «علاوة على ذلك» و«من المهم الإشارة إلى أن» يؤدي عملاً لا يطلبه كاتب بشري. ومُنسّننا يستهدف تلك البنية ويترك مصطلحاتك عمداً، لأن استبدال مرادف في جملة تقنية يغيّر ما قلته.",
+      },
+      {
+        icon: ShieldAlert,
+        h: "ما لن نساعدك عليه",
+        p: "لا نسوّق هذا كوسيلة لهزيمة فحص النزاهة الأكاديمية، ونفضّل خسارة البيع على ادعاء غير ذلك. فتمويه تأليف الذكاء الاصطناعي عمداً لتجاوز فحص مخالفةٌ في معظم المؤسسات أياً كانت الأداة التي أنتجت النص. إن سمحت مؤسستك بالاستعانة فأفصح عنها، وإن لم تسمح فلا تُسلّمه. والاستخدام المشروع للمُنسّن أن تجعل كتابتك أنت تُقرأ بالطريقة التي تتحدّث بها فعلاً.",
+      },
+      {
+        icon: Users,
+        h: "لمن بُني هذا فعلاً",
+        p: "كاتبون صاغوا بمساعدة نموذج ويريدون أن يبدو العرض بصوتهم. وغير الناطقين بالأصل ممن نحوهم سليم لكن إيقاعهم مسطّح. وفرق تنشر محتوى وتحتاجه أن يُقرأ كأن إنساناً كتبه لا كأنه متوسّط كل ما نُشر في الموضوع. وفي كل حالة من هذه يكون المضمون لك أصلاً — والناقص هو الجَرْس، وهي مشكلة أسلوبية بحتة قابلة للإصلاح.",
+      },
     ],
     faq: [
+      { q: "هل يغيّر التنسين معنى نصّي؟", a: "مضبوط على ألا يفعل. نغيّر إيقاع الجمل وصياغة الروابط بدل استبدال المفردات، وتُفحص النتيجة تلقائياً بعد إعادة الصياغة. ومع ذلك راجع المصطلحات التقنية والأرقام والتواريخ بعدها — فهناك يظهر انزياح المعنى أولاً في أي أداة إعادة كتابة." },
+      { q: "هل أستخدمه في العمل الأكاديمي؟", a: "فقط حيث تسمح مؤسستك بالكتابة المدعومة، وأفصح عنها حين تسمح. فاستخدام مُنسّن لتمويه تأليف الذكاء الاصطناعي أمام فحص نزاهة مخالفةٌ في كل مكان تقريباً. أما استخدامه لتحسين إيقاع كتابة يُسمح لك بإنتاجها فليس كذلك." },
+      { q: "هل يعمل بالعربية بجودة الإنجليزية؟", a: "العربية تعمل على إعادة صياغة مضبوطة للعربية لا على خط إنجليزي مترجَم، لأن الإيقاع العربي وأعراف الربط تختلف جوهرياً. جرّب فقرة على الخطة المجانية واحكم على المخرجات بنفسك قبل أن تدفع شيئاً." },
+      { q: "لماذا ما زال نصّي المُعاد صياغته يُصنَّف كآلي؟", a: "غالباً لأن البنية ما زالت منتظمة، أو لأن المقطع أقصر من أن يعمل عليه المُنسّن أو الكاشف بموثوقية. وقد يعني أيضاً أن التفكير نفسه عام — فلا أداة إعادة كتابة تجعل الفكرة الغامضة محدّدة." },
       { q: "هل سيغيّر معناي؟", a: "لا — صُمّم كتمريرة أسلوب فقط. يتغيّر إيقاع الجمل والروابط والتكرار؛ وتبقى الحقائق والادعاءات والقصد. وعرض قبل/بعد يتيح التحقق من كل سطر." },
       { q: "هل يعمل بالعربية؟", a: "نعم، بأصالة. ينتج فصحى حديثة سليمة نحوياً — لا صياغة مترجمة آلياً." },
       { q: "هل المُنسّن مجاني؟", a: "حتى ٢٥٠ كلمة لكل محاولة و٣ محاولات يومياً بلا حساب. الخطط المدفوعة ترفع حد الكلمات وتزيل السقف اليومي." },

@@ -51,10 +51,31 @@ const C = {
       minutes: "min",
       clear: "Clear",
     },
+    sections: [
+      {
+        h: "Why word counts matter more than writers expect",
+        p: "Almost every place your writing lands has a limit attached. Academic assignments are marked against one, journals desk-reject over one, job applications cap personal statements, and meta descriptions get truncated at a character count rather than a word count. Counting after the fact is the wrong habit — knowing the target before you draft changes what you choose to include, and it is far easier to write to 800 words than to cut 1,400 down to 800 without losing the argument.",
+      },
+      {
+        h: "How reading and speaking time are estimated",
+        p: "We use 200 words per minute for silent reading and 130 for reading aloud. Those are conventional averages and they are genuinely rough: comprehension speed varies with subject difficulty, reader familiarity, and language. Treat the reading estimate as a planning aid for blog length or study time, and the speaking estimate as a rehearsal starting point for a talk — then time yourself once, because your real pace is the only one that matters.",
+      },
+      {
+        h: "Counting Arabic correctly",
+        p: "Arabic raises problems most counters ignore. Words are separated by whitespace as in English, but sentence boundaries use different punctuation — the Arabic question mark and full stop are distinct characters — and a counter that only looks for Latin punctuation will merge whole paragraphs into one sentence. Arabic is also more compact than English: the same idea usually takes noticeably fewer words, which matters when you are translating to a fixed limit.",
+      },
+      {
+        h: "Your text never leaves this page",
+        p: "The counting runs entirely in your browser. Nothing is uploaded, stored, or logged, which means you can safely paste a confidential draft, an unpublished manuscript, or a client document without it touching a server. That is a deliberate design choice rather than a policy promise — there is no upload step to trust.",
+      },
+    ],
     faq: [
       { q: "Is the word counter private?", a: "Completely. Counting happens in your browser with JavaScript — the text is never uploaded to any server." },
       { q: "How is reading time calculated?", a: "We use the common average of 200 words per minute for silent reading and 130 for speaking aloud. Real speeds vary by reader and content." },
       { q: "Does it count Arabic correctly?", a: "Yes — words are split on whitespace and sentence detection understands Arabic punctuation (؟ ۔), so Arabic text counts accurately." },
+      { q: "What counts as a word?", a: "Any run of characters separated by whitespace. That matches how most editors, journals, and assignment briefs count, though be aware that hyphenated compounds count as one and numbers count as words." },
+      { q: "How many words should a blog post be?", a: "There is no universal number, and word count is not a ranking factor. Write the length the question needs — a precise 600-word answer outperforms a padded 2,000-word one, and padding is the most common way good pages get worse." },
+      { q: "Why does my word processor show a different count?", a: "Different tools treat footnotes, captions, headings, and hyphenated words differently. If you are writing to a hard limit, always confirm with the counter the assessor will actually use." },
     ],
     ctaTitle: "Need more than a count?",
     ctaBody: "Check whether your text reads as AI-written, or rewrite it into a natural human voice.",
@@ -76,10 +97,31 @@ const C = {
       minutes: "د",
       clear: "مسح",
     },
+    sections: [
+      {
+        h: "لماذا يهمّ عدد الكلمات أكثر مما يتوقّع الكاتب",
+        p: "كل مكان تصل إليه كتابتك تقريباً مرتبط بحدّ. فالواجبات الأكاديمية تُقيَّم مقابل حدّ، والمجلات ترفض مباشرةً بسببه، وطلبات التوظيف تحدّ الرسائل الشخصية، وأوصاف الميتا تُقتطع عند عدد أحرف لا كلمات. والعدّ بعد الكتابة عادة خاطئة — فمعرفة الهدف قبل الصياغة تغيّر ما تختار إدراجه، والكتابة إلى ٨٠٠ كلمة أسهل بكثير من تقليص ١٤٠٠ إلى ٨٠٠ دون خسارة الحجّة.",
+      },
+      {
+        h: "كيف يُقدَّر زمن القراءة والإلقاء",
+        p: "نستخدم ٢٠٠ كلمة في الدقيقة للقراءة الصامتة و١٣٠ للقراءة بصوت عالٍ. وهذه متوسّطات متعارف عليها وتقريبية فعلاً: فسرعة الاستيعاب تتفاوت بصعوبة الموضوع وألفة القارئ واللغة. اعتبر تقدير القراءة معيناً لتخطيط طول المقال أو زمن المذاكرة، وتقدير الإلقاء نقطة بداية للتمرين على كلمة — ثم قِس وقتك مرة واحدة، فسرعتك الحقيقية هي الوحيدة التي تهمّ.",
+      },
+      {
+        h: "عدّ العربية بشكل صحيح",
+        p: "تطرح العربية مشكلات تتجاهلها معظم العدّادات. فالكلمات تفصلها المسافات كالإنجليزية، لكن حدود الجمل تستخدم ترقيماً مختلفاً — فعلامة الاستفهام والنقطة العربيتان محرفان مستقلان — والعدّاد الذي يبحث عن الترقيم اللاتيني فقط سيدمج فقرات كاملة في جملة واحدة. والعربية أيضاً أكثر إيجازاً من الإنجليزية: فالفكرة نفسها تأخذ كلمات أقل بوضوح، وهذا يهمّ حين تترجم إلى حدّ ثابت.",
+      },
+      {
+        h: "نصّك لا يغادر هذه الصفحة",
+        p: "العدّ يجري بالكامل في متصفّحك. لا شيء يُرفَع أو يُحفَظ أو يُسجَّل، ما يعني أنك تستطيع بأمان لصق مسودّة سرّية أو مخطوطة غير منشورة أو مستند عميل دون أن يلمس خادماً. وهذا خيار تصميم مقصود لا وعد سياسة — إذ لا توجد خطوة رفع تحتاج للثقة بها.",
+      },
+    ],
     faq: [
       { q: "هل العدّاد خاص وآمن؟", a: "تماماً. يجري العدّ داخل متصفحك بجافاسكربت — النص لا يُرفع لأي خادم إطلاقاً." },
       { q: "كيف يُحسب وقت القراءة؟", a: "نستخدم المتوسط الشائع: ٢٠٠ كلمة بالدقيقة للقراءة الصامتة و١٣٠ للإلقاء. السرعات الفعلية تختلف حسب القارئ والمحتوى." },
       { q: "هل يعدّ العربية بشكل صحيح؟", a: "نعم — تُفصل الكلمات على المسافات ويفهم كاشف الجمل علامات الترقيم العربية (؟ ۔)، فيَعُدّ النص العربي بدقة." },
+      { q: "ما الذي يُحسب كلمةً؟", a: "أي تتابع من المحارف تفصله مسافة. وهذا يوافق طريقة العدّ في معظم المحرّرات والمجلات وتوصيفات الواجبات، مع الانتباه إلى أن المركّبات الموصولة بشَرطة تُحسب واحدة وأن الأرقام تُحسب كلمات." },
+      { q: "كم كلمة ينبغي أن يكون المقال؟", a: "لا رقم عالمي، وعدد الكلمات ليس عامل ترتيب. اكتب الطول الذي يحتاجه السؤال — فإجابة دقيقة في ٦٠٠ كلمة تتفوّق على أخرى محشوّة في ٢٠٠٠، والحشو أشيع طريقة تسوء بها الصفحات الجيدة." },
+      { q: "لماذا يعرض معالج النصوص عدداً مختلفاً؟", a: "الأدوات تتعامل مع الحواشي والتعليقات والعناوين والكلمات الموصولة بطرق مختلفة. فإن كنت تكتب لحدّ صارم، فتأكّد دائماً بالعدّاد الذي سيستخدمه المُقيّم فعلاً." },
     ],
     ctaTitle: "تحتاج أكثر من مجرد عدّ؟",
     ctaBody: "افحص إن كان نصّك يبدو مكتوباً بالذكاء الاصطناعي، أو أعد صياغته بصوت بشري طبيعي.",
@@ -162,6 +204,15 @@ export default async function WordCounterPage({
             </div>
           </div>
         </Reveal>
+
+        <div className="mt-14 space-y-8">
+          {c.sections.map((sec) => (
+            <section key={sec.h}>
+              <h2 className="text-xl font-bold">{sec.h}</h2>
+              <p className="mt-3 leading-relaxed text-white/70">{sec.p}</p>
+            </section>
+          ))}
+        </div>
 
         <div className="mt-14">
           <h2 className="text-center text-2xl font-bold">{dict.faq.title}</h2>

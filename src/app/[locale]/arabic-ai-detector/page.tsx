@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Languages, BookOpenCheck, Feather, ShieldCheck } from "lucide-react";
+import { Languages, BookOpenCheck, Feather, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
@@ -61,8 +61,27 @@ const C = {
         h: "Fair by design",
         p: "Because false accusations hit Arabic speakers hardest with English-only tools, Sahihly treats every result as an estimate, shows its reasoning, and never claims courtroom certainty. Use scores to revise your work — not to judge someone else's.",
       },
+      {
+        icon: Gauge,
+        h: "Why English-trained detectors misjudge Arabic",
+        p: "Almost every detector on the market was trained and validated on English, then pointed at other languages and shipped. Arabic breaks the assumptions that training encoded. Root-and-pattern morphology packs meaning into word forms rather than word counts, so sentence-length statistics mean something different. Classical connective conventions produce regular, flowing prose that an English-calibrated model reads as machine-smooth. The result is a tool that flags perfectly natural Arabic and misses genuinely generated Arabic, while displaying the same confident percentage either way.",
+      },
+      {
+        icon: Users,
+        h: "The cost of getting this wrong falls on real people",
+        p: "Published research has documented that AI detectors flag writing by non-native English speakers at dramatically higher rates than native speakers. The same structural bias applies when an English-tuned model judges Arabic. In practice that means Arabic-speaking students and professionals bear the highest false-positive risk from tools that were never calibrated on their language — which is precisely why we report a confidence rating rather than a bare number, and why we say plainly that a score is not evidence.",
+      },
+      {
+        icon: FileWarning,
+        h: "What we still cannot do",
+        p: "Arabic tuning improves the judgement; it does not make it certain. Short passages remain unreliable, heavily edited generated text still evades detection, and dialectal writing sits outside what any current detector handles well. We would rather state those limits than let a confident interface imply precision we do not have.",
+      },
     ],
     faq: [
+      { q: "Are there really no other Arabic AI detectors?", a: "There are tools that accept Arabic input. The distinction we draw is between accepting a language and being calibrated on it — most run one model generalised across many languages, which is why Arabic results from them are often closer to noise than judgement." },
+      { q: "Does it handle dialects as well as Modern Standard Arabic?", a: "Standard Arabic is where it performs best. Dialectal writing is harder for every detector because the training material is thinner and the conventions vary widely by region, so treat dialect results with extra caution." },
+      { q: "Can I check a mix of Arabic and English?", a: "Yes. Mixed-language passages are common in real writing and the analysis handles them, though a passage that switches constantly gives the statistics less to work with in either language." },
+      { q: "Is checking Arabic free?", a: "Yes. Arabic and English are covered identically on the free tier, with no account required. Paid plans exist for longer documents and the humanizer, not for unlocking Arabic." },
       { q: "Is this really different from running Arabic through GPTZero?", a: "Yes. English-trained detectors don't model Arabic morphology, so their Arabic scores are close to noise. Sahihly evaluates Arabic-specific signals and shows per-sentence reasoning you can verify yourself." },
       { q: "Does it handle dialects or only فصحى?", a: "It's strongest on Modern Standard Arabic (فصحى), which is what essays, articles, and professional writing use. Dialect text is analyzed too, but MSA results are the most reliable." },
       { q: "Is the Arabic detector free?", a: "Yes — 250 words per run, 3 runs a day, no account. Paid plans raise limits and save your history." },
@@ -94,8 +113,27 @@ const C = {
         h: "عادل بالتصميم",
         p: "لأن الاتهامات الخاطئة تصيب الناطقين بالعربية أكثر مع الأدوات الإنجليزية، يعامل صحيحلي كل نتيجة كتقدير، ويعرض منطقه، ولا يدّعي يقيناً قاطعاً أبداً. استخدم النتائج لتحسين عملك — لا للحكم على عمل غيرك.",
       },
+      {
+        icon: Gauge,
+        h: "لماذا تُخطئ الكواشف المدرَّبة على الإنجليزية في العربية",
+        p: "كل كاشف تقريباً في السوق دُرِّب وتُحقِّق على الإنجليزية، ثم وُجِّه للغات أخرى وشُحِن. والعربية تكسر الافتراضات التي رمّزها ذلك التدريب. فالصرف القائم على الجذر والوزن يحزم المعنى داخل صيغ الكلمات لا في عددها، فتصير إحصاءات أطوال الجمل تعني شيئاً مختلفاً. وأعراف الربط الفصيحة تُنتج نثراً منتظماً منساباً يقرأه نموذج مُعايَر على الإنجليزية كنعومة آلية. والنتيجة أداة تُصنِّف عربية سليمة تماماً كآلية وتُفوّت عربية مولّدة فعلاً، وتعرض النسبة الواثقة نفسها في الحالتين.",
+      },
+      {
+        icon: Users,
+        h: "ثمن الخطأ يقع على أشخاص حقيقيين",
+        p: "وثّقت أبحاث منشورة أن كواشف الذكاء الاصطناعي تُصنِّف كتابة غير الناطقين بالإنجليزية كآلية بمعدلات أعلى بكثير من الناطقين الأصليين. والانحياز البنيوي نفسه ينطبق حين يحكم نموذج مضبوط على الإنجليزية على العربية. وهذا عملياً يعني أن الطلاب والمهنيين الناطقين بالعربية يتحمّلون أعلى خطر خطأ من أدوات لم تُعايَر على لغتهم قط — ولهذا تحديداً نعرض تقييماً للثقة بدل رقم مجرّد، ونقول بوضوح إن النتيجة ليست دليلاً.",
+      },
+      {
+        icon: FileWarning,
+        h: "ما لا نستطيعه بعد",
+        p: "ضبط العربية يحسّن الحكم؛ ولا يجعله يقيناً. فالمقاطع القصيرة تبقى غير موثوقة، والنص المولّد المحرَّر بكثافة ما زال يفلت من الكشف، والكتابة باللهجات تقع خارج ما يُحسنه أي كاشف حالي. ونفضّل ذكر هذه الحدود على أن توحي واجهة واثقة بدقة لا نملكها.",
+      },
     ],
     faq: [
+      { q: "هل لا توجد فعلاً كواشف عربية أخرى؟", a: "توجد أدوات تقبل مُدخلاً عربياً. والتمييز الذي نضعه بين قبول لغة والمعايرة عليها — فمعظمها يشغّل نموذجاً واحداً معمّماً على لغات كثيرة، ولهذا كثيراً ما تكون نتائجها العربية أقرب للضجيج منها للحكم." },
+      { q: "هل يتعامل مع اللهجات كالفصحى؟", a: "الفصحى هي حيث يؤدي أفضل ما لديه. والكتابة باللهجات أصعب على كل كاشف لأن المادة التدريبية أرقّ والأعراف تتباين بشدة بين المناطق، فتعامل مع نتائج اللهجات بحذر إضافي." },
+      { q: "هل أفحص نصاً يخلط العربية والإنجليزية؟", a: "نعم. المقاطع مختلطة اللغة شائعة في الكتابة الواقعية والتحليل يتعامل معها، وإن كان المقطع الذي يتبدّل باستمرار يترك للإحصاء مادة أقل في كلتا اللغتين." },
+      { q: "هل فحص العربية مجاني؟", a: "نعم. العربية والإنجليزية مغطّاتان بالتساوي في الخطة المجانية بلا حساب. والخطط المدفوعة للمستندات الأطول وللمُنسّن، لا لفتح العربية." },
       { q: "هل يختلف فعلاً عن تمرير العربية في GPTZero؟", a: "نعم. الكواشف المدرّبة على الإنجليزية لا تنمذج صرف العربية، فنتائجها العربية أقرب للضجيج. يقيّم صحيحلي إشارات عربية مخصوصة ويعرض استدلالاً لكل جملة يمكنك التحقق منه بنفسك." },
       { q: "هل يتعامل مع اللهجات أم الفصحى فقط؟", a: "أقوى ما يكون مع الفصحى الحديثة، وهي لغة المقالات والأبحاث والكتابة المهنية. يحلّل النص اللهجي أيضاً، لكن نتائج الفصحى هي الأوثق." },
       { q: "هل الكاشف العربي مجاني؟", a: "نعم — ٢٥٠ كلمة لكل محاولة، ٣ محاولات يومياً، بلا حساب. الخطط المدفوعة ترفع الحدود وتحفظ سجلّك." },
