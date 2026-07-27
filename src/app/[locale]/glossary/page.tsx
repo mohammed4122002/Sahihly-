@@ -67,7 +67,8 @@ export default async function GlossaryPage({
           <Reveal key={t.id} delay={Math.min(i, 5)} as="div">
             <div id={t.id} className="glass scroll-mt-24 rounded-2xl p-6">
               <h2 className="text-lg font-semibold text-violet-200">{t.term[locale]}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-white/60">{t.def[locale]}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/70">{t.def[locale]}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/55">{t.long[locale]}</p>
             </div>
           </Reveal>
         ))}

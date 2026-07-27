@@ -60,6 +60,46 @@ export default async function BestHubPage({
         </p>
       </Reveal>
 
+      <Reveal>
+        <section className="mt-16 space-y-8">
+          {(ar
+            ? [
+          {
+            h: "كيف تُبنى هذه القوائم",
+            p: "كل أداة في هذه المراجعات استخدمناها على نصّ حقيقي بالعربية والإنجليزية، لا أداة قرأنا عنها. والترتيب يعكس ما تُجيده الأداة لحالة استخدام موصوفة لا ترتيباً عاماً واحداً، لأن أفضل كاشف لقسم جامعي وأفضل كاشف لكاتب مستقلّ نادراً ما يكونان المنتج نفسه. ونظهر في القوائم التي ننتمي إليها بحقّ ونقول ذلك صراحةً بدل التظاهر بأن محرّراً مستقلاً كتبها.",
+          },
+          {
+            h: "لا نأخذ عمولة على أي ترشيح",
+            p: "لا توجد روابط إحالة في هذا الموقع ولا مواضع مدفوعة في أي مراجعة. وهذا يهمّ في هذا المجال، حيث تُعوَّض حصة كبيرة من محتوى «الأفضل» عن كل تسجيل وتُرتَّب بهدوء حسب العائد لا الجودة. ودخلنا من الاشتراكات والإعلانات، فترتيب منافس فوقنا لا يكلّفنا شيئاً ولا يوجد حافز لدفن من يستحقّ الصدارة.",
+          },
+          {
+            h: "كيف تستخدم قائمة «الأفضل» دون أن تُضلَّل",
+            p: "ابدأ من قيدك أنت لا من المُدخل الأول. فالعمل بالعربية، أو الحاجة لمطابقة الانتحال، أو الشراء لمؤسسة، أو إرادة شيء مجاني بلا حساب، كلٌّ منها يُسقط معظم أي قائمة فوراً. ثم تحقّق من آخر تحديث للصفحة، فهذا المجال يتحرّك بسرعة تكفي لأن تكون مراجعة عمرها سنة خاطئة غالباً. وتعامل مع أي قائمة لا تنتقد خيارها الأول أبداً كإعلان.",
+          },
+              ]
+            : [
+          {
+            h: "How these lists are put together",
+            p: "Every tool in these roundups is one we have used on real text in both Arabic and English, not one we read about. Placement reflects what the tool does well for a described use case rather than a single overall ranking, because the best detector for a university department and the best one for a freelance writer are rarely the same product. We appear in lists where we genuinely belong and we say so openly rather than pretending an independent editor wrote them.",
+          },
+          {
+            h: "We take no commission for any recommendation",
+            p: "There are no affiliate links on this site and no paid placements in any roundup. That matters in this category, where a large share of best-of content is compensated per signup and quietly ordered by payout rather than quality. Our revenue comes from subscriptions and advertising, so a competitor ranking above us costs us nothing and there is no incentive to bury one that deserves the top spot.",
+          },
+          {
+            h: "How to use a best-of list without being misled",
+            p: "Start from your own constraint rather than the top entry. Working in Arabic, needing plagiarism matching, buying for an institution, or wanting something free with no account each eliminate most of any list immediately. Then check when the page was last updated, because this field moves fast enough that a year-old roundup is often wrong. And treat any list that never criticises its top pick as advertising.",
+          },
+              ]
+          ).map((sec) => (
+            <div key={sec.h}>
+              <h2 className="text-xl font-bold">{sec.h}</h2>
+              <p className="mt-3 leading-relaxed text-white/65">{sec.p}</p>
+            </div>
+          ))}
+        </section>
+      </Reveal>
+
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {roundups.map((r, i) => (
           <Reveal key={r.slug} delay={i} as="div">
