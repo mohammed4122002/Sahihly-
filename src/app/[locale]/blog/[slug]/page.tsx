@@ -60,7 +60,11 @@ export default async function PostPage({
       dateModified: post.date,
       inLanguage: locale,
       author: post.author
-        ? { "@type": "Person", name: post.author }
+        ? {
+            "@type": "Person",
+            name: post.author,
+            ...(post.authorAvatar ? { image: post.authorAvatar } : {}),
+          }
         : { "@type": "Organization", name: "Sahihly" },
       url: `${SITE_URL}/blog/${slug}`,
     },
@@ -105,9 +109,18 @@ export default async function PostPage({
 
       {/* byline — E-E-A-T signal */}
       <div className="mt-5 flex items-center gap-3 border-b border-white/10 pb-5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-400/15 font-display text-sm font-bold text-violet-300">
-          {(post.author || "S").trim().charAt(0).toUpperCase()}
-        </span>
+        {post.authorAvatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={post.authorAvatar}
+            alt=""
+            className="h-10 w-10 shrink-0 rounded-full border border-white/15 object-cover"
+          />
+        ) : (
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-400/15 font-display text-sm font-bold text-violet-300">
+            {(post.author || "S").trim().charAt(0).toUpperCase()}
+          </span>
+        )}
         <div className="text-sm">
           {post.author ? (
             <span className="font-medium text-white/85">{post.author}</span>

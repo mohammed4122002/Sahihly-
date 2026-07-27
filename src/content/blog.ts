@@ -10,6 +10,10 @@ export type BlogPost = {
   body: Record<Locale, string>; // simple HTML
   /** Real writer's name, shown on the byline instead of "The Sahihly Team". */
   author?: string;
+  /** Account that published it, used to look up the byline photo. */
+  authorId?: string;
+  /** Resolved profile photo for the byline; absent falls back to an initial. */
+  authorAvatar?: string;
 };
 
 export const posts: BlogPost[] = [

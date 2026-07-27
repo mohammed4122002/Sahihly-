@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { posts as staticPosts, type BlogPost } from "@/content/blog";
 
 type DbRow = {
@@ -12,6 +12,7 @@ type DbRow = {
   body_ar: string | null;
   reading_time: number;
   author_name: string | null;
+  author_id: string | null;
   created_at: string;
 };
 
@@ -25,7 +26,34 @@ function rowToPost(r: DbRow): BlogPost {
     excerpt: { en: r.excerpt_en || "", ar: r.excerpt_ar || "" },
     body: { en: r.body_en || "", ar: r.body_ar || "" },
     author: r.author_name || undefined,
+    authorId: r.author_id || undefined,
   };
+}
+
+/** Byline photos for the accounts that published these posts.
+ *
+ *  Read with the service client on purpose: `profiles` is restricted to each
+ *  user's own row, so a visitor's session cannot see an author's record, and
+ *  opening that policy up would expose the email address stored alongside the
+ *  photo. Only the two fields that belong on a public byline are selected, and
+ *  a missing service key simply means no photo rather than a broken page. */
+async function authorAvatars(ids: string[]): Promise<Map<string, string>> {
+  const unique = [...new Set(ids)];
+  if (unique.length === 0 || !process.env.SUPABASE_SERVICE_ROLE_KEY) return new Map();
+  try {
+    const svc = createServiceClient();
+    const { data } = await svc
+      .from("profiles")
+      .select("id, avatar_url")
+      .in("id", unique);
+    return new Map(
+      (data ?? [])
+        .filter((r: { avatar_url: string | null }) => r.avatar_url)
+        .map((r: { id: string; avatar_url: string | null }) => [r.id, r.avatar_url as string])
+    );
+  } catch {
+    return new Map();
+  }
 }
 
 async function dbPosts(): Promise<BlogPost[]> {
@@ -33,11 +61,19 @@ async function dbPosts(): Promise<BlogPost[]> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, created_at")
+      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, author_id, created_at")
       .eq("published", true)
       .order("created_at", { ascending: false });
     if (error || !data) return [];
-    return (data as DbRow[]).map(rowToPost);
+    const posts = (data as DbRow[]).map(rowToPost);
+    const avatars = await authorAvatars(
+      posts.map((p) => p.authorId).filter((id): id is string => Boolean(id))
+    );
+    return posts.map((p) =>
+      p.authorId && avatars.has(p.authorId)
+        ? { ...p, authorAvatar: avatars.get(p.authorId) }
+        : p
+    );
   } catch {
     return [];
   }

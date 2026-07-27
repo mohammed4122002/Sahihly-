@@ -168,9 +168,24 @@ export async function savePost(input: PostInput, id?: string) {
     updated_at: new Date().toISOString(),
   };
 
-  const { error } = id
-    ? await svc.from("blog_posts").update(row).eq("id", id)
-    : await svc.from("blog_posts").insert(row);
+  // author_id drives the byline photo. It is set once, when the post is
+  // created, and then left alone — an admin fixing a typo in someone else's
+  // article must not inherit their byline.
+  let error;
+  if (id) {
+    ({ error } = await svc.from("blog_posts").update(row).eq("id", id));
+    if (!error) {
+      // Posts written before this column existed are still unattributed;
+      // claim those for whoever is editing, but never reassign an existing one.
+      await svc
+        .from("blog_posts")
+        .update({ author_id: user.id })
+        .eq("id", id)
+        .is("author_id", null);
+    }
+  } else {
+    ({ error } = await svc.from("blog_posts").insert({ ...row, author_id: user.id }));
+  }
 
   if (error) {
     return { ok: false, message: error.message.includes("duplicate") ? "duplicate_slug" : "error" };
