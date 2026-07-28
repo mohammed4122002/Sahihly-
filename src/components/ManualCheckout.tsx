@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Copy, Loader2, ShieldCheck, Wallet, CircleCheckBig } from "lucide-react";
+import { Check, Copy, Loader2, ShieldCheck, Wallet, CircleCheckBig, MessageCircle, Mail } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 
 type Props = {
@@ -68,6 +68,7 @@ export default function ManualCheckout({
         <Link href="/dashboard" className="btn-primary mt-6 inline-flex rounded-full px-6 py-2.5 text-sm">
           {ar ? "اذهب للوحتي" : "Go to my dashboard"}
         </Link>
+        <SupportContact ar={ar} />
       </div>
     );
   }
@@ -241,8 +242,35 @@ export default function ManualCheckout({
                 ? "نراجع كل طلب يدوياً ونفعّل الاشتراك عادةً خلال ساعات قليلة."
                 : "Every request is reviewed manually; activation usually takes a few hours."}
             </p>
+            <SupportContact ar={ar} />
           </form>
         )}
+      </div>
+    </div>
+  );
+}
+
+function SupportContact({ ar }: { ar: boolean }) {
+  return (
+    <div className="mt-4 flex flex-col items-center gap-1.5 text-xs text-white/45">
+      <p>{ar ? "تواجه مشكلة في تفعيل اشتراكك؟ راسل الدعم مباشرة:" : "Having trouble activating your plan? Reach support directly:"}</p>
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
+        <a
+          href="https://wa.me/970594848203"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-emerald-300 hover:text-emerald-200"
+        >
+          <MessageCircle size={13} />
+          <span dir="ltr">+970 59 484 8203</span>
+        </a>
+        <a
+          href="mailto:mohammedsaadaang@gmail.com"
+          className="inline-flex items-center gap-1.5 text-violet-300 hover:text-violet-200"
+        >
+          <Mail size={13} />
+          mohammedsaadaang@gmail.com
+        </a>
       </div>
     </div>
   );
