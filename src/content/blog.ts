@@ -16,6 +16,11 @@ export type BlogPost = {
   authorAvatar?: string;
   /** Handle for /author/<username>, so the byline can link to their page. */
   authorUsername?: string;
+  /** The writer's own role and bio, so the byline reflects the person rather
+   *  than a fixed sentence — which was masculine in Arabic regardless of who
+   *  wrote the piece. */
+  authorTitle?: Record<Locale, string>;
+  authorBio?: Record<Locale, string>;
 };
 
 export const posts: BlogPost[] = [
