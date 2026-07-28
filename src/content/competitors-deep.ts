@@ -126,6 +126,274 @@ export const deepContent: Record<string, DeepFields> = {
     ],
   },
 
+  turnitin: {
+    whatItIs: {
+      en: [
+        "Turnitin is the plagiarism-checking system most universities already run, and in 2023 it added an indicator that estimates how much of a submission reads as AI-generated. Students almost never use it directly: work is submitted through a course page, and the report goes to the instructor.",
+        "That single fact shapes everything about it. It is bought by institutions, its reports are written for assessors rather than writers, and its AI indicator exists to flag work for review — not to help anyone improve a draft.",
+      ],
+      ar: [
+        "‏Turnitin هو نظام فحص الانتحال الذي تشغّله معظم الجامعات أصلاً، وأضاف عام ٢٠٢٣ مؤشراً يقدّر كم من التسليم يُقرأ كمولّد آلياً. ونادراً ما يستخدمه الطالب مباشرة: فالعمل يُسلَّم عبر صفحة المقرّر، والتقرير يذهب للمدرّس.",
+        "وهذه الحقيقة وحدها تشكّل كل شيء فيه. تشتريه المؤسسات، وتقاريره مكتوبة للمُقيّم لا للكاتب، ومؤشّر الذكاء الاصطناعي فيه موجود ليُشير إلى عمل للمراجعة — لا ليساعد أحداً على تحسين مسودّة.",
+      ],
+    },
+    theirStrengths: [
+      {
+        title: { en: "Plagiarism matching we do not attempt", ar: "مطابقة انتحال لا نحاولها" },
+        body: {
+          en: "Its real strength is comparing submissions against an enormous archive of published work and previously submitted papers. That is a completely different capability from measuring statistical predictability, and we do not offer it at all.",
+          ar: "قوّته الحقيقية مقارنة التسليمات بأرشيف هائل من الأعمال المنشورة والأوراق المُسلَّمة سابقاً. وهذه قدرة مختلفة كلياً عن قياس القابلية الإحصائية للتوقّع، ونحن لا نقدّمها إطلاقاً.",
+        },
+      },
+      {
+        title: { en: "It is where the decision actually happens", ar: "هو حيث يُتَّخذ القرار فعلاً" },
+        body: {
+          en: "If your university uses Turnitin, its report is the one that matters institutionally. No third-party score changes that, ours included, and any tool implying otherwise is misleading you.",
+          ar: "إن كانت جامعتك تستخدم Turnitin فتقريره هو المعتبَر مؤسسياً. ولا نتيجة من طرف ثالث تغيّر ذلك، ونتيجتنا منها، وأي أداة توحي بغير ذلك تضلّلك.",
+        },
+      },
+      {
+        title: { en: "Public about the error rate", ar: "معلن بشأن معدل الخطأ" },
+        body: {
+          en: "It has published guidance that its indicator should not be the sole basis for an accusation, and several universities disabled the feature over reliability concerns. Both facts are to its credit for being visible.",
+          ar: "نشر إرشادات بألا يكون مؤشّره الأساس الوحيد لاتهام، وعطّلت عدة جامعات الميزة بسبب مخاوف الموثوقية. وكلا الأمرين يُحسب له لأنه لم يُخفهما.",
+        },
+      },
+    ],
+    ourDifference: [
+      {
+        title: { en: "You can run it before you submit", ar: "تستطيع تشغيله قبل التسليم" },
+        body: {
+          en: "This is the entire practical difference. Turnitin runs after submission and reports to someone else; you can check a draft here beforehand, see which sentences read as flat, and fix them while it still matters. Nobody is notified and nothing is filed.",
+          ar: "هذا هو الفارق العملي كله. يعمل Turnitin بعد التسليم ويُبلّغ شخصاً آخر؛ بينما تفحص مسودّتك هنا قبلها، وترى أي الجمل يبدو مسطّحاً، وتصلحها وهي ما تزال قابلة للإصلاح. لا يُبلَّغ أحد ولا يُحفَظ شيء.",
+        },
+      },
+      {
+        title: { en: "Arabic is calibrated, not accepted", ar: "العربية مُعايَرة لا مقبولة فقط" },
+        body: {
+          en: "Detection tuned on English misjudges Arabic, and misjudges second-language writers hardest of all — the group most likely to be sitting in front of a Turnitin report they cannot argue with. We calibrate Arabic separately and report confidence honestly.",
+          ar: "الكشف المضبوط على الإنجليزية يُخطئ في العربية، ويُخطئ أشدّ ما يكون في حقّ الكاتبين بلغة ثانية — وهم الأكثر عرضةً للجلوس أمام تقرير Turnitin دون قدرة على مجادلته. نحن نُعايِر العربية على حدة ونُبلّغ عن الثقة بصدق.",
+        },
+      },
+      {
+        title: { en: "It explains itself", ar: "يشرح نفسه" },
+        body: {
+          en: "We return the sentences driving the score and a style breakdown you can act on, rather than a percentage in a report you never see. Knowing which paragraph reads as mechanical is the part that improves writing.",
+          ar: "نُعيد الجمل التي قادت للنتيجة وتفصيلاً للأسلوب تستطيع التصرّف به، بدل نسبة في تقرير لا تراه. ومعرفة أي فقرة تُقرأ آلياً هي الجزء الذي يحسّن الكتابة.",
+        },
+      },
+    ],
+    pricingNote: {
+      en: "Turnitin is not sold to individuals — it reaches you through an institutional licence, so there is no personal plan to compare against. We are self-serve with a free tier that needs no account. If your university already runs Turnitin, using us costs you nothing extra and does not replace it.",
+      ar: "لا يُباع Turnitin للأفراد — بل يصلك عبر ترخيص مؤسسي، فلا توجد خطة شخصية لمقارنتها. ونحن خدمة ذاتية بخطة مجانية بلا حساب. فإن كانت جامعتك تشغّل Turnitin أصلاً، فاستخدامنا لا يكلّفك شيئاً إضافياً ولا يحلّ محلّه.",
+    },
+    chooseThem: {
+      en: "You do not choose Turnitin — your institution does. If plagiarism matching against published sources is what you need, that is its job and not ours.",
+      ar: "أنت لا تختار Turnitin — مؤسستك تختاره. وإن كانت حاجتك مطابقة الانتحال مع مصادر منشورة، فتلك وظيفته لا وظيفتنا.",
+    },
+    chooseUs: {
+      en: "Use Sahihly before you submit: to see how your own writing reads, understand which lines are flat, and improve them — especially if you write in Arabic or in a second language.",
+      ar: "استخدم صحيحلي قبل التسليم: لترى كيف تُقرأ كتابتك، وتفهم أي السطور مسطّح، وتحسّنها — خاصة إن كنت تكتب بالعربية أو بلغة ثانية.",
+    },
+    faq: [
+      {
+        q: { en: "Does Turnitin detect ChatGPT?", ar: "هل يكشف Turnitin نصوص ChatGPT؟" },
+        a: {
+          en: "It reports an estimate of how much of a text reads as AI-generated. It does not identify a specific model, because no detector can — there is no watermark to read. Treat the number as a probability, not a finding.",
+          ar: "يعرض تقديراً لكم من النص يُقرأ كمولّد آلياً. ولا يحدّد نموذجاً بعينه، لأن ذلك متعذّر على أي كاشف — فلا علامة مائية تُقرأ. تعامل مع الرقم كاحتمال لا كنتيجة قاطعة.",
+        },
+      },
+      {
+        q: { en: "Will checking here change my Turnitin result?", ar: "هل يغيّر الفحص هنا نتيجتي في Turnitin؟" },
+        a: {
+          en: "No, and we would not claim otherwise. Different tools use different models and thresholds, so the scores will not match. What checking here does is show you which passages read as mechanical so you can genuinely improve them before submitting.",
+          ar: "لا، ولن ندّعي غير ذلك. فالأدوات المختلفة تستخدم نماذج وعتبات مختلفة، ولن تتطابق النتائج. وما يفعله الفحص هنا أن يُريك أي المقاطع يُقرأ آلياً لتحسّنه فعلياً قبل التسليم.",
+        },
+      },
+      {
+        q: { en: "I was accused based on a Turnitin score. What now?", ar: "اتُّهمت بناءً على نتيجة Turnitin. ماذا أفعل؟" },
+        a: {
+          en: "Do not rewrite the document — its version history is your evidence. Gather your drafts and notes, ask what the specific figure was and on how many words, and offer to discuss the argument in person. Our guide on false positives walks through this in detail.",
+          ar: "لا تُعِد كتابة المستند — فسجلّ نسخه هو دليلك. اجمع مسودّاتك وملاحظاتك، واسأل عن الرقم المحدّد وعلى كم كلمة، واعرض مناقشة حجّتك شفهياً. ودليلنا عن النتائج الخاطئة يشرح ذلك بالتفصيل.",
+        },
+      },
+    ],
+  },
+
+  "originality-ai": {
+    whatItIs: {
+      en: [
+        "Originality.ai is aimed squarely at people who buy content: agencies, publishers, and site owners checking work delivered by freelance writers. It combines AI detection with plagiarism scanning and a readability check, and keeps a team-visible history of every scan.",
+        "Its whole design assumes someone is verifying somebody else's work rather than improving their own, and it sells credits by the scan rather than a writing subscription.",
+      ],
+      ar: [
+        "‏Originality.ai موجّه مباشرةً لمن يشترون المحتوى: الوكالات والناشرون وأصحاب المواقع الذين يفحصون أعمالاً سلّمها كتّاب مستقلّون. ويجمع بين كشف الذكاء الاصطناعي وفحص الانتحال وقياس سهولة القراءة، ويحتفظ بسجلّ فحوصات مرئي للفريق.",
+        "وتصميمه كله يفترض أن أحداً يتحقّق من عمل غيره لا أنه يحسّن عمله هو، ويبيع أرصدة بالفحص لا اشتراك كتابة.",
+      ],
+    },
+    theirStrengths: [
+      {
+        title: { en: "Built for verifying delivered work", ar: "مبني للتحقّق من عمل مُسلَّم" },
+        body: {
+          en: "Team seats, a shared scan history, and per-writer tracking are genuinely useful if you commission content at volume. We do not build for that workflow and are not trying to.",
+          ar: "مقاعد الفريق وسجلّ الفحوصات المشترك وتتبّع كل كاتب أمور مفيدة فعلاً إن كنت تطلب محتوى بكميات. ونحن لا نبني لسير العمل هذا ولا نسعى إليه.",
+        },
+      },
+      {
+        title: { en: "Plagiarism scanning in the same pass", ar: "فحص انتحال في التمريرة نفسها" },
+        body: {
+          en: "Checking both AI likelihood and copied text at once is a real convenience for a publisher, and it is a capability we do not offer.",
+          ar: "فحص احتمال الذكاء الاصطناعي والنص المنسوخ معاً راحة حقيقية لناشر، وهي قدرة لا نقدّمها.",
+        },
+      },
+      {
+        title: { en: "Published accuracy testing", ar: "اختبارات دقة منشورة" },
+        body: {
+          en: "It publishes its own benchmark results openly. Vendor-run benchmarks always deserve scepticism, but publishing them at all is better than the silence most of this category offers.",
+          ar: "ينشر نتائج قياساته علناً. واختبارات الشركة لنفسها تستحق الشكّ دائماً، لكن نشرها أصلاً أفضل من صمت معظم هذا المجال.",
+        },
+      },
+    ],
+    ourDifference: [
+      {
+        title: { en: "We are on the writer's side of the table", ar: "نحن في جهة الكاتب" },
+        body: {
+          en: "Originality.ai exists to judge submitted work. We exist to help someone improve their own draft, which changes what we return: the sentences responsible, a style breakdown, and a rewrite that fixes rhythm without touching your terminology.",
+          ar: "‏Originality.ai موجود للحكم على عمل مُسلَّم. ونحن موجودون لمساعدة أحدهم على تحسين مسودّته، وهذا يغيّر ما نُعيده: الجمل المسؤولة، وتفصيل الأسلوب، وإعادة صياغة تصلح الإيقاع دون المساس بمصطلحاتك.",
+        },
+      },
+      {
+        title: { en: "Arabic, properly", ar: "العربية كما ينبغي" },
+        body: {
+          en: "It targets English content operations. If your writers deliver Arabic, a detector calibrated on English will misjudge them — and a false accusation against a freelancer costs someone their work.",
+          ar: "هو موجّه لعمليات المحتوى الإنجليزي. فإن كان كتّابك يسلّمون بالعربية، فكاشف مُعايَر على الإنجليزية سيُخطئ في حقّهم — واتهام خاطئ لمستقلّ يكلّفه عمله.",
+        },
+      },
+      {
+        title: { en: "No credits to buy before you can judge it", ar: "لا أرصدة تشتريها قبل الحكم عليه" },
+        body: {
+          en: "Ours runs free with no account, so you can test the quality on your own text before paying anything. Credit-based tools require a purchase before you know whether they work for your language.",
+          ar: "أداتنا تعمل مجاناً بلا حساب، فتختبر الجودة على نصّك قبل أن تدفع شيئاً. أما الأدوات القائمة على الأرصدة فتتطلّب شراءً قبل أن تعرف هل تعمل مع لغتك.",
+        },
+      },
+    ],
+    pricingNote: {
+      en: "Originality.ai sells credits consumed per scan, which suits an agency checking many deliveries and is poor value for someone checking their own drafts repeatedly. We sell a subscription with a free tier and no per-check cost. Match the model to how often you check, not to the headline number.",
+      ar: "يبيع Originality.ai أرصدة تُستهلَك بكل فحص، وهو مناسب لوكالة تفحص تسليمات كثيرة وضعيف القيمة لمن يفحص مسودّاته مراراً. ونحن نبيع اشتراكاً بخطة مجانية وبلا تكلفة لكل فحص. طابق النموذج مع عدد مرات فحصك لا مع الرقم المعلن.",
+    },
+    chooseThem: {
+      en: "Choose Originality.ai if you commission English content and need plagiarism scanning, team seats, and a per-writer audit trail.",
+      ar: "اختر Originality.ai إن كنت تطلب محتوى إنجليزياً وتحتاج فحص انتحال ومقاعد فريق وسجلّ تدقيق لكل كاتب.",
+    },
+    chooseUs: {
+      en: "Choose Sahihly if you are improving your own writing, if any of it is Arabic, or if you want to test the quality before buying credits.",
+      ar: "اختر صحيحلي إن كنت تحسّن كتابتك أنت، أو كان أي منها بالعربية، أو أردت اختبار الجودة قبل شراء أرصدة.",
+    },
+    faq: [
+      {
+        q: { en: "Can I use a detector to reject a freelancer's work?", ar: "هل أستخدم كاشفاً لرفض عمل مستقلّ؟" },
+        a: {
+          en: "Be very careful. Scores are probabilistic and flag second-language writers at higher rates, so rejecting work on a percentage alone will eventually cost you a good writer unfairly. Use it to start a conversation about specific passages instead.",
+          ar: "كن شديد الحذر. فالنتائج احتمالية وتصنّف الكاتبين بلغة ثانية بمعدلات أعلى، ورفض عمل بناءً على نسبة وحدها سيكلّفك كاتباً جيداً ظلماً في النهاية. استخدمها لبدء نقاش حول مقاطع محدّدة بدلاً من ذلك.",
+        },
+      },
+      {
+        q: { en: "Why do the two tools disagree on the same text?", ar: "لماذا تختلف الأداتان على النص نفسه؟" },
+        a: {
+          en: "Different models, different training, different thresholds — all estimating the same fuzzy property. A wide gap means the text sits in an ambiguous zone, which is exactly when a confident-looking number misleads most.",
+          ar: "نماذج مختلفة وتدريب مختلف وعتبات مختلفة — كلها تقدّر الخاصية الغامضة نفسها. والفجوة الواسعة تعني أن النص في منطقة ملتبسة، وهي تحديداً حين يضلّل الرقم الواثق أكثر ما يضلّل.",
+        },
+      },
+    ],
+  },
+
+  grammarly: {
+    whatItIs: {
+      en: [
+        "Grammarly is a writing assistant that most people already have installed: grammar and spelling correction, tone suggestions, and rewriting help, delivered inside the browser and word processors rather than on a separate site. It has since added generative writing features and an AI-detection indicator.",
+        "Its centre of gravity is correctness and clarity as you type. Detection is a recent addition to a product built around helping you write, not around judging what was written.",
+      ],
+      ar: [
+        "‏Grammarly مساعد كتابة يملكه معظم الناس أصلاً: تصحيح نحوي وإملائي، واقتراحات للنبرة، ومساعدة في إعادة الصياغة، يعمل داخل المتصفح ومعالجات النصوص لا على موقع منفصل. وأضاف لاحقاً ميزات كتابة توليدية ومؤشراً لكشف الذكاء الاصطناعي.",
+        "ومركز ثقله الصواب والوضوح أثناء الكتابة. والكشف إضافة حديثة لمنتج بُني حول مساعدتك على الكتابة لا حول الحكم على ما كُتب.",
+      ],
+    },
+    theirStrengths: [
+      {
+        title: { en: "It is already where you write", ar: "هو حيث تكتب أصلاً" },
+        body: {
+          en: "Browser extensions and document integrations mean it corrects you in the place you actually work. That convenience beats any feature comparison for day-to-day writing, and we do not compete with it.",
+          ar: "إضافات المتصفح والتكامل مع المستندات تجعله يصحّح لك في المكان الذي تعمل فيه فعلاً. وهذه الراحة تتفوّق على أي مقارنة ميزات في الكتابة اليومية، ونحن لا ننافسها.",
+        },
+      },
+      {
+        title: { en: "Genuinely good at correctness", ar: "جيّد فعلاً في الصواب" },
+        body: {
+          en: "Years of refinement on grammar, punctuation, and clarity suggestions. If English is not your first language, it will catch things no detector ever looks at.",
+          ar: "سنوات من الصقل في النحو والترقيم واقتراحات الوضوح. وإن لم تكن الإنجليزية لغتك الأولى فسيلتقط أموراً لا ينظر إليها أي كاشف.",
+        },
+      },
+      {
+        title: { en: "One tool for a whole team", ar: "أداة واحدة لفريق كامل" },
+        body: {
+          en: "Style guides, shared terminology, and brand-tone enforcement across an organisation are things we do not offer at all.",
+          ar: "أدلة الأسلوب والمصطلحات المشتركة وفرض نبرة العلامة عبر مؤسسة أمور لا نقدّمها إطلاقاً.",
+        },
+      },
+    ],
+    ourDifference: [
+      {
+        title: { en: "Correct and human-sounding are different problems", ar: "الصواب والبشرية مشكلتان مختلفتان" },
+        body: {
+          en: "Grammarly makes writing correct. Correct is not the same as human-sounding — in fact polishing every sentence to the same clean standard is one of the things that makes prose read as machine-written. We measure and fix rhythm, which is the signal detectors actually respond to.",
+          ar: "‏Grammarly يجعل الكتابة صحيحة. والصواب ليس البشرية — بل إن صقل كل جملة إلى المعيار النظيف نفسه من أكثر ما يجعل النثر يُقرأ كآلي. ونحن نقيس الإيقاع ونصلحه، وهو الإشارة التي تستجيب لها الكواشف فعلاً.",
+        },
+      },
+      {
+        title: { en: "Arabic is a first language here", ar: "العربية لغة أولى هنا" },
+        body: {
+          en: "Grammarly is an English product. Detection and rewriting in Arabic run here on Arabic-tuned analysis rather than English rules applied to Arabic text, which is the difference between a usable judgement and noise.",
+          ar: "‏Grammarly منتج إنجليزي. أما الكشف وإعادة الصياغة بالعربية فيجريان هنا على تحليل مضبوط للعربية لا على قواعد إنجليزية مطبَّقة على نص عربي، وهذا الفرق بين حكم صالح وضجيج.",
+        },
+      },
+      {
+        title: { en: "The score explains itself", ar: "النتيجة تشرح نفسها" },
+        body: {
+          en: "We return a confidence rating, the sentences driving the result, and a style report covering rhythm variance and filler density — the things you can act on rather than a single indicator.",
+          ar: "نُعيد تقييماً للثقة، والجمل التي قادت للنتيجة، وتقرير أسلوب يغطي تباين الإيقاع وكثافة الحشو — أموراً تستطيع التصرّف بها بدل مؤشّر واحد.",
+        },
+      },
+    ],
+    pricingNote: {
+      en: "Grammarly's free tier covers basic correction and its paid plans cover the rest, priced as an everyday writing subscription. We price a narrower product and include a free tier with no account. They are complementary rather than competing purchases — plenty of people reasonably pay for both.",
+      ar: "خطة Grammarly المجانية تغطي التصحيح الأساسي وخططه المدفوعة تغطي الباقي، بسعر اشتراك كتابة يومي. ونحن نسعّر منتجاً أضيق مع خطة مجانية بلا حساب. وهما شراءان متكاملان لا متنافسان — وكثيرون يدفعون للاثنين بحقّ.",
+    },
+    chooseThem: {
+      en: "Choose Grammarly for everyday correctness, clarity, and tone in English, inside the tools you already write in.",
+      ar: "اختر Grammarly للصواب اليومي والوضوح والنبرة بالإنجليزية، داخل الأدوات التي تكتب فيها أصلاً.",
+    },
+    chooseUs: {
+      en: "Use Sahihly when the question is how machine-written a passage reads and how to loosen it — particularly in Arabic. Most people use both.",
+      ar: "استخدم صحيحلي حين يكون السؤال كم يبدو المقطع آلياً وكيف تليّنه — خاصة بالعربية. ومعظم الناس يستخدمون الاثنين.",
+    },
+    faq: [
+      {
+        q: { en: "Does fixing grammar lower an AI score?", ar: "هل يخفض تصحيح النحو نتيجة الذكاء الاصطناعي؟" },
+        a: {
+          en: "Often it raises it. Correction pushes every sentence toward the same clean, conventional form, and that uniformity is precisely what detectors read as machine-written. Vary sentence length after correcting, not before.",
+          ar: "غالباً يرفعها. فالتصحيح يدفع كل جملة نحو الصيغة النظيفة التقليدية نفسها، وهذا الانتظام تحديداً ما تقرأه الكواشف كنصّ آلي. نوّع أطوال الجمل بعد التصحيح لا قبله.",
+        },
+      },
+      {
+        q: { en: "Can I use both together?", ar: "هل أستخدمهما معاً؟" },
+        a: {
+          en: "Yes, and it is the sensible order: correct first, then check how the corrected text reads and restore some rhythm. They solve different problems and neither replaces the other.",
+          ar: "نعم، وهذا الترتيب المنطقي: صحّح أولاً، ثم افحص كيف يُقرأ النص المصحَّح وأعد بعض الإيقاع. فهما يحلّان مشكلتين مختلفتين ولا يغني أحدهما عن الآخر.",
+        },
+      },
+    ],
+  },
+
   quillbot: {
     whatItIs: {
       en: [

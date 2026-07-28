@@ -225,6 +225,21 @@ export default async function AIDetectorPage({
         </Reveal>
 
         <Reveal>
+          {/* Arabic is the differentiator and the query people actually search,
+              so point at the dedicated page with anchor text that says so. */}
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-center text-sm">
+            <span className="text-white/55">
+              {locale === "ar"
+                ? "تكتب بالعربية؟ الكواشف المدرَّبة على الإنجليزية تُخطئ فيها كثيراً — "
+                : "Writing in Arabic? Detectors trained on English misjudge it routinely — "}
+            </span>
+            <Link href="/arabic-ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
+              {locale === "ar" ? "جرّب كاشف النصوص العربية المجاني" : "try the free AI detector for Arabic text"}
+            </Link>
+          </div>
+        </Reveal>
+
+        <Reveal>
           <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-center text-sm">
             <span className="text-white/55">
               {locale === "ar" ? "تريد معرفة كيف نحسب النتيجة بالضبط؟ " : "Want to know exactly how the score is computed? "}

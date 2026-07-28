@@ -115,6 +115,48 @@ const baseCompetitors: BaseCompetitor[] = [
 
 baseCompetitors.push(
   {
+    slug: "turnitin",
+    name: "Turnitin",
+    title: { en: "Sahihly vs Turnitin", ar: "صحيحلي مقابل Turnitin" },
+    intro: {
+      en: "Turnitin is the integrity system your university runs after you submit. Sahihly is the check you run before — with sentence-level reasons and genuine Arabic support.",
+      ar: "‏Turnitin نظام النزاهة الذي تشغّله جامعتك بعد التسليم. وصحيحلي الفحص الذي تجريه أنت قبله — بأسباب على مستوى الجملة ودعم عربي حقيقي.",
+    },
+    rows: commonRows(),
+    verdict: {
+      en: "Turnitin reports on you. Sahihly reports to you — before it matters.",
+      ar: "‏Turnitin يكتب تقريراً عنك. وصحيحلي يكتبه لك — قبل أن يصبح الأمر مهماً.",
+    },
+  },
+  {
+    slug: "originality-ai",
+    name: "Originality.ai",
+    title: { en: "Sahihly vs Originality.ai", ar: "صحيحلي مقابل Originality.ai" },
+    intro: {
+      en: "Originality.ai is built for publishers verifying delivered work. Sahihly is built for the person writing it — and calibrated for Arabic, which content-ops tools are not.",
+      ar: "‏Originality.ai مبني للناشرين الذين يتحقّقون من أعمال مُسلَّمة. وصحيحلي مبني لمن يكتبها — ومُعايَر للعربية، وهو ما لا توفّره أدوات عمليات المحتوى.",
+    },
+    rows: commonRows(),
+    verdict: {
+      en: "Verifying someone else's work and improving your own are different jobs. We do the second.",
+      ar: "التحقّق من عمل غيرك وتحسين عملك مهمّتان مختلفتان. ونحن نؤدّي الثانية.",
+    },
+  },
+  {
+    slug: "grammarly",
+    name: "Grammarly",
+    title: { en: "Sahihly vs Grammarly", ar: "صحيحلي مقابل Grammarly" },
+    intro: {
+      en: "Grammarly makes writing correct. Correct is not the same as human-sounding — polishing every sentence to one clean standard is itself a machine tell. Sahihly measures and fixes rhythm, in Arabic and English.",
+      ar: "‏Grammarly يجعل الكتابة صحيحة. والصواب ليس البشرية — فصقل كل جملة إلى معيار نظيف واحد علامة آلية بحدّ ذاته. وصحيحلي يقيس الإيقاع ويصلحه، بالعربية والإنجليزية.",
+    },
+    rows: commonRows(),
+    verdict: {
+      en: "Most people need both: Grammarly to be correct, Sahihly to still sound like a person.",
+      ar: "معظم الناس يحتاجون الاثنين: Grammarly ليكون النص صحيحاً، وصحيحلي ليظل يبدو بشرياً.",
+    },
+  },
+  {
     slug: "copyleaks",
     name: "Copyleaks",
     title: { en: "Sahihly vs Copyleaks", ar: "صحيحلي مقابل Copyleaks" },

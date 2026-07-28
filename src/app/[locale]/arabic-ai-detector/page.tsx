@@ -17,12 +17,12 @@ export async function generateMetadata({
   return {
     title:
       loc === "ar"
-        ? "كاشف الذكاء الاصطناعي للنصوص العربية — الأول من نوعه"
-        : "Arabic AI Detector — The First Built for Arabic, Free",
+        ? "كاشف الذكاء الاصطناعي للنصوص العربية — مجاني وبلا تسجيل"
+        : "Arabic AI Detector — Free AI Detector for Arabic Text",
     description:
       loc === "ar"
-        ? "أول كاشف ذكاء اصطناعي مبني للعربية فعلاً: يفهم الصرف والتشكيل والمستوى اللغوي، يميّز الجمل المشبوهة، ويعطي تقرير أسلوب كامل — مجاناً وبلا تسجيل."
-        : "The first AI detector genuinely built for Arabic: it understands morphology, diacritics, and register, highlights suspicious sentences, and gives a full style report — free, no signup.",
+        ? "كاشف ذكاء اصطناعي مجاني للنصوص العربية، مبني للغة لا مترجَم إليها: يقرأ الصرف والمستوى اللغوي، ويميّز الجمل التي رفعت النتيجة، ويخبرك بمقدار ثقته. بلا تسجيل."
+        : "A free AI detector for Arabic text, built for the language rather than translated into it: it reads Arabic morphology and register, highlights the sentences driving the score, and reports how confident it is. No signup.",
     alternates: { canonical: "/arabic-ai-detector" },
     openGraph: {
       images: [
