@@ -158,7 +158,7 @@ export default async function ContactPage({
               hello@sahihly.com
             </a>
           </p>
-          <p className="flex items-center justify-center gap-2">
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
             <MessageCircle size={15} className="text-emerald-300" />
             {locale === "ar"
               ? "أو واتساب الدعم الفني وتفعيل الاشتراكات:"
@@ -171,6 +171,16 @@ export default async function ContactPage({
               className="text-emerald-300 hover:text-emerald-200"
             >
               +970 59 484 8203
+            </a>
+          </p>
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <Mail size={15} className="text-emerald-300" />
+            {locale === "ar" ? "أو الإيميل مباشرة:" : "Or email directly:"}{" "}
+            <a
+              href="mailto:mohammedsaadaang@gmail.com"
+              className="text-emerald-300 hover:text-emerald-200"
+            >
+              mohammedsaadaang@gmail.com
             </a>
           </p>
         </div>
