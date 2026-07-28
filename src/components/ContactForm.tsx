@@ -13,6 +13,7 @@ type Labels = {
   sending: string;
   sent: string;
   error: string;
+  invalid: string;
 };
 
 export default function ContactForm({
@@ -24,6 +25,7 @@ export default function ContactForm({
 }) {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState(labels.error);
 
   function set<K extends keyof typeof form>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -38,10 +40,16 @@ export default function ContactForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, locale }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        setErrorMessage(json?.error === "invalid" || json?.error === "invalid_body" ? labels.invalid : labels.error);
+        setState("error");
+        return;
+      }
       setState("sent");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch {
+      setErrorMessage(labels.error);
       setState("error");
     }
   }
@@ -98,7 +106,7 @@ export default function ContactForm({
 
       {state === "error" && (
         <p className="mt-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">
-          {labels.error}
+          {errorMessage}
         </p>
       )}
 

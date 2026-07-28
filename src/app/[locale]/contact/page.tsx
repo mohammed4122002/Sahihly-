@@ -59,6 +59,7 @@ const C = {
       sending: "Sending…",
       sent: "Thanks — your message is in. We'll get back to you soon.",
       error: "Couldn't send right now. Please try again or email us directly.",
+      invalid: "Please enter a valid email and a message of at least 5 characters.",
     },
   },
   ar: {
@@ -98,6 +99,7 @@ const C = {
       sending: "جاري الإرسال…",
       sent: "شكراً — وصلتنا رسالتك وسنرد عليك قريباً.",
       error: "تعذّر الإرسال حالياً. حاول مجدداً أو راسلنا مباشرة.",
+      invalid: "أدخل بريداً إلكترونياً صحيحاً ورسالة لا تقل عن 5 أحرف.",
     },
   },
 };
