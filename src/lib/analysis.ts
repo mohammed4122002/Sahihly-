@@ -155,25 +155,64 @@ function heuristicDetect(text: string): DetectResult {
   const cv = mean > 0 ? Math.sqrt(variance) / mean : 1; // coefficient of variation
   const uniformity = Math.max(0, 1 - Math.min(cv, 1)); // 0..1, higher = more uniform
 
-  // 2) lexical repetition (type-token ratio); AI often lower diversity in long text
-  const unique = new Set(words).size;
-  const ttr = words.length ? unique / words.length : 1;
-  const repetition = Math.max(0, 0.75 - ttr) / 0.75; // 0..1
+  // 2) lexical repetition, measured over a fixed window.
+  //
+  // Plain type-token ratio cannot be used here: it falls as a text gets longer
+  // no matter who wrote it, because common words keep recurring. Scoring it
+  // directly made the same passage look progressively more machine-written the
+  // more of it you pasted. A moving-average TTR averages the ratio across
+  // fixed-size windows instead, so the number describes the writing rather
+  // than its length.
+  const WINDOW = 60;
+  let ttr: number;
+  if (words.length <= WINDOW) {
+    ttr = words.length ? new Set(words).size / words.length : 1;
+  } else {
+    let sum = 0;
+    let windows = 0;
+    for (let i = 0; i + WINDOW <= words.length; i += 10) {
+      sum += new Set(words.slice(i, i + WINDOW)).size / WINDOW;
+      windows++;
+    }
+    ttr = windows ? sum / windows : 1;
+  }
+  const repetition = Math.max(0, 0.72 - ttr) / 0.72; // 0..1
 
-  // 3) AI tell phrases density
+  // 3) AI tell phrases, as a rate rather than a presence flag.
+  //
+  // Counting how many distinct phrases appear at least once punished long
+  // honest writing: a 2,000-word essay that says "furthermore" once scored the
+  // same as a paragraph built entirely from filler. What separates the two is
+  // density, so count every occurrence and normalise per 100 words.
   const lower = text.toLowerCase();
-  let tellHits = 0;
-  for (const t of tells) if (lower.includes(t)) tellHits++;
-  const tellSignal = Math.min(tellHits / 3, 1);
+  let tellOccurrences = 0;
+  for (const t of tells) {
+    const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    tellOccurrences += (lower.match(new RegExp(escaped, "g")) || []).length;
+  }
+  const tellsPer100 = words.length ? (tellOccurrences * 100) / words.length : 0;
+  // Roughly one filler phrase per 50 words already reads as machine-written.
+  const tellSignal = Math.min(tellsPer100 / 2, 1);
 
   // 4) punctuation regularity — very even comma usage
   const commaRatio =
     (text.match(/[,،]/g)?.length || 0) / Math.max(sentences.length, 1);
   const commaSignal = commaRatio > 1.5 ? Math.min((commaRatio - 1.5) / 2, 1) : 0;
 
+  // Rhythm uniformity and filler density carry the result; repetition and
+  // punctuation only nudge it. Weights were fitted against passages of known
+  // origin so that varied human prose lands low, formal human prose lands
+  // low-to-middle, machine text with filler lands high, and machine text
+  // without filler lands in the middle.
+  //
+  // That last band is deliberate. Formal human writing and unfilled machine
+  // writing genuinely overlap on these statistics, and forcing them apart here
+  // would mean flagging academic prose as AI — the exact failure this tool
+  // tells people not to trust. The middle is the honest answer; separating
+  // those two cases is what the language model is for.
   const raw =
-    uniformity * 0.4 + repetition * 0.25 + tellSignal * 0.25 + commaSignal * 0.1;
-  const score = Math.round(Math.min(96, Math.max(4, raw * 100)));
+    uniformity * 0.46 + tellSignal * 0.38 + repetition * 0.14 + commaSignal * 0.08;
+  const score = Math.round(Math.min(96, Math.max(3, raw * 100)));
 
   // per-sentence scoring
   const scored: Sentence[] = sentences.map((s) => {

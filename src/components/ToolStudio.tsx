@@ -411,7 +411,19 @@ export default function ToolStudio({
                         {t.hybridBadge}
                       </span>
                     )}
+                    {detect.engine === "heuristic" && (
+                      <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] text-amber-300">
+                        {t.basicEngineBadge}
+                      </span>
+                    )}
                   </div>
+                  {/* Say plainly when the model half is unavailable. Showing a
+                      degraded score with no warning is worse than showing none. */}
+                  {detect.engine === "heuristic" && (
+                    <p className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-center text-[11px] leading-relaxed text-amber-200/90">
+                      {t.basicEngineNote}
+                    </p>
+                  )}
                   {detect.words < 40 && (
                     <p className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-center text-[11px] text-amber-200/90">
                       {t.shortText}
