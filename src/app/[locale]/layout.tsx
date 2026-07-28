@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Backgrounds from "@/components/Backgrounds";
 import ScrollProgress from "@/components/ScrollProgress";
 import ConsentBanner from "@/components/ConsentBanner";
+import WelcomeToast from "@/components/WelcomeToast";
 import CursorGlow from "@/components/CursorGlow";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -184,6 +185,7 @@ export default async function LocaleLayout({
         <main id="main" className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />
         <ConsentBanner locale={locale} />
+        <WelcomeToast locale={locale} />
         <Analytics />
       </body>
     </html>
