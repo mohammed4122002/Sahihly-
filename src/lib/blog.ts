@@ -1,5 +1,6 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { posts as staticPosts, type BlogPost } from "@/content/blog";
+import { getAuthorUsernames } from "@/lib/authors";
 
 type DbRow = {
   slug: string;
@@ -66,12 +67,18 @@ async function dbPosts(): Promise<BlogPost[]> {
       .order("created_at", { ascending: false });
     if (error || !data) return [];
     const posts = (data as DbRow[]).map(rowToPost);
-    const avatars = await authorAvatars(
-      posts.map((p) => p.authorId).filter((id): id is string => Boolean(id))
-    );
+    const ids = posts.map((p) => p.authorId).filter((id): id is string => Boolean(id));
+    const [avatars, usernames] = await Promise.all([
+      authorAvatars(ids),
+      getAuthorUsernames(ids),
+    ]);
     return posts.map((p) =>
-      p.authorId && avatars.has(p.authorId)
-        ? { ...p, authorAvatar: avatars.get(p.authorId) }
+      p.authorId
+        ? {
+            ...p,
+            authorAvatar: avatars.get(p.authorId) ?? p.authorAvatar,
+            authorUsername: usernames.get(p.authorId),
+          }
         : p
     );
   } catch {

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import Reveal from "@/components/Reveal";
+import Link from "next/link";
+import { getAuthors } from "@/lib/authors";
+import VerifiedBadge from "@/components/VerifiedBadge";
+import AuthorLinks from "@/components/AuthorLinks";
 import { ShieldCheck, Globe, Heart } from "lucide-react";
 
 export async function generateMetadata({
@@ -113,6 +117,8 @@ export default async function AboutPage({
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const c = content[locale];
+  const ar = locale === "ar";
+  const team = await getAuthors();
 
   return (
     <div className="container-x max-w-3xl py-16">
@@ -136,6 +142,56 @@ export default async function AboutPage({
           );
         })}
       </div>
+
+      {team.length > 0 && (
+        <Reveal>
+          <section className="mt-16">
+            <h2 className="text-2xl font-bold">{ar ? "الفريق" : "The team"}</h2>
+            <p className="mt-2 text-sm text-white/50">
+              {ar
+                ? "الأشخاص الذين يكتبون هنا. لكل واحد صفحة تجمع مقالاته وطريقة للتواصل معه."
+                : "The people who write here. Each has a page collecting their articles and a way to reach them."}
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {team.map((m) => (
+                <div key={m.id} className="glass glow-card rounded-2xl p-5">
+                  <Link href={`/author/${m.username}`} className="group flex items-center gap-3">
+                    {m.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={m.avatarUrl}
+                        alt={m.fullName}
+                        className="h-14 w-14 shrink-0 rounded-full border border-white/15 object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-violet-400/15 font-display text-lg font-bold text-violet-300">
+                        {m.fullName.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-1.5 font-semibold text-white/90 transition-colors group-hover:text-violet-200">
+                        {m.fullName}
+                        <VerifiedBadge size={14} label={ar ? "كاتب موثّق" : "Verified writer"} />
+                      </p>
+                      <p className="truncate text-xs text-violet-200/70">
+                        {m.title[locale] || (ar ? "كاتب في صحيحلي" : "Writer at Sahihly")}
+                      </p>
+                    </div>
+                  </Link>
+                  {m.bio[locale] && (
+                    <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/55">
+                      {m.bio[locale]}
+                    </p>
+                  )}
+                  <div className="mt-4">
+                    <AuthorLinks author={m} ar={ar} size="sm" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+      )}
 
       <Reveal>
         <section className="mt-16">

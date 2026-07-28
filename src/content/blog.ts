@@ -14,6 +14,8 @@ export type BlogPost = {
   authorId?: string;
   /** Resolved profile photo for the byline; absent falls back to an initial. */
   authorAvatar?: string;
+  /** Handle for /author/<username>, so the byline can link to their page. */
+  authorUsername?: string;
 };
 
 export const posts: BlogPost[] = [

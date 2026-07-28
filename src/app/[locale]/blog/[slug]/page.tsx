@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { ArrowLeft, ChevronLeft } from "lucide-react";
 import { withHeadingIds } from "@/lib/toc";
 import TableOfContents from "@/components/TableOfContents";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 export const revalidate = 300;
 
@@ -139,7 +140,17 @@ export default async function PostPage({
         )}
         <div className="text-sm">
           {post.author ? (
-            <span className="font-medium text-white/85">{post.author}</span>
+            post.authorUsername ? (
+              <Link
+                href={`/author/${post.authorUsername}`}
+                className="inline-flex items-center gap-1.5 font-medium text-white/85 hover:text-violet-200"
+              >
+                {post.author}
+                <VerifiedBadge size={14} label={ar ? "كاتب موثّق" : "Verified writer"} />
+              </Link>
+            ) : (
+              <span className="font-medium text-white/85">{post.author}</span>
+            )
           ) : (
             <Link href="/about" className="font-medium text-white/85 hover:text-violet-200">
               {locale === "ar" ? "فريق صحيحلي" : "The Sahihly Team"}
@@ -183,12 +194,29 @@ export default async function PostPage({
                 <p className="text-xs uppercase tracking-wider text-white/35">
                   {ar ? "بقلم" : "Written by"}
                 </p>
-                <p className="mt-0.5 font-semibold text-white/90">{post.author}</p>
+                <p className="mt-0.5 flex items-center gap-1.5 font-semibold text-white/90">
+                  {post.authorUsername ? (
+                    <Link href={`/author/${post.authorUsername}`} className="hover:text-violet-200">
+                      {post.author}
+                    </Link>
+                  ) : (
+                    post.author
+                  )}
+                  <VerifiedBadge size={15} label={ar ? "كاتب موثّق في صحيحلي" : "Verified Sahihly writer"} />
+                </p>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">
                   {ar
                     ? "كاتب في صحيحلي، يكتب عن الكتابة وجودتها وأدوات الذكاء الاصطناعي بالعربية والإنجليزية."
                     : "Writer at Sahihly, covering writing quality and AI tooling in Arabic and English."}
                 </p>
+                {post.authorUsername && (
+                  <Link
+                    href={`/author/${post.authorUsername}`}
+                    className="mt-3 inline-block text-sm text-violet-300 hover:text-violet-200"
+                  >
+                    {ar ? "كل مقالات الكاتب ←" : "All articles by this writer →"}
+                  </Link>
+                )}
               </div>
             </div>
           )}

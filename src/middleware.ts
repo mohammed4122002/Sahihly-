@@ -95,7 +95,10 @@ export async function middleware(req: NextRequest) {
   if (hostRedirect) return hostRedirect;
 
   if (
-    BYPASS_PREFIXES.some((p) => pathname.startsWith(p)) ||
+    // Match on path segments, not raw string prefixes: a bare startsWith
+    // means "/auth" also swallows "/author/...", which silently drops those
+    // pages out of the locale tree and 404s them.
+    BYPASS_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
     BYPASS_EXACT.includes(pathname) ||
     PUBLIC_FILE.test(pathname)
   ) {

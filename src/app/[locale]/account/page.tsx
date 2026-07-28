@@ -4,6 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 import AccountForm from "@/components/AccountForm";
+import AuthorProfileForm from "@/components/AuthorProfileForm";
+import { resolveStaff } from "@/lib/admin";
 import Reveal from "@/components/Reveal";
 
 export const dynamic = "force-dynamic";
@@ -43,12 +45,18 @@ export default async function AccountPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, avatar_url")
+    .select(
+      "full_name, avatar_url, role, username, title_ar, title_en, bio_ar, bio_en, website_url, x_url, linkedin_url, facebook_url, instagram_url, youtube_url, whatsapp"
+    )
     .eq("id", user.id)
     .maybeSingle();
 
+  // The writer fields only mean something for staff — an ordinary user has no
+  // author page for a bio or a set of social links to appear on.
+  const isStaff = resolveStaff(user.email, profile?.role);
+
   return (
-    <div className="container-x max-w-lg py-10 sm:py-16">
+    <div className="container-x max-w-2xl py-10 sm:py-16">
       <Reveal>
         <Link
           href="/dashboard"
@@ -78,6 +86,29 @@ export default async function AccountPage({
           />
         </div>
       </Reveal>
+
+      {isStaff && (
+        <Reveal delay={2}>
+          <AuthorProfileForm
+            locale={locale}
+            userId={user.id}
+            initial={{
+              username: profile?.username ?? "",
+              title_ar: profile?.title_ar ?? "",
+              title_en: profile?.title_en ?? "",
+              bio_ar: profile?.bio_ar ?? "",
+              bio_en: profile?.bio_en ?? "",
+              website_url: profile?.website_url ?? "",
+              x_url: profile?.x_url ?? "",
+              linkedin_url: profile?.linkedin_url ?? "",
+              facebook_url: profile?.facebook_url ?? "",
+              instagram_url: profile?.instagram_url ?? "",
+              youtube_url: profile?.youtube_url ?? "",
+              whatsapp: profile?.whatsapp ?? "",
+            }}
+          />
+        </Reveal>
+      )}
     </div>
   );
 }
