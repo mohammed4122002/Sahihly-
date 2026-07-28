@@ -9,6 +9,13 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import AuthorLinks from "@/components/AuthorLinks";
 import { ShieldCheck, Globe, Heart } from "lucide-react";
 
+// The team section reads live profiles, so this page cannot be baked once at
+// build time: it was still showing the name, photo and (missing) social links
+// a writer had on the day of the last deploy, while /author/<name> — which does
+// revalidate — showed the current ones. Same interval as the author page, so
+// the two never disagree for longer than one window.
+export const revalidate = 300;
+
 export async function generateMetadata({
   params,
 }: {

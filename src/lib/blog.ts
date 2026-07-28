@@ -31,14 +31,21 @@ function rowToPost(r: DbRow): BlogPost {
   };
 }
 
-/** Byline photos for the accounts that published these posts.
+/** Byline details for the accounts that published these posts.
  *
  *  Read with the service client on purpose: `profiles` is restricted to each
  *  user's own row, so a visitor's session cannot see an author's record, and
  *  opening that policy up would expose the email address stored alongside the
- *  photo. Only the two fields that belong on a public byline are selected, and
- *  a missing service key simply means no photo rather than a broken page. */
+ *  photo. Only the fields that belong on a public byline are selected, and
+ *  a missing service key simply means no photo rather than a broken page.
+ *
+ *  The name is read here too. `blog_posts.author_name` is a free-text snapshot
+ *  typed at publish time, so it froze whatever the writer was called that day —
+ *  which is how one article said "Deema" while her own page said "Deema Mahdi
+ *  Jaradat". The account is the source of truth for who someone is; the stored
+ *  string is only a fallback for posts with no account attached. */
 type AuthorBits = {
+  name?: string;
   avatar?: string;
   title: { ar: string; en: string };
   bio: { ar: string; en: string };
@@ -51,10 +58,11 @@ async function authorBits(ids: string[]): Promise<Map<string, AuthorBits>> {
     const svc = createServiceClient();
     const { data } = await svc
       .from("profiles")
-      .select("id, avatar_url, title_ar, title_en, bio_ar, bio_en")
+      .select("id, full_name, avatar_url, title_ar, title_en, bio_ar, bio_en")
       .in("id", unique);
     type Row = {
       id: string;
+      full_name: string | null;
       avatar_url: string | null;
       title_ar: string | null;
       title_en: string | null;
@@ -65,6 +73,7 @@ async function authorBits(ids: string[]): Promise<Map<string, AuthorBits>> {
       ((data ?? []) as Row[]).map((r) => [
         r.id,
         {
+          name: (r.full_name || "").trim() || undefined,
           avatar: r.avatar_url || undefined,
           title: { ar: (r.title_ar || "").trim(), en: (r.title_en || "").trim() },
           bio: { ar: (r.bio_ar || "").trim(), en: (r.bio_en || "").trim() },
@@ -96,6 +105,7 @@ async function dbPosts(): Promise<BlogPost[]> {
       const b = bits.get(p.authorId);
       return {
         ...p,
+        author: b?.name ?? p.author,
         authorAvatar: b?.avatar ?? p.authorAvatar,
         authorUsername: usernames.get(p.authorId),
         authorTitle: b?.title,

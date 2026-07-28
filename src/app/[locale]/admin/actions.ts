@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidateArticlePages } from "@/lib/revalidate-public";
 import { requireAdmin, requireStaff } from "@/lib/admin";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -192,9 +193,7 @@ export async function savePost(input: PostInput, id?: string) {
   }
 
   revalidatePath("/admin/articles");
-  revalidatePath("/blog");
-  revalidatePath(`/blog/${slug}`);
-  revalidatePath("/");
+  revalidateArticlePages();
   return { ok: true, slug };
 }
 
@@ -202,6 +201,5 @@ export async function deletePost(id: string) {
   const { svc } = await guardStaff();
   await svc.from("blog_posts").delete().eq("id", id);
   revalidatePath("/admin/articles");
-  revalidatePath("/blog");
-  revalidatePath("/");
+  revalidateArticlePages();
 }

@@ -9,6 +9,11 @@ const MAX_BYTES = 4 * 1024 * 1024; // 4MB
 
 function notifyHeader() {
   window.dispatchEvent(new Event("sahihly:profile-updated"));
+  // The write went straight to Supabase, so nothing told Next that the cached
+  // /about, /author and byline pages are now out of date. Fire and forget —
+  // a failed refresh means the page catches up on its own revalidate window,
+  // which is not worth interrupting a successful save for.
+  fetch("/api/profile-updated", { method: "POST" }).catch(() => {});
 }
 
 export default function AccountForm({

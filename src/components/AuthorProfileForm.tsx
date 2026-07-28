@@ -93,6 +93,9 @@ export default function AuthorProfileForm({
             : "Saved ✓",
       });
       window.dispatchEvent(new Event("sahihly:profile-updated"));
+      // Refresh the public pages that show this profile — their own page, the
+      // team list, and every byline they carry. See api/profile-updated.
+      fetch("/api/profile-updated", { method: "POST" }).catch(() => {});
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
