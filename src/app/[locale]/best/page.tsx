@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { ArrowRight, Trophy } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { roundups } from "@/content/tools";
 import Reveal from "@/components/Reveal";
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "قوائم مراجعة صادقة لأفضل أدوات الذكاء الاصطناعي: كواشف، مُنسّنات، أدوات كتابة، وأدوات تقارير — بالعربية والإنجليزية."
         : "Honest ranked reviews of the best AI tools: detectors, humanizers, writing tools, and report tools — English and Arabic.",
-    alternates: { canonical: "/best" },
+    alternates: alternatesFor(loc, "/best"),
   };
 }
 
@@ -35,11 +36,11 @@ export default async function BestHubPage({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: ar ? "أفضل أدوات الذكاء الاصطناعي" : "Best AI Tools",
-    url: `${SITE_URL}/best`,
+    url: pageUrl(locale, "/best"),
     hasPart: roundups.map((r) => ({
       "@type": "WebPage",
       name: r.title[locale],
-      url: `${SITE_URL}/best/${r.slug}`,
+      url: pageUrl(locale, `/best/${r.slug}`),
     })),
   };
 
@@ -103,7 +104,7 @@ export default async function BestHubPage({
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {roundups.map((r, i) => (
           <Reveal key={r.slug} delay={i} as="div">
-            <Link
+            <TreeLink
               href={`/best/${r.slug}`}
               className="glass glow-card tilt group flex h-full flex-col rounded-2xl p-6"
             >
@@ -116,7 +117,7 @@ export default async function BestHubPage({
                 {ar ? "اقرأ القائمة" : "Read the list"}
                 <ArrowRight size={14} className="flip-x" />
               </span>
-            </Link>
+            </TreeLink>
           </Reveal>
         ))}
       </div>

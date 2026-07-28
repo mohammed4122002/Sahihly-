@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Languages, BookOpenCheck, Feather, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
@@ -23,7 +24,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "كاشف ذكاء اصطناعي مجاني للنصوص العربية، مبني للغة لا مترجَم إليها: يقرأ الصرف والمستوى اللغوي، ويميّز الجمل التي رفعت النتيجة، ويخبرك بمقدار ثقته. بلا تسجيل."
         : "A free AI detector for Arabic text, built for the language rather than translated into it: it reads Arabic morphology and register, highlights the sentences driving the score, and reports how confident it is. No signup.",
-    alternates: { canonical: "/arabic-ai-detector" },
+    alternates: alternatesFor(loc, "/arabic-ai-detector"),
     openGraph: {
       images: [
         {
@@ -167,8 +168,8 @@ export default async function ArabicDetectorPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/arabic-ai-detector` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/arabic-ai-detector") },
       ],
     },
   ];

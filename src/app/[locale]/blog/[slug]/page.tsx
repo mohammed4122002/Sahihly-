@@ -1,7 +1,8 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, type Locale, SITE_URL, ORG_ID } from "@/lib/i18n/config";
+import { isLocale, type Locale, ORG_ID } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
@@ -24,7 +25,7 @@ export async function generateMetadata({
   return {
     title: post.title[loc],
     description: post.excerpt[loc],
-    alternates: { canonical: `/blog/${slug}` },
+    alternates: alternatesFor(loc, `/blog/${slug}`),
     openGraph: {
       title: post.title[loc],
       description: post.excerpt[loc],
@@ -69,8 +70,8 @@ export default async function PostPage({
             ...(post.authorAvatar ? { image: post.authorAvatar } : {}),
           }
         : { "@type": "Organization", name: "Sahihly" },
-      url: `${SITE_URL}/blog/${slug}`,
-      mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
+      url: pageUrl(locale, `/blog/${slug}`),
+      mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl(locale, `/blog/${slug}`) },
       publisher: { "@id": ORG_ID },
       isAccessibleForFree: true,
       wordCount: post.body[locale].replace(/<[^>]*>/g, " ").trim().split(/\s+/).length,
@@ -79,9 +80,9 @@ export default async function PostPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
-        { "@type": "ListItem", position: 3, name: post.title[locale], item: `${SITE_URL}/blog/${slug}` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: "Blog", item: pageUrl(locale, "/blog") },
+        { "@type": "ListItem", position: 3, name: post.title[locale], item: pageUrl(locale, `/blog/${slug}`) },
       ],
     },
   ];
@@ -101,9 +102,9 @@ export default async function PostPage({
       <div className="mx-auto w-full max-w-3xl xl:mx-0 xl:ms-auto">
       <nav aria-label={ar ? "مسار التنقّل" : "Breadcrumb"}>
         <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/40">
-          <li><Link href="/" className="hover:text-white">{ar ? "الرئيسية" : "Home"}</Link></li>
+          <li><TreeLink href="/" className="hover:text-white">{ar ? "الرئيسية" : "Home"}</TreeLink></li>
           <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
-          <li><Link href={`${base}/blog`} className="hover:text-white">{ar ? "المدوّنة" : "Blog"}</Link></li>
+          <li><TreeLink href={`${base}/blog`} className="hover:text-white">{ar ? "المدوّنة" : "Blog"}</TreeLink></li>
           <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
           <li className="truncate text-white/60" aria-current="page">{post.title[locale]}</li>
         </ol>
@@ -141,20 +142,20 @@ export default async function PostPage({
         <div className="text-sm">
           {post.author ? (
             post.authorUsername ? (
-              <Link
+              <TreeLink
                 href={`/author/${post.authorUsername}`}
                 className="inline-flex items-center gap-1.5 font-medium text-white/85 hover:text-violet-200"
               >
                 {post.author}
                 <VerifiedBadge size={14} label={ar ? "كاتب موثّق" : "Verified writer"} />
-              </Link>
+              </TreeLink>
             ) : (
               <span className="font-medium text-white/85">{post.author}</span>
             )
           ) : (
-            <Link href="/about" className="font-medium text-white/85 hover:text-violet-200">
+            <TreeLink href="/about" className="font-medium text-white/85 hover:text-violet-200">
               {locale === "ar" ? "فريق صحيحلي" : "The Sahihly Team"}
-            </Link>
+            </TreeLink>
           )}
           <p className="text-xs text-white/40">
             {post.author
@@ -195,9 +196,9 @@ export default async function PostPage({
                 </p>
                 <p className="mt-0.5 flex items-center gap-1.5 font-semibold text-white/90">
                   {post.authorUsername ? (
-                    <Link href={`/author/${post.authorUsername}`} className="hover:text-violet-200">
+                    <TreeLink href={`/author/${post.authorUsername}`} className="hover:text-violet-200">
                       {post.author}
-                    </Link>
+                    </TreeLink>
                   ) : (
                     post.author
                   )}
@@ -215,12 +216,12 @@ export default async function PostPage({
                       : "Part of the Sahihly team, covering writing quality and AI tooling in Arabic and English.")}
                 </p>
                 {post.authorUsername && (
-                  <Link
+                  <TreeLink
                     href={`/author/${post.authorUsername}`}
                     className="mt-3 inline-block text-sm text-violet-300 hover:text-violet-200"
                   >
                     {ar ? "كل مقالات الكاتب ←" : "All articles by this writer →"}
-                  </Link>
+                  </TreeLink>
                 )}
               </div>
             </div>
@@ -228,9 +229,9 @@ export default async function PostPage({
 
           <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
             <p className="text-sm text-white/70">{dict.cta.subtitle}</p>
-            <Link href="/" className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
+            <TreeLink href="/" className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
               {dict.cta.button}
-            </Link>
+            </TreeLink>
           </div>
 
           {related.length > 0 && (
@@ -240,7 +241,7 @@ export default async function PostPage({
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {related.map((p) => (
-                  <Link
+                  <TreeLink
                     key={p.slug}
                     href={`/blog/${p.slug}`}
                     className="glass tilt group rounded-2xl p-5"
@@ -250,18 +251,18 @@ export default async function PostPage({
                       {p.title[locale]}
                     </h3>
                     <p className="mt-1.5 text-xs text-white/50">{p.excerpt[locale]}</p>
-                  </Link>
+                  </TreeLink>
                 ))}
               </div>
             </div>
           )}
 
-          <Link
+          <TreeLink
             href={`${base}/blog`}
             className="mt-14 inline-flex items-center gap-2 text-sm text-white/50 hover:text-white"
           >
             <ArrowLeft size={15} className="flip-x" /> {dict.blog.backToBlog}
-          </Link>
+          </TreeLink>
         </article>
       </div>
 

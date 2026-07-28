@@ -1,8 +1,9 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { isLocale, type Locale, SITE_URL, ORG_ID } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getAuthorByUsername, getAuthors } from "@/lib/authors";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
@@ -34,7 +35,7 @@ export async function generateMetadata({
   return {
     title: `${author.fullName} — ${role}`,
     description,
-    alternates: { canonical: `/author/${author.username}` },
+    alternates: alternatesFor(loc, `/author/${author.username}`),
     openGraph: {
       type: "profile",
       title: `${author.fullName} — ${role}`,
@@ -72,7 +73,7 @@ export default async function AuthorPage({
         "@type": "Person",
         "@id": `${SITE_URL}/author/${author.username}#person`,
         name: author.fullName,
-        url: `${SITE_URL}/author/${author.username}`,
+        url: pageUrl(locale, `/author/${author.username}`),
         jobTitle: role,
         ...(author.avatarUrl ? { image: author.avatarUrl } : {}),
         ...(author.bio[locale] ? { description: author.bio[locale] } : {}),
@@ -84,13 +85,13 @@ export default async function AuthorPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: ar ? "من نحن" : "About", item: `${SITE_URL}/about` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: ar ? "من نحن" : "About", item: pageUrl(locale, "/about") },
         {
           "@type": "ListItem",
           position: 3,
           name: author.fullName,
-          item: `${SITE_URL}/author/${author.username}`,
+          item: pageUrl(locale, `/author/${author.username}`),
         },
       ],
     },
@@ -105,9 +106,9 @@ export default async function AuthorPage({
 
       <nav aria-label={ar ? "مسار التنقّل" : "Breadcrumb"}>
         <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/40">
-          <li><Link href="/" className="hover:text-white">{ar ? "الرئيسية" : "Home"}</Link></li>
+          <li><TreeLink href="/" className="hover:text-white">{ar ? "الرئيسية" : "Home"}</TreeLink></li>
           <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
-          <li><Link href="/about" className="hover:text-white">{ar ? "من نحن" : "About"}</Link></li>
+          <li><TreeLink href="/about" className="hover:text-white">{ar ? "من نحن" : "About"}</TreeLink></li>
           <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
           <li className="text-white/60" aria-current="page">{author.fullName}</li>
         </ol>
@@ -162,7 +163,7 @@ export default async function AuthorPage({
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {posts.map((p, i) => (
               <Reveal key={p.slug} delay={Math.min(i, 4)} as="div">
-                <Link
+                <TreeLink
                   href={`/blog/${p.slug}`}
                   className="glass tilt group flex h-full flex-col rounded-2xl p-5"
                 >
@@ -174,7 +175,7 @@ export default async function AuthorPage({
                   <span className="mt-3 text-xs text-white/35">
                     {formatDate(p.date, locale)} · {p.readingTime} {ar ? "د قراءة" : "min read"}
                   </span>
-                </Link>
+                </TreeLink>
               </Reveal>
             ))}
           </div>
@@ -188,7 +189,7 @@ export default async function AuthorPage({
           </h2>
           <div className="mt-4 flex flex-wrap gap-3">
             {others.map((a) => (
-              <Link
+              <TreeLink
                 key={a.id}
                 href={`/author/${a.username}`}
                 className="glass flex items-center gap-2.5 rounded-full py-1.5 pe-4 ps-1.5 transition-colors hover:border-violet-400/40"
@@ -205,7 +206,7 @@ export default async function AuthorPage({
                   {a.fullName}
                   <VerifiedBadge size={13} label={ar ? "موثّق" : "Verified"} />
                 </span>
-              </Link>
+              </TreeLink>
             ))}
           </div>
         </section>

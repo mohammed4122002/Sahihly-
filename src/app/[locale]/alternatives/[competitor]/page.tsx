@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { notFound } from "next/navigation";
 import { Crown, ExternalLink, TriangleAlert } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { alternatives, getAlternative } from "@/content/alternatives";
 import Reveal from "@/components/Reveal";
@@ -36,7 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical: `/alternatives/${competitor}` },
+    alternates: alternatesFor(loc, `/alternatives/${competitor}`),
     openGraph: {
       title,
       description,
@@ -168,9 +169,9 @@ export default async function AlternativePage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: ar ? "البدائل" : "Alternatives", item: `${SITE_URL}/alternatives` },
-        { "@type": "ListItem", position: 3, name: h1, item: `${SITE_URL}/alternatives/${competitor}` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: ar ? "البدائل" : "Alternatives", item: pageUrl(locale, "/alternatives") },
+        { "@type": "ListItem", position: 3, name: h1, item: pageUrl(locale, `/alternatives/${competitor}`) },
       ],
     },
   ];
@@ -180,9 +181,9 @@ export default async function AlternativePage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <Reveal>
-        <Link href="/alternatives" className="mb-6 inline-block text-sm text-white/50 hover:text-white">
+        <TreeLink href="/alternatives" className="mb-6 inline-block text-sm text-white/50 hover:text-white">
           ← {ar ? "كل البدائل" : "All alternatives"}
-        </Link>
+        </TreeLink>
         <h1 className="text-4xl font-bold sm:text-5xl">{h1}</h1>
         <p className="mt-4 text-lg text-white/65">
           {ar
@@ -245,7 +246,7 @@ export default async function AlternativePage({
               </div>
               <p className="mt-3 text-sm leading-relaxed text-white/65">{o.why[locale]}</p>
               {o.url && (
-                <Link
+                <TreeLink
                   href={o.url}
                   target={o.isSahihly ? undefined : "_blank"}
                   rel={o.isSahihly ? undefined : "nofollow noopener"}
@@ -255,7 +256,7 @@ export default async function AlternativePage({
                 >
                   {o.isSahihly ? (ar ? "جرّب مجاناً الآن" : "Try it free now") : ar ? "زر الموقع" : "Visit site"}
                   {!o.isSahihly && <ExternalLink size={13} />}
-                </Link>
+                </TreeLink>
               )}
             </div>
           </Reveal>
@@ -270,16 +271,16 @@ export default async function AlternativePage({
       </div>
 
       <div className="mt-10 flex flex-wrap justify-center gap-2">
-        <Link href={`/vs/${a.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
+        <TreeLink href={`/vs/${a.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
           {ar ? `مقارنة مباشرة مع ${a.target}` : `Head-to-head vs ${a.target}`}
-        </Link>
+        </TreeLink>
         {alternatives
           .filter((x) => x.slug !== a.slug)
           .slice(0, 3)
           .map((x) => (
-            <Link key={x.slug} href={`/alternatives/${x.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
+            <TreeLink key={x.slug} href={`/alternatives/${x.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
               {ar ? `بدائل ${x.target}` : `${x.target} alternatives`}
-            </Link>
+            </TreeLink>
           ))}
       </div>
     </div>

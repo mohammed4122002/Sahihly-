@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bot, Fingerprint, RefreshCcw, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
@@ -23,7 +24,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "هل كُتب هذا النص بـ ChatGPT؟ الصقه واحصل على نسبة الاحتمال مع تمييز الجمل المشبوهة وتقرير أسلوب كامل — بالعربية والإنجليزية، مجاناً وبلا تسجيل."
         : "Was this written by ChatGPT? Paste it and get an AI-likelihood score with suspicious sentences highlighted and a full style report — English and Arabic, free, no signup.",
-    alternates: { canonical: "/chatgpt-detector" },
+    alternates: alternatesFor(loc, "/chatgpt-detector"),
     openGraph: {
       images: [
         {
@@ -165,8 +166,8 @@ export default async function ChatGPTDetectorPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/chatgpt-detector` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/chatgpt-detector") },
       ],
     },
   ];

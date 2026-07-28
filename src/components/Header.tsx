@@ -8,6 +8,7 @@ import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import AccountMenu from "./AccountMenu";
 import type { Locale } from "@/lib/i18n/config";
+import { treeBase } from "@/lib/seo";
 import type { Dictionary } from "@/lib/i18n";
 import type { HeaderUser } from "@/lib/auth-user";
 import { createClient } from "@/lib/supabase/client";
@@ -26,7 +27,8 @@ export default function Header({
   // wrong "Log in" flash); null = confirmed signed out.
   const [user, setUser] = useState<HeaderUser | null | undefined>(undefined);
   const pathname = usePathname();
-  const base = "";
+  // Keep the reader in whichever language tree they arrived through.
+  const base = treeBase(pathname);
   const ar = locale === "ar";
 
   const refreshUser = useCallback(async () => {
@@ -65,8 +67,8 @@ export default function Header({
   }, []);
 
   const links = [
-    { href: "/ai-detector", label: dict.nav.detector },
-    { href: "/ai-humanizer", label: dict.nav.humanizer },
+    { href: `${base}/ai-detector`, label: dict.nav.detector },
+    { href: `${base}/ai-humanizer`, label: dict.nav.humanizer },
     { href: `${base}/best`, label: dict.nav.best },
     { href: `${base}/pricing`, label: dict.nav.pricing },
     { href: `${base}/blog`, label: dict.nav.blog },
@@ -88,7 +90,7 @@ export default function Header({
       )}
     >
       <nav className="container-x flex h-16 items-center justify-between gap-4">
-        <Link href="/" aria-label="Sahihly home">
+        <Link href={base || "/"} aria-label="Sahihly home">
           <Logo />
         </Link>
 
@@ -115,7 +117,7 @@ export default function Header({
 
         <div className="flex items-center gap-2">
           <Link
-            href="/search"
+            href={`${base}/search`}
             aria-label="Search"
             className="rounded-full border border-white/10 p-2 text-white/60 transition-colors hover:text-white"
           >
@@ -171,14 +173,14 @@ export default function Header({
             {user ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href={`${base}/dashboard`}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5"
                 >
                   {accountLabels.dashboard}
                 </Link>
                 <Link
-                  href="/account"
+                  href={`${base}/account`}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5"
                 >
@@ -186,7 +188,7 @@ export default function Header({
                 </Link>
                 {user.isAdmin && (
                   <Link
-                    href="/admin"
+                    href={`${base}/admin`}
                     onClick={() => setOpen(false)}
                     className="rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5"
                   >

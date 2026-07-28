@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import WordCounterTool from "@/components/WordCounterTool";
 import Reveal from "@/components/Reveal";
@@ -22,7 +23,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "عدّاد كلمات فوري يعمل بالعربية والإنجليزية: كلمات، أحرف مع/بدون مسافات، جمل، فقرات، وقت القراءة والإلقاء — مجاناً وبلا تسجيل، ويعمل مباشرة في متصفحك."
         : "Instant word counter for English and Arabic: words, characters with/without spaces, sentences, paragraphs, reading and speaking time — free, no signup, runs entirely in your browser.",
-    alternates: { canonical: "/word-counter" },
+    alternates: alternatesFor(loc, "/word-counter"),
     openGraph: {
       images: [
         {
@@ -148,7 +149,7 @@ export default async function WordCounterPage({
       applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      url: `${SITE_URL}/word-counter`,
+      url: pageUrl(locale, "/word-counter"),
     },
     {
       "@context": "https://schema.org",
@@ -163,8 +164,8 @@ export default async function WordCounterPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/word-counter` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/word-counter") },
       ],
     },
   ];

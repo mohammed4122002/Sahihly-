@@ -6,7 +6,17 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/dashboard", "/admin"],
+      // The Arabic tree mirrors every path, so the private areas need blocking
+      // in both — /ar/admin is a different URL to a crawler than /admin.
+      disallow: [
+        "/api/",
+        "/dashboard",
+        "/admin",
+        "/account",
+        "/ar/dashboard",
+        "/ar/admin",
+        "/ar/account",
+      ],
     },
     sitemap: [
       `${SITE_URL}/sitemap.xml`,

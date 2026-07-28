@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import type { Locale } from "@/lib/i18n/config";
+import { treeBase } from "@/lib/seo";
 import type { Dictionary } from "@/lib/i18n";
 
 export default function Footer({
@@ -13,7 +15,8 @@ export default function Footer({
   locale: Locale;
   dict: Dictionary;
 }) {
-  const base = "";
+  // Keep the reader in whichever language tree they arrived through.
+  const base = treeBase(usePathname());
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
 
@@ -37,40 +40,40 @@ export default function Footer({
         { href: "/ai-humanizer", label: dict.nav.humanizer },
         { href: "/arabic-ai-detector", label: locale === "ar" ? "كاشف النصوص العربية" : "Arabic AI Detector" },
         { href: "/chatgpt-detector", label: locale === "ar" ? "كاشف ChatGPT" : "ChatGPT Detector" },
-        { href: `${base}/pricing`, label: dict.nav.pricing },
+        { href: "/pricing", label: dict.nav.pricing },
       ],
     },
     {
       title: dict.footer.resources,
       links: [
-        { href: `${base}/blog`, label: dict.nav.blog },
-        { href: `${base}/best`, label: dict.nav.best },
-        { href: `${base}/vs`, label: dict.nav.compare },
-        { href: `${base}/alternatives`, label: locale === "ar" ? "البدائل" : "Alternatives" },
-        { href: `${base}/word-counter`, label: locale === "ar" ? "عدّاد الكلمات" : "Word Counter" },
-        { href: `${base}/readability-checker`, label: locale === "ar" ? "فاحص سهولة القراءة" : "Readability Checker" },
-        { href: `${base}/glossary`, label: locale === "ar" ? "قاموس المصطلحات" : "Glossary" },
-        { href: `${base}/vs/undetectable-ai`, label: "vs Undetectable.ai" },
-        { href: `${base}/vs/quillbot`, label: "vs QuillBot" },
-        { href: `${base}/vs/gptzero`, label: "vs GPTZero" },
-        { href: `${base}/vs/copyleaks`, label: "vs Copyleaks" },
-        { href: `${base}/vs/zerogpt`, label: "vs ZeroGPT" },
+        { href: "/blog", label: dict.nav.blog },
+        { href: "/best", label: dict.nav.best },
+        { href: "/vs", label: dict.nav.compare },
+        { href: "/alternatives", label: locale === "ar" ? "البدائل" : "Alternatives" },
+        { href: "/word-counter", label: locale === "ar" ? "عدّاد الكلمات" : "Word Counter" },
+        { href: "/readability-checker", label: locale === "ar" ? "فاحص سهولة القراءة" : "Readability Checker" },
+        { href: "/glossary", label: locale === "ar" ? "قاموس المصطلحات" : "Glossary" },
+        { href: "/vs/undetectable-ai", label: "vs Undetectable.ai" },
+        { href: "/vs/quillbot", label: "vs QuillBot" },
+        { href: "/vs/gptzero", label: "vs GPTZero" },
+        { href: "/vs/copyleaks", label: "vs Copyleaks" },
+        { href: "/vs/zerogpt", label: "vs ZeroGPT" },
       ],
     },
     {
       title: dict.footer.company,
       links: [
-        { href: `${base}/about`, label: dict.nav.about },
-        { href: `${base}/methodology`, label: locale === "ar" ? "منهجيتنا" : "Methodology" },
-        { href: `${base}/contact`, label: locale === "ar" ? "تواصل معنا" : "Contact" },
-        { href: `${base}/about#policy`, label: dict.ethics.link },
+        { href: "/about", label: dict.nav.about },
+        { href: "/methodology", label: locale === "ar" ? "منهجيتنا" : "Methodology" },
+        { href: "/contact", label: locale === "ar" ? "تواصل معنا" : "Contact" },
+        { href: "/about#policy", label: dict.ethics.link },
       ],
     },
     {
       title: dict.footer.legal,
       links: [
-        { href: `${base}/privacy`, label: dict.footer.privacy },
-        { href: `${base}/terms`, label: dict.footer.terms },
+        { href: "/privacy", label: dict.footer.privacy },
+        { href: "/terms", label: dict.footer.terms },
       ],
     },
   ];
@@ -108,7 +111,7 @@ export default function Footer({
               {col.links.map((l) => (
                 <li key={l.href}>
                   <Link
-                    href={l.href}
+                    href={`${base}${l.href}`}
                     className="text-sm text-white/50 transition-colors hover:text-white"
                   >
                     {l.label}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, MessageCircle } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import ContactForm from "@/components/ContactForm";
 import Reveal from "@/components/Reveal";
 
@@ -17,7 +18,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "راسل فريق صحيحلي — أسئلة، ملاحظات، شراكات، أو دعم فني."
         : "Reach the Sahihly team — questions, feedback, partnerships, or support.",
-    alternates: { canonical: "/contact" },
+    alternates: alternatesFor(loc, "/contact"),
   };
 }
 
@@ -115,7 +116,7 @@ export default async function ContactPage({
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: c.h1,
-    url: `${SITE_URL}/contact`,
+    url: pageUrl(locale, "/contact"),
   };
 
   return (

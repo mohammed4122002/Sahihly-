@@ -1,8 +1,9 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Check, X } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { competitors, getCompetitor } from "@/content/competitors";
 import Reveal from "@/components/Reveal";
@@ -25,7 +26,7 @@ export async function generateMetadata({
   return {
     title: c.title[loc],
     description: c.intro[loc],
-    alternates: { canonical: `/vs/${competitor}` },
+    alternates: alternatesFor(loc, `/vs/${competitor}`),
   };
 }
 
@@ -47,9 +48,9 @@ export default async function ComparePage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Compare", item: `${SITE_URL}/vs` },
-        { "@type": "ListItem", position: 3, name: c.title[locale], item: `${SITE_URL}/vs/${c.slug}` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: "Compare", item: pageUrl(locale, "/vs") },
+        { "@type": "ListItem", position: 3, name: c.title[locale], item: pageUrl(locale, `/vs/${c.slug}`) },
       ],
     },
     {
@@ -204,9 +205,9 @@ export default async function ComparePage({
       <Reveal delay={2}>
         <div className="mt-14 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-8 text-center">
           <p className="text-lg text-white/80">{c.verdict[locale]}</p>
-          <Link href="/" className="btn-primary mt-6 inline-flex rounded-full px-6 py-3 text-sm">
+          <TreeLink href="/" className="btn-primary mt-6 inline-flex rounded-full px-6 py-3 text-sm">
             {dict.compare.tryFree}
-          </Link>
+          </TreeLink>
         </div>
       </Reveal>
 
@@ -214,13 +215,13 @@ export default async function ComparePage({
         {competitors
           .filter((x) => x.slug !== c.slug)
           .map((x) => (
-            <Link
+            <TreeLink
               key={x.slug}
               href={`${base}/vs/${x.slug}`}
               className="btn-ghost rounded-full px-4 py-2 text-sm"
             >
               {locale === "ar" ? "مقابل" : "vs"} {x.name}
-            </Link>
+            </TreeLink>
           ))}
       </div>
     </div>

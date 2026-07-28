@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { FlaskConical, Scale, GitCompare, TriangleAlert, ShieldCheck } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import Reveal from "@/components/Reveal";
 
 export async function generateMetadata({
@@ -17,7 +18,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "شرح كامل وشفاف لكيفية عمل محرّك صحيحلي الهجين: الإشارات الإحصائية، استدلال الذكاء الاصطناعي، درجة الثقة، وحدود الدقة."
         : "A full, transparent explanation of how Sahihly's hybrid engine works: statistical signals, AI reasoning, the confidence rating, and the limits of accuracy.",
-    alternates: { canonical: "/methodology" },
+    alternates: alternatesFor(loc, "/methodology"),
     openGraph: {
       images: [
         {
@@ -116,7 +117,7 @@ export default async function MethodologyPage({
     inLanguage: locale,
     author: { "@type": "Organization", name: "Sahihly" },
     publisher: { "@type": "Organization", name: "Sahihly" },
-    url: `${SITE_URL}/methodology`,
+    url: pageUrl(locale, "/methodology"),
   };
 
   return (
@@ -149,9 +150,9 @@ export default async function MethodologyPage({
 
       <Reveal>
         <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
-          <Link href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
+          <TreeLink href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
             {c.cta}
-          </Link>
+          </TreeLink>
         </div>
       </Reveal>
     </div>

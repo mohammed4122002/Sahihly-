@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { notFound } from "next/navigation";
 import { Check, X, ExternalLink, Crown } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { roundups, getRoundup } from "@/content/tools";
 import Stars from "@/components/Stars";
@@ -25,7 +26,7 @@ export async function generateMetadata({
   return {
     title: r.title[loc],
     description: r.intro[loc],
-    alternates: { canonical: `/best/${category}` },
+    alternates: alternatesFor(loc, `/best/${category}`),
     openGraph: {
       title: r.title[loc],
       description: r.intro[loc],
@@ -86,9 +87,9 @@ export default async function RoundupPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: ar ? "الأفضل" : "Best", item: `${SITE_URL}/best` },
-        { "@type": "ListItem", position: 3, name: r.h1[locale], item: `${SITE_URL}/best/${category}` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: ar ? "الأفضل" : "Best", item: pageUrl(locale, "/best") },
+        { "@type": "ListItem", position: 3, name: r.h1[locale], item: pageUrl(locale, `/best/${category}`) },
       ],
     },
   ];
@@ -98,9 +99,9 @@ export default async function RoundupPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <Reveal>
-        <Link href="/best" className="mb-6 inline-block text-sm text-white/50 hover:text-white">
+        <TreeLink href="/best" className="mb-6 inline-block text-sm text-white/50 hover:text-white">
           ← {ar ? "كل القوائم" : "All lists"}
-        </Link>
+        </TreeLink>
         <h1 className="text-4xl font-bold sm:text-5xl">{r.h1[locale]}</h1>
         <p className="mt-4 text-lg text-white/65">{r.intro[locale]}</p>
         <p className="mt-2 text-xs text-white/40">
@@ -206,7 +207,7 @@ export default async function RoundupPage({
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <span className="text-sm text-white/50">{t.price[locale]}</span>
                 {t.url && (
-                  <Link
+                  <TreeLink
                     href={t.isSahihly ? t.url : t.url}
                     target={t.isSahihly ? undefined : "_blank"}
                     rel={t.isSahihly ? undefined : "nofollow noopener"}
@@ -216,7 +217,7 @@ export default async function RoundupPage({
                   >
                     {t.isSahihly ? (ar ? "جرّب مجاناً" : "Try free") : ar ? "زر الموقع" : "Visit site"}
                     {!t.isSahihly && <ExternalLink size={13} />}
-                  </Link>
+                  </TreeLink>
                 )}
               </div>
             </div>
@@ -235,9 +236,9 @@ export default async function RoundupPage({
         {roundups
           .filter((x) => x.slug !== r.slug)
           .map((x) => (
-            <Link key={x.slug} href={`/best/${x.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
+            <TreeLink key={x.slug} href={`/best/${x.slug}`} className="btn-ghost rounded-full px-4 py-2 text-sm">
               {x.h1[locale]}
-            </Link>
+            </TreeLink>
           ))}
       </div>
     </div>

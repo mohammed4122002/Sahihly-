@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import Reveal from "@/components/Reveal";
 
 export async function generateMetadata({
@@ -15,7 +16,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "الشروط التي تحكم استخدامك لخدمة صحيحلي."
         : "The terms governing your use of Sahihly.",
-    alternates: { canonical: "/terms" },
+    alternates: alternatesFor(loc, "/terms"),
   };
 }
 

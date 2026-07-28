@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { locales, defaultLocale, isLocale } from "@/lib/i18n/config";
+import { defaultLocale, isLocale } from "@/lib/i18n/config";
 
 /**
  * Keep the Supabase session fresh on every request. Without this, access
@@ -105,17 +105,28 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Legacy /en/* and /ar/* URLs: adopt that language, then redirect to the
-  // clean URL. This keeps old links working and gives shareable language
-  // links (sahihly.com/ar → Arabic experience at sahihly.com).
-  const prefixed = locales.find(
-    (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)
-  );
-  if (prefixed) {
+  // /ar/* is a real, indexable tree — served, not redirected.
+  //
+  // Googlebot crawls with Accept-Language: en-US, so the negotiating clean URL
+  // only ever showed it English and the Arabic side of the site could not be
+  // indexed at all. Arabic now has its own addressable documents; the clean URL
+  // remains the English canonical and keeps negotiating for humans, and the two
+  // are paired with hreflang (see lib/seo.ts).
+  if (pathname === "/ar" || pathname.startsWith("/ar/")) {
+    const res = NextResponse.next();
+    res.cookies.set(COOKIE, "ar", { path: "/", maxAge: 60 * 60 * 24 * 365 });
+    res.headers.set("Content-Language", "ar");
+    await refreshSupabaseSession(req, res);
+    return res;
+  }
+
+  // /en/* stays a redirect: the clean URL is already the English canonical, and
+  // two live URLs for the same English document would split its signals.
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
     const url = req.nextUrl.clone();
-    url.pathname = pathname.slice(prefixed.length + 1) || "/";
+    url.pathname = pathname.slice(3) || "/";
     const res = NextResponse.redirect(url, 308);
-    res.cookies.set(COOKIE, prefixed, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+    res.cookies.set(COOKIE, "en", { path: "/", maxAge: 60 * 60 * 24 * 365 });
     return res;
   }
 

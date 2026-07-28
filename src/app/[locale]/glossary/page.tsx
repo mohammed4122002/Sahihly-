@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import Reveal from "@/components/Reveal";
 import { TERMS } from "@/content/glossary";
 
@@ -20,7 +21,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "شرح مبسّط لكل مصطلحات كشف الذكاء الاصطناعي: الحيرة، التباين، ثراء المفردات، التنسين، وأكثر — بالعربية والإنجليزية."
         : "Plain-language definitions of every AI-detection term: perplexity, burstiness, lexical diversity, humanizing, and more — in English and Arabic.",
-    alternates: { canonical: "/glossary" },
+    alternates: alternatesFor(loc, "/glossary"),
   };
 }
 
@@ -36,7 +37,7 @@ export default async function GlossaryPage({
     "@context": "https://schema.org",
     "@type": "DefinedTermSet",
     name: locale === "ar" ? "قاموس مصطلحات كشف الذكاء الاصطناعي" : "AI Detection Glossary",
-    url: `${SITE_URL}/glossary`,
+    url: pageUrl(locale, "/glossary"),
     hasDefinedTerm: TERMS.map((t) => ({
       "@type": "DefinedTerm",
       "@id": `${SITE_URL}/glossary#${t.id}`,
@@ -76,11 +77,11 @@ export default async function GlossaryPage({
 
       <Reveal>
         <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
-          <Link href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
+          <TreeLink href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
             {locale === "ar"
               ? "شاهد هذه المفاهيم عملياً — جرّب الكاشف مجاناً"
               : "See these concepts in action — try the detector free"}
-          </Link>
+          </TreeLink>
         </div>
       </Reveal>
     </div>

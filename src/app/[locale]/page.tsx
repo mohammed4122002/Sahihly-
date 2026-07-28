@@ -1,4 +1,4 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import {
   Languages,
   Sparkles,
@@ -16,6 +16,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
@@ -31,9 +32,15 @@ import { LogoMark } from "@/components/Logo";
 const featureIcons = [Languages, Sparkles, ScanText, ShieldCheck, Lock, Zap];
 const useCaseIcons = [GraduationCap, PenTool, Briefcase, Users];
 
-export const metadata = {
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const loc: Locale = isLocale(locale) ? locale : "en";
+  return { alternates: alternatesFor(loc, "/") };
+}
 
 export default async function HomePage({
   params,
@@ -93,12 +100,12 @@ export default async function HomePage({
                 {dict.hero.ctaPrimary}
                 <ArrowRight size={16} className="flip-x" />
               </a>
-              <Link
+              <TreeLink
                 href={`${base}/pricing`}
                 className="btn-ghost inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm"
               >
                 {dict.hero.ctaSecondary}
-              </Link>
+              </TreeLink>
             </div>
             <p className="mt-4 text-center text-xs text-white/40">{dict.hero.trust}</p>
           </Reveal>
@@ -316,9 +323,9 @@ export default async function HomePage({
               <ShieldCheck className="text-violet-300" />
               <h2 className="text-xl font-semibold">{dict.ethics.title}</h2>
               <p className="text-sm text-white/60">{dict.ethics.body}</p>
-              <Link href={`${base}/about#policy`} className="text-sm text-violet-300 hover:text-violet-200">
+              <TreeLink href={`${base}/about#policy`} className="text-sm text-violet-300 hover:text-violet-200">
                 {dict.ethics.link} →
-              </Link>
+              </TreeLink>
             </div>
           </Reveal>
         </div>
@@ -338,7 +345,7 @@ export default async function HomePage({
           <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
             {latestPosts.map((post, i) => (
               <Reveal key={post.slug} delay={i} as="div">
-                <Link
+                <TreeLink
                   href={`/blog/${post.slug}`}
                   className="glass tilt group flex h-full flex-col rounded-2xl p-6"
                 >
@@ -352,7 +359,7 @@ export default async function HomePage({
                   <span className="mt-4 text-sm text-violet-300">
                     {dict.blog.readMore} <span className="inline-block flip-x">→</span>
                   </span>
-                </Link>
+                </TreeLink>
               </Reveal>
             ))}
           </div>

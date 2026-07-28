@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import PricingCards from "@/components/PricingCards";
 import FAQ from "@/components/FAQ";
@@ -11,11 +12,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const dict = getDictionary(isLocale(locale) ? locale : "en");
+  const loc: Locale = isLocale(locale) ? locale : "en";
+  const dict = getDictionary(loc);
   return {
     title: dict.pricing.title,
     description: dict.pricing.subtitle,
-    alternates: { canonical: "/pricing" },
+    alternates: alternatesFor(loc, "/pricing"),
     openGraph: {
       images: [
         {

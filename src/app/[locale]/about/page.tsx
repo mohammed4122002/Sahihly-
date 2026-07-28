@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import Reveal from "@/components/Reveal";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { getAuthors } from "@/lib/authors";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import AuthorLinks from "@/components/AuthorLinks";
@@ -14,11 +15,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const dict = getDictionary(isLocale(locale) ? locale : "en");
+  const loc: Locale = isLocale(locale) ? locale : "en";
+  const dict = getDictionary(loc);
   return {
     title: dict.nav.about,
     description: dict.ethics.body,
-    alternates: { canonical: "/about" },
+    alternates: alternatesFor(loc, "/about"),
   };
 }
 
@@ -155,7 +157,7 @@ export default async function AboutPage({
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {team.map((m) => (
                 <div key={m.id} className="glass glow-card rounded-2xl p-5">
-                  <Link href={`/author/${m.username}`} className="group flex items-center gap-3">
+                  <TreeLink href={`/author/${m.username}`} className="group flex items-center gap-3">
                     {m.avatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -177,7 +179,7 @@ export default async function AboutPage({
                         {m.title[locale] || (ar ? "كاتب في صحيحلي" : "Writer at Sahihly")}
                       </p>
                     </div>
-                  </Link>
+                  </TreeLink>
                   {m.bio[locale] && (
                     <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/55">
                       {m.bio[locale]}

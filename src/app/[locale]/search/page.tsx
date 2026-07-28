@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import { getAllPosts } from "@/lib/blog";
 import { competitors } from "@/content/competitors";
 import { roundups } from "@/content/tools";
@@ -24,7 +25,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "ابحث في أدوات صحيحلي ومقالاته ومصطلحاته ومقارناته."
         : "Search Sahihly's tools, articles, glossary terms, and comparisons.",
-    alternates: { canonical: "/search" },
+    alternates: alternatesFor(loc, "/search"),
     robots: { index: false, follow: true },
   };
 }

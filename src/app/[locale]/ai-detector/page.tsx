@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ScanLine, Languages, AlignLeft, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
@@ -24,7 +25,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "الصق نصك واحصل فوراً على نسبة احتمال كتابته بالذكاء الاصطناعي، مع تمييز الجمل المشبوهة. يدعم العربية بأصالة والإنجليزية بجودة كاملة — مجاناً وبلا تسجيل."
         : "Paste your text and instantly see how likely it was AI-generated, with suspicious sentences highlighted. Native Arabic and full-quality English — free, no signup.",
-    alternates: { canonical: "/ai-detector" },
+    alternates: alternatesFor(loc, "/ai-detector"),
     openGraph: {
       images: [
         {
@@ -177,8 +178,8 @@ export default async function AIDetectorPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/ai-detector` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/ai-detector") },
       ],
     },
   ];

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles, Repeat, FileCheck2, HeartHandshake, Gauge, ShieldAlert, Users } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
@@ -23,7 +24,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "أعد صياغة النص الآلي بأسلوب بشري طبيعي دون تغيير المعنى، مع مقارنة قبل/بعد. يدعم العربية الفصحى بأصالة والإنجليزية بجودة كاملة — مجاناً وبلا تسجيل."
         : "Rewrite robotic AI text into a natural human voice without changing the meaning, with a before/after comparison. Native Arabic and full-quality English — free, no signup.",
-    alternates: { canonical: "/ai-humanizer" },
+    alternates: alternatesFor(loc, "/ai-humanizer"),
     openGraph: {
       images: [
         {
@@ -176,8 +177,8 @@ export default async function AIHumanizerPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/ai-humanizer` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/ai-humanizer") },
       ],
     },
   ];

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import ReadabilityTool from "@/components/ReadabilityTool";
 import Reveal from "@/components/Reveal";
@@ -22,7 +23,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "اعرف مدى سهولة قراءة نصّك فوراً: درجة القراءة، مستوى الجمهور، متوسط طول الجملة، والجمل الطويلة — مجاناً وداخل متصفحك."
         : "See how easy your text is to read instantly: readability score, audience level, average sentence length, and long sentences — free, entirely in your browser.",
-    alternates: { canonical: "/readability-checker" },
+    alternates: alternatesFor(loc, "/readability-checker"),
     openGraph: {
       images: [
         {
@@ -187,7 +188,7 @@ export default async function ReadabilityPage({
       applicationCategory: "UtilitiesApplication",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      url: `${SITE_URL}/readability-checker`,
+      url: pageUrl(locale, "/readability-checker"),
     },
     {
       "@context": "https://schema.org",
@@ -202,8 +203,8 @@ export default async function ReadabilityPage({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Sahihly", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: c.h1, item: `${SITE_URL}/readability-checker` },
+        { "@type": "ListItem", position: 1, name: "Sahihly", item: pageUrl(locale, "/") },
+        { "@type": "ListItem", position: 2, name: c.h1, item: pageUrl(locale, "/readability-checker") },
       ],
     },
   ];

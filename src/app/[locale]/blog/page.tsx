@@ -1,6 +1,7 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
@@ -14,11 +15,12 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const dict = getDictionary(isLocale(locale) ? locale : "en");
+  const loc: Locale = isLocale(locale) ? locale : "en";
+  const dict = getDictionary(loc);
   return {
     title: dict.blog.title,
     description: dict.blog.subtitle,
-    alternates: { canonical: "/blog" },
+    alternates: alternatesFor(loc, "/blog"),
   };
 }
 
@@ -43,7 +45,7 @@ export default async function BlogPage({
       <div className="mx-auto mt-12 grid max-w-4xl gap-5">
         {posts.map((post, i) => (
           <Reveal key={post.slug} delay={i} as="div">
-            <Link
+            <TreeLink
               href={`${base}/blog/${post.slug}`}
               className="glass glow-card group block rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
             >
@@ -61,7 +63,7 @@ export default async function BlogPage({
               <span className="mt-4 inline-block text-sm text-violet-300">
                 {dict.blog.readMore} →
               </span>
-            </Link>
+            </TreeLink>
           </Reveal>
         ))}
       </div>

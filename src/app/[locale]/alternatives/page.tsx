@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { ArrowRight, Repeat2 } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { alternatives } from "@/content/alternatives";
 import Reveal from "@/components/Reveal";
 
@@ -21,7 +22,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "تبحث عن بديل لأداة تستخدمها؟ قوائم بدائل صادقة لكل من Undetectable.ai وQuillBot وGPTZero وZeroGPT وCopyleaks."
         : "Looking to switch tools? Honest alternative lists for Undetectable.ai, QuillBot, GPTZero, ZeroGPT, and Copyleaks.",
-    alternates: { canonical: "/alternatives" },
+    alternates: alternatesFor(loc, "/alternatives"),
   };
 }
 
@@ -38,11 +39,11 @@ export default async function AlternativesHub({
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: ar ? "بدائل الأدوات" : "Tool alternatives",
-    url: `${SITE_URL}/alternatives`,
+    url: pageUrl(locale, "/alternatives"),
     hasPart: alternatives.map((a) => ({
       "@type": "WebPage",
       name: ar ? `أفضل بدائل ${a.target}` : `Best ${a.target} Alternatives`,
-      url: `${SITE_URL}/alternatives/${a.slug}`,
+      url: pageUrl(locale, `/alternatives/${a.slug}`),
     })),
   };
 
@@ -106,7 +107,7 @@ export default async function AlternativesHub({
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {alternatives.map((a, i) => (
           <Reveal key={a.slug} delay={i} as="div">
-            <Link
+            <TreeLink
               href={`/alternatives/${a.slug}`}
               className="glass glow-card tilt group flex h-full flex-col rounded-2xl p-6"
             >
@@ -121,7 +122,7 @@ export default async function AlternativesHub({
                 {ar ? "اقرأ القائمة" : "See the list"}
                 <ArrowRight size={14} className="flip-x" />
               </span>
-            </Link>
+            </TreeLink>
           </Reveal>
         ))}
       </div>

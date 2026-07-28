@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { ArrowRight } from "lucide-react";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import { competitors } from "@/content/competitors";
 import Reveal from "@/components/Reveal";
@@ -22,7 +23,7 @@ export async function generateMetadata({
       loc === "ar"
         ? "قارن صحيحلي مع Undetectable.ai وQuillBot وGPTZero وCopyleaks وZeroGPT — أين نتفوق فعلاً وأين يتعادلون."
         : "Compare Sahihly with Undetectable.ai, QuillBot, GPTZero, Copyleaks, and ZeroGPT — where we genuinely win and where they hold their own.",
-    alternates: { canonical: "/vs" },
+    alternates: alternatesFor(loc, "/vs"),
   };
 }
 
@@ -43,7 +44,7 @@ export default async function VsHubPage({
       "@type": "ListItem",
       position: i + 1,
       name: c.title[locale],
-      url: `${SITE_URL}/vs/${c.slug}`,
+      url: pageUrl(locale, `/vs/${c.slug}`),
     })),
   };
 
@@ -103,7 +104,7 @@ export default async function VsHubPage({
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {competitors.map((c, i) => (
           <Reveal key={c.slug} delay={i} as="div">
-            <Link
+            <TreeLink
               href={`/vs/${c.slug}`}
               className="glass glow-card tilt group flex h-full flex-col rounded-2xl p-6"
             >
@@ -115,16 +116,16 @@ export default async function VsHubPage({
                 {dict.blog.readMore}
                 <ArrowRight size={14} className="flip-x" />
               </span>
-            </Link>
+            </TreeLink>
           </Reveal>
         ))}
       </div>
 
       <Reveal>
         <div className="mt-12 text-center">
-          <Link href="/" className="btn-primary inline-flex rounded-full px-6 py-3 text-sm">
+          <TreeLink href="/" className="btn-primary inline-flex rounded-full px-6 py-3 text-sm">
             {dict.compare.tryFree}
-          </Link>
+          </TreeLink>
         </div>
       </Reveal>
     </div>
