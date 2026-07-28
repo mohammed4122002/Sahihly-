@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
 import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import ContactForm from "@/components/ContactForm";
 import Reveal from "@/components/Reveal";
@@ -150,13 +150,30 @@ export default async function ContactPage({
       </Reveal>
 
       <Reveal delay={2}>
-        <p className="mt-10 flex items-center justify-center gap-2 text-sm text-white/50">
-          <Mail size={15} className="text-violet-300" />
-          {c.email}{" "}
-          <a href="mailto:hello@sahihly.com" className="text-violet-300 hover:text-violet-200">
-            hello@sahihly.com
-          </a>
-        </p>
+        <div className="mt-10 flex flex-col items-center gap-2 text-sm text-white/50">
+          <p className="flex items-center justify-center gap-2">
+            <Mail size={15} className="text-violet-300" />
+            {c.email}{" "}
+            <a href="mailto:hello@sahihly.com" className="text-violet-300 hover:text-violet-200">
+              hello@sahihly.com
+            </a>
+          </p>
+          <p className="flex items-center justify-center gap-2">
+            <MessageCircle size={15} className="text-emerald-300" />
+            {locale === "ar"
+              ? "أو واتساب الدعم الفني وتفعيل الاشتراكات:"
+              : "Or WhatsApp support (billing & activation):"}{" "}
+            <a
+              href="https://wa.me/970594848203"
+              target="_blank"
+              rel="noopener noreferrer"
+              dir="ltr"
+              className="text-emerald-300 hover:text-emerald-200"
+            >
+              +970 59 484 8203
+            </a>
+          </p>
+        </div>
       </Reveal>
     </div>
   );
