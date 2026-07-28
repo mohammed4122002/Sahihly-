@@ -6,14 +6,17 @@ import { SITE_URL } from "@/lib/i18n/config";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  const { plan, cycle } = (await req.json()) as {
+  const { plan, cycle, gateway: gatewayRaw } = (await req.json()) as {
     plan: PlanId;
     cycle: BillingCycle;
+    gateway?: string;
   };
 
   if (!["pro", "ultimate"].includes(plan) || !["monthly", "yearly"].includes(cycle)) {
     return NextResponse.json({ error: "invalid_plan" }, { status: 400 });
   }
+  const gateway = gatewayRaw === "lemonsqueezy" ? "lemonsqueezy" : "binance";
+  const currency = gateway === "lemonsqueezy" ? "USD" : "USDT";
 
   // Require an authenticated user to attach the subscription to.
   const supabase = await createClient();
@@ -32,11 +35,11 @@ export async function POST(req: NextRequest) {
     const svc = createServiceClient();
     await svc.from("payment_orders").insert({
       user_id: user.id,
-      provider: "binance",
+      provider: gateway,
       merchant_trade_no: merchantTradeNo,
       plan,
       amount,
-      currency: "USDT",
+      currency,
       status: "created",
     });
   } catch {
@@ -44,13 +47,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const provider = getProvider("binance");
+    const provider = getProvider(gateway);
     const result = await provider.createOrder({
       plan,
       cycle,
       amount,
-      currency: "USDT",
+      currency,
       userId: user.id,
+      email: user.email,
       merchantTradeNo,
       description: `Sahihly ${plan} (${cycle})`,
       returnUrl: `${SITE_URL}/dashboard?paid=1`,
@@ -70,7 +74,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ checkoutUrl: result.checkoutUrl, merchantTradeNo });
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";
-    if (message === "binance_not_configured") {
+    if (message === "binance_not_configured" || message === "lemonsqueezy_not_configured") {
       return NextResponse.json({ error: "gateway_unconfigured" }, { status: 503 });
     }
     console.error("create order failed", message);
