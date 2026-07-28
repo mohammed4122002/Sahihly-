@@ -38,19 +38,38 @@ function rowToPost(r: DbRow): BlogPost {
  *  opening that policy up would expose the email address stored alongside the
  *  photo. Only the two fields that belong on a public byline are selected, and
  *  a missing service key simply means no photo rather than a broken page. */
-async function authorAvatars(ids: string[]): Promise<Map<string, string>> {
+type AuthorBits = {
+  avatar?: string;
+  title: { ar: string; en: string };
+  bio: { ar: string; en: string };
+};
+
+async function authorBits(ids: string[]): Promise<Map<string, AuthorBits>> {
   const unique = [...new Set(ids)];
   if (unique.length === 0 || !process.env.SUPABASE_SERVICE_ROLE_KEY) return new Map();
   try {
     const svc = createServiceClient();
     const { data } = await svc
       .from("profiles")
-      .select("id, avatar_url")
+      .select("id, avatar_url, title_ar, title_en, bio_ar, bio_en")
       .in("id", unique);
+    type Row = {
+      id: string;
+      avatar_url: string | null;
+      title_ar: string | null;
+      title_en: string | null;
+      bio_ar: string | null;
+      bio_en: string | null;
+    };
     return new Map(
-      (data ?? [])
-        .filter((r: { avatar_url: string | null }) => r.avatar_url)
-        .map((r: { id: string; avatar_url: string | null }) => [r.id, r.avatar_url as string])
+      ((data ?? []) as Row[]).map((r) => [
+        r.id,
+        {
+          avatar: r.avatar_url || undefined,
+          title: { ar: (r.title_ar || "").trim(), en: (r.title_en || "").trim() },
+          bio: { ar: (r.bio_ar || "").trim(), en: (r.bio_en || "").trim() },
+        },
+      ])
     );
   } catch {
     return new Map();
@@ -68,19 +87,21 @@ async function dbPosts(): Promise<BlogPost[]> {
     if (error || !data) return [];
     const posts = (data as DbRow[]).map(rowToPost);
     const ids = posts.map((p) => p.authorId).filter((id): id is string => Boolean(id));
-    const [avatars, usernames] = await Promise.all([
-      authorAvatars(ids),
+    const [bits, usernames] = await Promise.all([
+      authorBits(ids),
       getAuthorUsernames(ids),
     ]);
-    return posts.map((p) =>
-      p.authorId
-        ? {
-            ...p,
-            authorAvatar: avatars.get(p.authorId) ?? p.authorAvatar,
-            authorUsername: usernames.get(p.authorId),
-          }
-        : p
-    );
+    return posts.map((p) => {
+      if (!p.authorId) return p;
+      const b = bits.get(p.authorId);
+      return {
+        ...p,
+        authorAvatar: b?.avatar ?? p.authorAvatar,
+        authorUsername: usernames.get(p.authorId),
+        authorTitle: b?.title,
+        authorBio: b?.bio,
+      };
+    });
   } catch {
     return [];
   }

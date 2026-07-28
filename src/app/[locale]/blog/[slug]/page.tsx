@@ -158,9 +158,8 @@ export default async function PostPage({
           )}
           <p className="text-xs text-white/40">
             {post.author
-              ? locale === "ar"
-                ? "كاتب في صحيحلي"
-                : "Writer at Sahihly"
+              ? post.authorTitle?.[locale] ||
+                (locale === "ar" ? "من فريق صحيحلي" : "Writer at Sahihly")
               : locale === "ar"
                 ? "نبني أدوات جودة الكتابة ثنائية اللغة"
                 : "Building bilingual writing-quality tools"}
@@ -204,10 +203,16 @@ export default async function PostPage({
                   )}
                   <VerifiedBadge size={15} label={ar ? "كاتب موثّق في صحيحلي" : "Verified Sahihly writer"} />
                 </p>
+                {post.authorTitle?.[locale] && (
+                  <p className="mt-0.5 text-xs text-violet-200/70">
+                    {post.authorTitle[locale]}
+                  </p>
+                )}
                 <p className="mt-2 text-sm leading-relaxed text-white/55">
-                  {ar
-                    ? "كاتب في صحيحلي، يكتب عن الكتابة وجودتها وأدوات الذكاء الاصطناعي بالعربية والإنجليزية."
-                    : "Writer at Sahihly, covering writing quality and AI tooling in Arabic and English."}
+                  {post.authorBio?.[locale] ||
+                    (ar
+                      ? "من فريق صحيحلي — نكتب عن جودة الكتابة وأدوات الذكاء الاصطناعي بالعربية والإنجليزية."
+                      : "Part of the Sahihly team, covering writing quality and AI tooling in Arabic and English.")}
                 </p>
                 {post.authorUsername && (
                   <Link
