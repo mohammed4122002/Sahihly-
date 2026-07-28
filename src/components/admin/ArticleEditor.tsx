@@ -85,18 +85,89 @@ function Toolbar({
   );
 }
 
-/** Turns bare lines into <p> so writers never have to think about HTML. */
+/** Inline markdown → HTML, applied only to text that is not already a tag. */
+function inline(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+}
+
+/**
+ * Accepts whatever the writer pastes — HTML, markdown, or plain text — and
+ * returns HTML.
+ *
+ * Writers get articles from a chat interface, which renders markdown rather
+ * than showing the source. Copying what is on screen therefore loses every
+ * heading, and the previous version wrapped each block in <p> regardless, so
+ * an article arrived with no <h2> at all: no contents list, no anchors, and
+ * nothing for search to read as structure. Recognising markdown here means
+ * that mistake cannot silently cost an article its outline.
+ */
 function normalizeHtml(input: string): string {
-  return input
-    .split(/\n{2,}/)
-    .map((block) => {
-      const b = block.trim();
-      if (!b) return "";
-      if (/^<(h[1-6]|ul|ol|p|blockquote|figure|div|table)/i.test(b)) return b;
-      return `<p>${b.replace(/\n/g, "<br/>")}</p>`;
-    })
-    .filter(Boolean)
-    .join("\n");
+  const out: string[] = [];
+  let list: { type: "ul" | "ol"; items: string[] } | null = null;
+
+  const flush = () => {
+    if (!list) return;
+    out.push(
+      `<${list.type}>\n${list.items.map((i) => `  <li>${i}</li>`).join("\n")}\n</${list.type}>`
+    );
+    list = null;
+  };
+
+  for (const block of input.split(/\n{2,}/)) {
+    const b = block.trim();
+    if (!b) continue;
+
+    // Already HTML — leave it exactly as written.
+    if (/^<(h[1-6]|ul|ol|p|blockquote|figure|div|table|section)/i.test(b)) {
+      flush();
+      out.push(b);
+      continue;
+    }
+
+    for (const rawLine of b.split("\n")) {
+      const line = rawLine.trim();
+      if (!line) continue;
+
+      const heading = line.match(/^(#{2,4})\s+(.*)$/);
+      if (heading) {
+        flush();
+        const level = Math.min(heading[1].length, 3); // h1 is the title field
+        out.push(`<h${level}>${inline(heading[2].trim())}</h${level}>`);
+        continue;
+      }
+
+      const bullet = line.match(/^[-*+]\s+(.*)$/);
+      if (bullet) {
+        if (list?.type !== "ul") {
+          flush();
+          list = { type: "ul", items: [] };
+        }
+        list.items.push(inline(bullet[1]));
+        continue;
+      }
+
+      const numbered = line.match(/^\d+[.)]\s+(.*)$/);
+      if (numbered) {
+        if (list?.type !== "ol") {
+          flush();
+          list = { type: "ol", items: [] };
+        }
+        list.items.push(inline(numbered[1]));
+        continue;
+      }
+
+      flush();
+      out.push(/^</.test(line) ? line : `<p>${inline(line)}</p>`);
+    }
+    flush();
+  }
+
+  flush();
+  return out.join("\n");
 }
 
 export default function ArticleEditor({
