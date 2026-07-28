@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Loader2, X, ShieldCheck } from "lucide-react";
+import { Check, Loader2, X, ShieldCheck, CreditCard } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -18,6 +18,8 @@ export default function PricingCards({
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [confirmPlan, setConfirmPlan] = useState<string | null>(null);
+  const [cardLoading, setCardLoading] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
   const router = useRouter();
   const p = dict.pricing;
   const c = dict.checkout;
@@ -33,12 +35,40 @@ export default function PricingCards({
     // Pre-checkout explainer: payment is a manual two-step flow, so set
     // expectations before sending the visitor to /checkout.
     setNotice(null);
+    setCardError(null);
+    setCardLoading(false);
     setConfirmPlan(planId);
   }
 
   function startCheckout(planId: string) {
     setLoadingPlan(planId);
     router.push(`/checkout?plan=${planId}&cycle=${cycle}`);
+  }
+
+  async function startCardCheckout(planId: string) {
+    setCardError(null);
+    setCardLoading(true);
+    try {
+      const res = await fetch("/api/payments/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planId, cycle, gateway: "lemonsqueezy" }),
+      });
+      const json = await res.json();
+      if (res.status === 401) {
+        router.push(`/login?next=/pricing`);
+        return;
+      }
+      if (!res.ok || !json.checkoutUrl) {
+        setCardError(json.error === "gateway_unconfigured" ? c.cardUnavailable : c.cardError);
+        setCardLoading(false);
+        return;
+      }
+      window.location.href = json.checkoutUrl;
+    } catch {
+      setCardError(c.cardError);
+      setCardLoading(false);
+    }
   }
 
   return (
@@ -135,7 +165,7 @@ export default function PricingCards({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => !loadingPlan && setConfirmPlan(null)}
+            onClick={() => !loadingPlan && !cardLoading && setConfirmPlan(null)}
           >
             <motion.div
               className="glass-strong glow-card w-full max-w-md rounded-3xl p-7"
@@ -148,7 +178,7 @@ export default function PricingCards({
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-xl font-bold">{c.title}</h3>
                 <button
-                  onClick={() => !loadingPlan && setConfirmPlan(null)}
+                  onClick={() => !loadingPlan && !cardLoading && setConfirmPlan(null)}
                   className="rounded-lg border border-white/10 p-1.5 text-white/60 hover:text-white"
                   aria-label="Close"
                 >
@@ -167,7 +197,39 @@ export default function PricingCards({
                 </span>
               </div>
 
-              <ol className="mt-5 space-y-3">
+              {cardError && (
+                <p className="mt-4 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                  {cardError}
+                </p>
+              )}
+
+              <button
+                onClick={() => startCardCheckout(confirmPlan)}
+                disabled={cardLoading || Boolean(loadingPlan)}
+                className="btn-primary mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm disabled:opacity-70"
+              >
+                {cardLoading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" /> {c.redirecting}
+                  </>
+                ) : (
+                  <>
+                    <CreditCard size={16} /> {c.payWithCard}
+                  </>
+                )}
+              </button>
+              <p className="mt-2 flex items-start gap-2 text-[11px] text-white/40">
+                <ShieldCheck size={12} className="mt-0.5 shrink-0 text-violet-300" />
+                {c.cardNote}
+              </p>
+
+              <div className="my-5 flex items-center gap-3 text-xs text-white/30">
+                <span className="h-px flex-1 bg-white/10" />
+                {c.orDivider}
+                <span className="h-px flex-1 bg-white/10" />
+              </div>
+
+              <ol className="space-y-3">
                 {c.steps.map((step, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-white/75">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-400/15 text-xs font-semibold text-violet-300">
@@ -185,8 +247,8 @@ export default function PricingCards({
 
               <button
                 onClick={() => startCheckout(confirmPlan)}
-                disabled={Boolean(loadingPlan)}
-                className="btn-primary mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm disabled:opacity-70"
+                disabled={Boolean(loadingPlan) || cardLoading}
+                className="btn-ghost mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm disabled:opacity-70"
               >
                 {loadingPlan ? (
                   <>
