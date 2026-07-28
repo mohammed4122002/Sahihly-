@@ -5,7 +5,9 @@ import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { withHeadingIds } from "@/lib/toc";
+import TableOfContents from "@/components/TableOfContents";
 
 export const revalidate = 300;
 
@@ -80,21 +82,29 @@ export default async function PostPage({
   ];
 
   const related = all.filter((p) => p.slug !== slug).slice(0, 2);
+  const ar = locale === "ar";
+  const { html: bodyHtml, toc } = withHeadingIds(post.body[locale]);
 
   return (
-    <article className="container-x max-w-3xl py-16">
+    <div className="container-x py-10 sm:py-16 xl:grid xl:grid-cols-[1fr_16rem] xl:gap-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Link
-        href={`${base}/blog`}
-        className="mb-8 inline-flex items-center gap-2 text-sm text-white/50 hover:text-white"
-      >
-        <ArrowLeft size={15} className="flip-x" /> {dict.blog.backToBlog}
-      </Link>
+      {/* Breadcrumb trail — matches the BreadcrumbList schema above, so the
+          path Google shows in results is the one a reader can actually click. */}
+      <div className="mx-auto w-full max-w-3xl xl:mx-0 xl:ms-auto">
+      <nav aria-label={ar ? "مسار التنقّل" : "Breadcrumb"}>
+        <ol className="flex flex-wrap items-center gap-1.5 text-xs text-white/40">
+          <li><Link href="/" className="hover:text-white">{ar ? "الرئيسية" : "Home"}</Link></li>
+          <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
+          <li><Link href={`${base}/blog`} className="hover:text-white">{ar ? "المدوّنة" : "Blog"}</Link></li>
+          <li aria-hidden><ChevronLeft size={13} className="flip-x opacity-50" /></li>
+          <li className="truncate text-white/60" aria-current="page">{post.title[locale]}</li>
+        </ol>
+      </nav>
 
-      <div className="flex items-center gap-3 text-xs text-white/40">
+      <div className="mt-6 flex items-center gap-3 text-xs text-white/40">
         <span className="rounded-full bg-violet-400/15 px-2.5 py-0.5 text-violet-300">
           {post.category}
         </span>
@@ -102,13 +112,15 @@ export default async function PostPage({
         <span>· {post.readingTime} {dict.blog.readingTime}</span>
       </div>
 
-      <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl">
+      <h1 className="mt-4 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.6rem]">
         {post.title[locale]}
       </h1>
-      <p className="mt-4 text-lg text-white/60">{post.excerpt[locale]}</p>
+      <p className="mt-4 text-lg leading-relaxed text-white/60">
+        {post.excerpt[locale]}
+      </p>
 
       {/* byline — E-E-A-T signal */}
-      <div className="mt-5 flex items-center gap-3 border-b border-white/10 pb-5">
+      <div className="mt-6 flex items-center gap-3 border-b border-white/10 pb-6">
         {post.authorAvatar ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -141,40 +153,86 @@ export default async function PostPage({
         </div>
       </div>
 
-      <div
-        className="prose-sahihly mt-8"
-        dangerouslySetInnerHTML={{ __html: post.body[locale] }}
-      />
+        <article className="mt-10">
+          <div
+            className="prose-sahihly"
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          />
 
-      <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
-        <p className="text-sm text-white/70">{dict.cta.subtitle}</p>
-        <Link href="/" className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
-          {dict.cta.button}
-        </Link>
+          {/* Author box — the E-E-A-T signal Google looks for: a named person
+              with a face, not an anonymous byline. */}
+          {post.author && (
+            <div className="glass mt-14 flex items-start gap-4 rounded-2xl p-6">
+              {post.authorAvatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={post.authorAvatar}
+                  alt=""
+                  className="h-14 w-14 shrink-0 rounded-full border border-white/15 object-cover"
+                />
+              ) : (
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-violet-400/15 font-display text-lg font-bold text-violet-300">
+                  {post.author.trim().charAt(0).toUpperCase()}
+                </span>
+              )}
+              <div>
+                <p className="text-xs uppercase tracking-wider text-white/35">
+                  {ar ? "بقلم" : "Written by"}
+                </p>
+                <p className="mt-0.5 font-semibold text-white/90">{post.author}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/55">
+                  {ar
+                    ? "كاتب في صحيحلي، يكتب عن الكتابة وجودتها وأدوات الذكاء الاصطناعي بالعربية والإنجليزية."
+                    : "Writer at Sahihly, covering writing quality and AI tooling in Arabic and English."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-12 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
+            <p className="text-sm text-white/70">{dict.cta.subtitle}</p>
+            <Link href="/" className="btn-primary mt-4 inline-flex rounded-full px-6 py-2.5 text-sm">
+              {dict.cta.button}
+            </Link>
+          </div>
+
+          {related.length > 0 && (
+            <div className="mt-14">
+              <h2 className="text-lg font-semibold text-white/80">
+                {ar ? "اقرأ أيضاً" : "Keep reading"}
+              </h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {related.map((p) => (
+                  <Link
+                    key={p.slug}
+                    href={`/blog/${p.slug}`}
+                    className="glass tilt group rounded-2xl p-5"
+                  >
+                    <span className="text-xs text-violet-300">{p.category}</span>
+                    <h3 className="mt-1.5 font-semibold transition-colors group-hover:text-violet-200">
+                      {p.title[locale]}
+                    </h3>
+                    <p className="mt-1.5 text-xs text-white/50">{p.excerpt[locale]}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Link
+            href={`${base}/blog`}
+            className="mt-14 inline-flex items-center gap-2 text-sm text-white/50 hover:text-white"
+          >
+            <ArrowLeft size={15} className="flip-x" /> {dict.blog.backToBlog}
+          </Link>
+        </article>
       </div>
 
-      {related.length > 0 && (
-        <div className="mt-12">
-          <h2 className="text-lg font-semibold text-white/80">
-            {locale === "ar" ? "اقرأ أيضاً" : "Keep reading"}
-          </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {related.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/blog/${p.slug}`}
-                className="glass tilt group rounded-2xl p-5"
-              >
-                <span className="text-xs text-violet-300">{p.category}</span>
-                <h3 className="mt-1.5 font-semibold transition-colors group-hover:text-violet-200">
-                  {p.title[locale]}
-                </h3>
-                <p className="mt-1.5 text-xs text-white/50">{p.excerpt[locale]}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </article>
+      {/* Sticky contents list. Only shown from xl up — on anything narrower a
+          long list would push the article itself below the fold. */}
+      <aside className="hidden xl:block">
+        <TableOfContents entries={toc} label={ar ? "في هذه الصفحة" : "On this page"} />
+      </aside>
+    </div>
   );
 }
