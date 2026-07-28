@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useTransition } from "react";
+import Toast from "@/components/Toast";
 import {
   Loader2, Save, Trash2, Plus, Pencil, X, Eye, Heading2, Bold, List, Link2, CheckCircle2,
 } from "lucide-react";
@@ -242,6 +243,7 @@ export default function ArticleEditor({
       if (res.ok) {
         setMsg({ ok: true, text: ar ? "تم النشر ✓ ظهر في المدونة الآن" : "Published ✓ live on the blog now" });
         setOpen(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         setMsg({
           ok: false,
@@ -307,6 +309,14 @@ export default function ArticleEditor({
 
       {/* editor */}
       <div className="glass glow-card rounded-2xl p-5">
+        <Toast
+          show={Boolean(msg)}
+          ok={msg?.ok ?? true}
+          text={msg?.text ?? ""}
+          onClose={() => setMsg(null)}
+          closeLabel={ar ? "إغلاق" : "Dismiss"}
+        />
+
         {msg && !open && (
           <p
             className={`mb-4 flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm ${

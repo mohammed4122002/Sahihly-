@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Save, CheckCircle2, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import Toast from "@/components/Toast";
 import type { Locale } from "@/lib/i18n/config";
 
 export type AuthorFields = {
@@ -55,6 +56,7 @@ export default function AuthorProfileForm({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ ok: boolean; text: string } | null>(null);
 
   function set<K extends keyof AuthorFields>(key: K, value: AuthorFields[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -80,19 +82,30 @@ export default function AuthorProfileForm({
       if (err) throw err;
       setForm((f) => ({ ...f, username }));
       setSaved(true);
+      setToast({
+        ok: true,
+        text: ar
+          ? username
+            ? `تم الحفظ ✓ صفحتك العامة: /author/${username}`
+            : "تم الحفظ ✓"
+          : username
+            ? `Saved ✓ your public page: /author/${username}`
+            : "Saved ✓",
+      });
       window.dispatchEvent(new Event("sahihly:profile-updated"));
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
-      setError(
+      const text =
         message.includes("duplicate") || message.includes("unique")
           ? ar
             ? "اسم المستخدم محجوز — اختر غيره."
             : "That username is taken — pick another."
           : ar
             ? "تعذّر الحفظ."
-            : "Couldn't save."
-      );
+            : "Couldn't save.";
+      setError(text);
+      setToast({ ok: false, text });
     } finally {
       setSaving(false);
     }
@@ -223,6 +236,14 @@ export default function AuthorProfileForm({
         )}
         {saved ? (ar ? "تم الحفظ" : "Saved") : ar ? "حفظ الملف" : "Save profile"}
       </button>
+
+      <Toast
+        show={Boolean(toast)}
+        ok={toast?.ok ?? true}
+        text={toast?.text ?? ""}
+        onClose={() => setToast(null)}
+        closeLabel={ar ? "إغلاق" : "Dismiss"}
+      />
     </form>
   );
 }

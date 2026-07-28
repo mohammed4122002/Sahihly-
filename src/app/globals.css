@@ -37,8 +37,15 @@
   --accent-strong: #7c5fd3;
 }
 
-* {
-  border-color: var(--border);
+/* Default border colour, declared in the base layer so it stays a default.
+   Unlayered it outranked every border-<colour> utility regardless of
+   specificity, which quietly greyed out the borders on success, warning, and
+   error states across the site — the alpha backgrounds applied, the coloured
+   edge did not. */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 }
 
 html {
