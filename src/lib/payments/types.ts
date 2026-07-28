@@ -7,6 +7,7 @@ export interface CreateOrderInput {
   amount: number; // in currency units
   currency: string; // USDT
   userId?: string | null;
+  email?: string | null;
   merchantTradeNo: string;
   description: string;
   returnUrl: string;

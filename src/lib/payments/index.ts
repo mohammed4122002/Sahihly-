@@ -1,8 +1,10 @@
 import type { PaymentProvider, PlanId, BillingCycle } from "./types";
 import { binanceProvider } from "./binance";
+import { lemonsqueezyProvider } from "./lemonsqueezy";
 
 const providers: Record<string, PaymentProvider> = {
   binance: binanceProvider,
+  lemonsqueezy: lemonsqueezyProvider,
 };
 
 export function getProvider(id = "binance"): PaymentProvider {
