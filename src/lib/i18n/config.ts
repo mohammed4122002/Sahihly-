@@ -22,3 +22,9 @@ export function otherLocale(locale: Locale): Locale {
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://sahihly.com";
+
+/** Stable schema.org node ids. Every entity that needs to name the publisher
+ *  references these instead of repeating the organization inline, so crawlers
+ *  resolve one node rather than many look-alike copies. */
+export const ORG_ID = `${SITE_URL}/#organization`;
+export const SITE_ID = `${SITE_URL}/#website`;

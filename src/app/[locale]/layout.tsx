@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { locales, isLocale, localeDirection, SITE_URL, type Locale } from "@/lib/i18n/config";
+import { locales, isLocale, localeDirection, SITE_URL, ORG_ID, SITE_ID, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { inter, spaceGrotesk, plexArabic } from "@/lib/fonts";
 import Header from "@/components/Header";
@@ -94,20 +94,51 @@ export default async function LocaleLayout({
       inLanguage: locale === "ar" ? "ar" : "en",
       url: SITE_URL,
     },
+    // Organization and WebSite carry stable @ids so every other entity on the
+    // site — articles, breadcrumbs, tool pages — can point at the same node
+    // instead of restating the publisher. That is what lets a crawler treat
+    // the pages as one entity rather than a pile of unrelated documents.
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": ORG_ID,
       name: "Sahihly",
+      alternateName: "صحيحلي",
       url: SITE_URL,
-      logo: `${SITE_URL}/opengraph-image`,
-      sameAs: [],
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+      },
+      description: dict.meta.description,
+      knowsLanguage: ["ar", "en"],
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "hello@sahihly.com",
+          availableLanguage: ["Arabic", "English"],
+          url: `${SITE_URL}/contact`,
+        },
+        {
+          "@type": "ContactPoint",
+          contactType: "privacy",
+          email: "privacy@sahihly.com",
+          availableLanguage: ["Arabic", "English"],
+          url: `${SITE_URL}/privacy`,
+        },
+      ],
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": SITE_ID,
       name: "Sahihly",
+      alternateName: "صحيحلي",
       url: SITE_URL,
       inLanguage: ["en", "ar"],
+      publisher: { "@id": ORG_ID },
       potentialAction: {
         "@type": "SearchAction",
         target: {

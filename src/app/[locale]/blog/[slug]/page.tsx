@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, type Locale, SITE_URL } from "@/lib/i18n/config";
+import { isLocale, type Locale, SITE_URL, ORG_ID } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
@@ -69,6 +69,10 @@ export default async function PostPage({
           }
         : { "@type": "Organization", name: "Sahihly" },
       url: `${SITE_URL}/blog/${slug}`,
+      mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
+      publisher: { "@id": ORG_ID },
+      isAccessibleForFree: true,
+      wordCount: post.body[locale].replace(/<[^>]*>/g, " ").trim().split(/\s+/).length,
     },
     {
       "@context": "https://schema.org",
