@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { ScanLine, Languages, AlignLeft, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, pageUrl } from "@/lib/seo";
@@ -8,6 +8,7 @@ import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
 import EmbedSnippet from "@/components/EmbedSnippet";
+import { useCases } from "@/content/use-cases";
 
 export async function generateMetadata({
   params,
@@ -218,10 +219,41 @@ export default async function AIDetectorPage({
         </div>
 
         <Reveal>
+          {/* The reason someone checks text differs completely by situation — a
+              student fears an accusation, a recruiter is skimming for sameness,
+              a freelancer is protecting an invoice. Each of those has its own
+              page because each needs a different answer, not a different noun. */}
+          <section className="mt-14">
+            <h2 className="text-center text-2xl font-bold">
+              {locale === "ar" ? "لماذا تفحص نصّك؟" : "Why are you checking?"}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-center text-sm text-white/55">
+              {locale === "ar"
+                ? "لكل حالة قواعدها ومخاطرها المختلفة — اختر ما يشبه وضعك."
+                : "Each situation has its own rules and its own risks — pick the one that matches yours."}
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {useCases.map((u) => (
+                <TreeLink
+                  key={u.slug}
+                  href={`/ai-detector/${u.slug}`}
+                  className="glass glow-card rounded-2xl border border-white/10 p-5 transition-colors hover:border-violet-400/30"
+                >
+                  <span className="block font-semibold text-white">{u[locale].h1}</span>
+                  <span className="mt-1.5 block text-sm leading-relaxed text-white/55">
+                    {u[locale].metaDescription}
+                  </span>
+                </TreeLink>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
           <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
-            <Link href="/ai-humanizer" className="font-medium text-violet-300 hover:text-violet-200">
+            <TreeLink href="/ai-humanizer" className="font-medium text-violet-300 hover:text-violet-200">
               {c.ctaHumanizer}
-            </Link>
+            </TreeLink>
           </div>
         </Reveal>
 
@@ -234,9 +266,9 @@ export default async function AIDetectorPage({
                 ? "تكتب بالعربية؟ الكواشف المدرَّبة على الإنجليزية تُخطئ فيها كثيراً — "
                 : "Writing in Arabic? Detectors trained on English misjudge it routinely — "}
             </span>
-            <Link href="/arabic-ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
+            <TreeLink href="/arabic-ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
               {locale === "ar" ? "جرّب كاشف النصوص العربية المجاني" : "try the free AI detector for Arabic text"}
-            </Link>
+            </TreeLink>
           </div>
         </Reveal>
 
@@ -245,9 +277,9 @@ export default async function AIDetectorPage({
             <span className="text-white/55">
               {locale === "ar" ? "تريد معرفة كيف نحسب النتيجة بالضبط؟ " : "Want to know exactly how the score is computed? "}
             </span>
-            <Link href="/methodology" className="font-medium text-violet-300 hover:text-violet-200">
+            <TreeLink href="/methodology" className="font-medium text-violet-300 hover:text-violet-200">
               {locale === "ar" ? "اقرأ منهجيتنا الكاملة" : "Read our full methodology"}
-            </Link>
+            </TreeLink>
           </div>
         </Reveal>
 

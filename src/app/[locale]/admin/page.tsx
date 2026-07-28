@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import {
   Users,
   CreditCard,
@@ -239,9 +239,9 @@ export default async function AdminPage({
           <h1 className="mt-2 text-2xl font-bold sm:text-4xl">{t.title}</h1>
           <p className="mt-1 text-sm text-white/40">{t.updated}</p>
         </div>
-        <Link href="/dashboard" className="btn-ghost rounded-full px-4 py-2 text-sm">
+        <TreeLink href="/dashboard" className="btn-ghost rounded-full px-4 py-2 text-sm">
           {t.backToDashboard}
-        </Link>
+        </TreeLink>
       </div>
 
       <AdminNav ar={locale === "ar"} />

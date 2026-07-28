@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { ArrowLeft } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { createClient } from "@/lib/supabase/server";
@@ -36,9 +36,9 @@ export default async function AccountPage({
         <p className="mt-2 text-white/55">
           {ar ? "سجّل دخولك لعرض ملفك الشخصي." : "Log in to view your account."}
         </p>
-        <Link href="/login?next=/account" className="btn-primary mt-6 rounded-full px-6 py-2.5 text-sm">
+        <TreeLink href="/login?next=/account" className="btn-primary mt-6 rounded-full px-6 py-2.5 text-sm">
           {ar ? "تسجيل الدخول" : "Log in"}
-        </Link>
+        </TreeLink>
       </div>
     );
   }
@@ -58,13 +58,13 @@ export default async function AccountPage({
   return (
     <div className="container-x max-w-2xl py-10 sm:py-16">
       <Reveal>
-        <Link
+        <TreeLink
           href="/dashboard"
           className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white"
         >
           <ArrowLeft size={15} className="flip-x" />
           {ar ? "لوحتي" : "Dashboard"}
-        </Link>
+        </TreeLink>
         <h1 className="mt-4 text-3xl font-bold sm:text-4xl">
           {ar ? "الملف الشخصي" : "Account"}
         </h1>

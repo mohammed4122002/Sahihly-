@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { requireAdmin, getAdminEmails } from "@/lib/admin";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -105,9 +105,9 @@ export default async function AdminUsersPage({
               <li>• {ar ? "الحذف نهائي ويزيل حساب المصادقة." : "Delete is permanent and removes the auth account."}</li>
             </ul>
           </div>
-          <Link href="/admin" className="btn-ghost block rounded-full px-4 py-2 text-center text-sm">
+          <TreeLink href="/admin" className="btn-ghost block rounded-full px-4 py-2 text-center text-sm">
             {ar ? "العودة للنظرة العامة" : "Back to overview"}
-          </Link>
+          </TreeLink>
         </div>
       </div>
     </div>

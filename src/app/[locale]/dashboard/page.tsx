@@ -1,4 +1,4 @@
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
@@ -55,12 +55,12 @@ export default async function DashboardPage({
         <p className="mt-2 text-white/55">
           {ar ? "سجّل دخولك لعرض لوحتك." : "Log in to view your dashboard."}
         </p>
-        <Link
+        <TreeLink
           href={`${base}/login?next=/dashboard`}
           className="btn-primary mt-6 rounded-full px-6 py-2.5 text-sm"
         >
           {dict.nav.login}
-        </Link>
+        </TreeLink>
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default async function DashboardPage({
   return (
     <div className="container-x max-w-5xl py-10 sm:py-16">
       <div className="flex items-center gap-3">
-        <Link
+        <TreeLink
           href="/account"
           aria-label={ar ? "الملف الشخصي" : "Account"}
           className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-violet-400/15 text-lg font-bold text-violet-200 transition-colors hover:border-violet-400/40"
@@ -130,7 +130,7 @@ export default async function DashboardPage({
           ) : (
             (profile?.full_name || user.email || "?").trim().charAt(0).toUpperCase()
           )}
-        </Link>
+        </TreeLink>
         <div className="min-w-0">
           <p className="text-sm text-white/50">{d.welcome}</p>
           <h1 className="truncate text-2xl font-bold sm:text-3xl">
@@ -140,17 +140,17 @@ export default async function DashboardPage({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <Link href="/account" className="btn-ghost inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+        <TreeLink href="/account" className="btn-ghost inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm">
           {ar ? "تعديل الملف الشخصي" : "Edit profile"}
-        </Link>
+        </TreeLink>
         {resolveAdmin(user.email, profile?.role) && (
-          <Link
+          <TreeLink
             href="/admin"
             className="btn-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
           >
             <ShieldCheck size={15} />
             {ar ? "لوحة الإدارة" : "Admin Console"}
-          </Link>
+          </TreeLink>
         )}
         <SignOutButton locale={locale} label={d.signOut} />
       </div>
@@ -195,26 +195,26 @@ export default async function DashboardPage({
           )}
           <div className="mt-auto pt-4">
             {plan === "free" ? (
-              <Link
+              <TreeLink
                 href={`${base}/pricing`}
                 className="btn-primary inline-flex rounded-full px-4 py-2 text-sm"
               >
                 {d.upgrade}
-              </Link>
+              </TreeLink>
             ) : (
-              <Link
+              <TreeLink
                 href={`${base}/pricing`}
                 className="btn-ghost inline-flex rounded-full px-4 py-2 text-sm"
               >
                 {d.manage}
-              </Link>
+              </TreeLink>
             )}
-            <Link
+            <TreeLink
               href="/ai-detector"
               className="btn-ghost ms-2 inline-flex rounded-full px-4 py-2 text-sm"
             >
               {dict.cta.button}
-            </Link>
+            </TreeLink>
           </div>
         </div>
       </div>

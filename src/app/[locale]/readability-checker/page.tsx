@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
@@ -243,12 +243,12 @@ export default async function ReadabilityPage({
             <h2 className="text-lg font-semibold">{c.ctaTitle}</h2>
             <p className="mt-2 text-sm text-white/60">{c.ctaBody}</p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <Link href="/ai-detector" className="btn-primary rounded-full px-5 py-2.5 text-sm">
+              <TreeLink href="/ai-detector" className="btn-primary rounded-full px-5 py-2.5 text-sm">
                 {ar ? "جرّب الكاشف" : "Try the AI Detector"}
-              </Link>
-              <Link href="/word-counter" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
+              </TreeLink>
+              <TreeLink href="/word-counter" className="btn-ghost rounded-full px-5 py-2.5 text-sm">
                 {ar ? "عدّاد الكلمات" : "Word Counter"}
-              </Link>
+              </TreeLink>
             </div>
           </div>
         </Reveal>

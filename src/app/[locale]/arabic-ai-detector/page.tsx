@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import TreeLink from "@/components/TreeLink";
 import { Languages, BookOpenCheck, Feather, ShieldCheck, Gauge, Users, FileWarning } from "lucide-react";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, pageUrl } from "@/lib/seo";
@@ -210,9 +210,9 @@ export default async function ArabicDetectorPage({
         <Reveal>
           <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">
             <span className="text-sm text-white/60">{c.ctaTitle} </span>
-            <Link href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
+            <TreeLink href="/ai-detector" className="font-medium text-violet-300 hover:text-violet-200">
               {c.ctaLink}
-            </Link>
+            </TreeLink>
           </div>
         </Reveal>
 
