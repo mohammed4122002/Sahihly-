@@ -1,4 +1,5 @@
 import { getAnthropic, hasAnthropic, MODEL } from "./anthropic";
+import { geminiChat, hasGemini } from "./gemini";
 import {
   heuristicDetect,
   computeMetrics,
@@ -14,8 +15,13 @@ import {
 } from "./detector-stats";
 
 /* ------------------------------------------------------------------
-   Provider selection: OpenAI (ChatGPT key) → Anthropic → heuristic.
-   Override with AI_PROVIDER=openai|anthropic if both keys are set.
+   Provider selection: Gemini → OpenAI → Anthropic → heuristic.
+   Override with AI_PROVIDER=gemini|openai|anthropic when several keys are set.
+
+   Gemini leads because it is the one with a free tier, and a detector that
+   only reaches its real accuracy behind a paid key mostly runs at its floor.
+   Any of them beats the statistical engine on the case that matters — telling
+   careful human prose apart from machine prose that carries no filler.
 ------------------------------------------------------------------ */
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
@@ -23,10 +29,14 @@ function hasOpenAI(): boolean {
   return Boolean(process.env.OPENAI_API_KEY);
 }
 
-function pickProvider(): "openai" | "anthropic" | "heuristic" {
+type Provider = "gemini" | "openai" | "anthropic" | "heuristic";
+
+function pickProvider(): Provider {
   const pref = process.env.AI_PROVIDER;
+  if (pref === "gemini" && hasGemini()) return "gemini";
   if (pref === "openai" && hasOpenAI()) return "openai";
   if (pref === "anthropic" && hasAnthropic()) return "anthropic";
+  if (hasGemini()) return "gemini";
   if (hasOpenAI()) return "openai";
   if (hasAnthropic()) return "anthropic";
   return "heuristic";
@@ -202,6 +212,26 @@ async function openaiDetect(text: string, locale: string): Promise<DetectResult>
   };
 }
 
+async function geminiDetect(text: string, locale: string): Promise<DetectResult> {
+  const metrics = computeMetrics(text);
+  const signals = computeSignals(text);
+  const raw = await geminiChat(
+    DETECT_SYSTEM,
+    detectPrompt(text, locale, metrics, signals),
+    true,
+    2000
+  );
+  const { score, sentences } = parseDetectJson(raw, text);
+  return {
+    score,
+    verdict: verdictFromScore(score),
+    confidence: "medium",
+    sentences,
+    metrics,
+    engine: "gemini",
+  };
+}
+
 /**
  * Honest confidence: short texts carry weak signal, and disagreement
  * between the statistical and LLM engines means the case is genuinely
@@ -240,17 +270,24 @@ function chunkText(text: string, maxWords = 600): string[] {
   return chunks;
 }
 
+async function llmDetect(
+  text: string,
+  locale: string,
+  provider: Exclude<Provider, "heuristic">
+): Promise<DetectResult> {
+  if (provider === "gemini") return geminiDetect(text, locale);
+  if (provider === "openai") return openaiDetect(text, locale);
+  return claudeDetect(text, locale);
+}
+
 /** One hybrid pass over a single chunk. */
 async function detectChunk(
   text: string,
   locale: string,
-  provider: "openai" | "anthropic"
+  provider: Exclude<Provider, "heuristic">
 ): Promise<{ score: number; gap: number; sentences: Sentence[]; words: number }> {
   const statistical = heuristicDetect(text);
-  const llm =
-    provider === "openai"
-      ? await openaiDetect(text, locale)
-      : await claudeDetect(text, locale);
+  const llm = await llmDetect(text, locale, provider);
   const blended = Math.round(llm.score * 0.65 + statistical.score * 0.35);
   return {
     score: blended,
@@ -260,12 +297,26 @@ async function detectChunk(
   };
 }
 
+/** The statistical result for one chunk, shaped like a model result. */
+function statisticalChunk(text: string) {
+  const s = heuristicDetect(text);
+  return { score: s.score, gap: 0, sentences: s.sentences, words: wordsOf(text), llm: false };
+}
+
 /**
- * Hybrid ensemble: LLM judgment blended with deterministic statistical
- * signals (65/35), with the metrics fed into the LLM prompt as evidence.
- * Long texts are chunked at sentence boundaries and analyzed in parallel,
- * then merged with a word-weighted average — per-sentence quality stays
- * sharp even at Ultimate-plan lengths.
+ * Hybrid ensemble: model judgment blended with the deterministic signals
+ * (65/35), with those signals also fed into the prompt as evidence. Long texts
+ * are chunked at sentence boundaries and merged by word-weighted average, so
+ * per-sentence quality holds up at Ultimate-plan lengths.
+ *
+ * Chunks run one at a time, and a chunk that fails falls back to its own
+ * statistical score instead of taking the whole analysis down with it.
+ *
+ * Both of those exist for the free tier. Firing five chunks at once is the
+ * fastest way to spend a free key's per-minute allowance on a single paste,
+ * and the previous all-or-nothing Promise.all meant one rate-limited chunk
+ * discarded four good model reads. Sequential is slower per request and far
+ * more likely to return a model-quality answer at all.
  */
 export async function detectAI(text: string, locale: string): Promise<DetectResult> {
   const provider = pickProvider();
@@ -276,29 +327,39 @@ export async function detectAI(text: string, locale: string): Promise<DetectResu
     return { ...statistical, confidence: confidenceFor(words, null) };
   }
 
-  try {
-    const chunks = chunkText(text);
-    const results = await Promise.all(
-      chunks.map((c) => detectChunk(c, locale, provider))
-    );
+  const chunks = chunkText(text);
+  const results: ReturnType<typeof statisticalChunk>[] = [];
+  for (const chunk of chunks) {
+    try {
+      results.push({ ...(await detectChunk(chunk, locale, provider)), llm: true });
+    } catch {
+      results.push(statisticalChunk(chunk));
+    }
+  }
 
-    const totalWords = results.reduce((s, r) => s + r.words, 0) || 1;
-    const score = Math.round(
-      results.reduce((s, r) => s + r.score * r.words, 0) / totalWords
-    );
-    const maxGap = Math.max(...results.map((r) => r.gap));
-
-    return {
-      score,
-      verdict: verdictFromScore(score),
-      confidence: confidenceFor(words, maxGap),
-      sentences: results.flatMap((r) => r.sentences),
-      metrics: statistical.metrics,
-      engine: "hybrid",
-    };
-  } catch {
+  const usedModel = results.filter((r) => r.llm);
+  if (usedModel.length === 0) {
+    // Every call failed — usually a rate limit or a missing key. Say so through
+    // the engine field so the interface can warn instead of quietly showing a
+    // degraded number as though it were the full analysis.
     return { ...statistical, confidence: confidenceFor(words, null) };
   }
+
+  const totalWords = results.reduce((s, r) => s + r.words, 0) || 1;
+  const score = Math.round(
+    results.reduce((s, r) => s + r.score * r.words, 0) / totalWords
+  );
+  // Only chunks the model actually read can disagree with it.
+  const maxGap = Math.max(...usedModel.map((r) => r.gap));
+
+  return {
+    score,
+    verdict: verdictFromScore(score),
+    confidence: confidenceFor(words, maxGap),
+    sentences: results.flatMap((r) => r.sentences),
+    metrics: statistical.metrics,
+    engine: "hybrid",
+  };
 }
 
 /* ------------------------------------------------------------------
@@ -524,6 +585,15 @@ async function claudeHumanize(
   return raw && "text" in raw ? raw.text.trim() : text;
 }
 
+async function geminiHumanize(
+  text: string,
+  locale: string,
+  style: HumanizeStyle
+): Promise<string> {
+  const out = await geminiChat(humanizeSystem(locale, style), text, false, 4000);
+  return out.trim() || text;
+}
+
 /**
  * Did the rewrite keep the substance?
  *
@@ -577,10 +647,11 @@ export async function humanizeText(
   const provider = pickProvider();
   const before = styleSignalScore(text);
 
-  const rewrite = (input: string) =>
-    provider === "openai"
-      ? openaiHumanize(input, locale, style)
-      : claudeHumanize(input, locale, style);
+  const rewrite = (input: string) => {
+    if (provider === "gemini") return geminiHumanize(input, locale, style);
+    if (provider === "openai") return openaiHumanize(input, locale, style);
+    return claudeHumanize(input, locale, style);
+  };
 
   if (provider !== "heuristic") {
     try {
@@ -598,7 +669,9 @@ export async function humanizeText(
       }
 
       if (contentOverlap(text, best) >= MIN_CONTENT_KEPT) {
-        return { text: best, engine: provider === "openai" ? "openai" : "claude" };
+        const engine: Engine =
+          provider === "gemini" ? "gemini" : provider === "openai" ? "openai" : "claude";
+        return { text: best, engine };
       }
     } catch {
       /* fall through to heuristic */

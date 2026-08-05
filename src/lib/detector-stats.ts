@@ -33,7 +33,7 @@ export type StyleMetrics = {
   avgSentenceLen: number; // words per sentence
   aiTells: number; // machine-typical phrases found
 };
-export type Engine = "claude" | "openai" | "heuristic" | "hybrid";
+export type Engine = "claude" | "openai" | "gemini" | "heuristic" | "hybrid";
 export type Confidence = "low" | "medium" | "high";
 export type DetectResult = {
   score: number; // 0..100 probability of AI
