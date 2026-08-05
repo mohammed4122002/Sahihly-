@@ -1,4 +1,17 @@
 import { getAnthropic, hasAnthropic, MODEL } from "./anthropic";
+import {
+  heuristicDetect,
+  computeMetrics,
+  computeSignals,
+  splitSentences,
+  verdictFromScore,
+  isArabicText,
+  type Sentence,
+  type StyleMetrics,
+  type Engine,
+  type Confidence,
+  type DetectResult,
+} from "./detector-stats";
 
 /* ------------------------------------------------------------------
    Provider selection: OpenAI (ChatGPT key) → Anthropic → heuristic.
@@ -49,192 +62,19 @@ async function openaiChat(
   return json.choices?.[0]?.message?.content ?? "";
 }
 
-export type Sentence = { text: string; score: number };
-export type StyleMetrics = {
-  burstiness: number; // 0..100, higher = more human-like rhythm variety
-  diversity: number; // 0..100 vocabulary richness (type-token ratio)
-  avgSentenceLen: number; // words per sentence
-  aiTells: number; // count of machine-typical phrases found
-};
-export type Engine = "claude" | "openai" | "heuristic" | "hybrid";
-export type Confidence = "low" | "medium" | "high";
-export type DetectResult = {
-  score: number; // 0..100 probability of AI
-  verdict: "human" | "mixed" | "ai";
-  confidence: Confidence;
-  sentences: Sentence[];
-  metrics: StyleMetrics;
-  engine: Engine;
-};
-export type HumanizeStyle = "natural" | "academic" | "casual";
-export type HumanizeResult = {
-  text: string;
-  engine: Engine;
-};
-
-function splitSentences(text: string): string[] {
-  return text
-    .replace(/\s+/g, " ")
-    .split(/(?<=[.!?؟।])\s+|(?<=\n)/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
-}
-
-function verdictFromScore(score: number): DetectResult["verdict"] {
-  if (score >= 65) return "ai";
-  if (score >= 35) return "mixed";
-  return "human";
-}
-
-/* ------------------------------------------------------------------
-   Heuristic detector (fallback when no ANTHROPIC_API_KEY).
-   Uses lexical & structural signals: repetition, low burstiness,
-   uniform sentence length, and common "AI tell" phrases.
-   Works for both English and Arabic.
------------------------------------------------------------------- */
-const AI_TELLS_EN = [
-  "in conclusion", "furthermore", "moreover", "it is important to note",
-  "in today's world", "delve into", "in the realm of", "a testament to",
-  "navigating the", "it is worth noting", "in summary", "on the other hand",
-  "plays a crucial role", "in the ever-evolving", "tapestry", "underscores",
-  "seamless", "leverage", "robust", "holistic",
-];
-const AI_TELLS_AR = [
-  "في الختام", "علاوة على ذلك", "من الجدير بالذكر", "بالإضافة إلى ذلك",
-  "في عالم اليوم", "من ناحية أخرى", "يلعب دوراً", "في نهاية المطاف",
-  "تجدر الإشارة", "بشكل عام", "في هذا السياق", "لا يمكن إنكار",
-];
-
-/** Deterministic style metrics — engine-agnostic, works for AR & EN. */
-export function computeMetrics(text: string): StyleMetrics {
-  const sentences = splitSentences(text);
-  const words = text.toLowerCase().split(/\s+/).filter(Boolean);
-  const isArabic = /[؀-ۿ]/.test(text);
-  const tells = isArabic ? AI_TELLS_AR : AI_TELLS_EN;
-
-  const lengths = sentences.map((s) => s.split(/\s+/).length);
-  const mean = lengths.reduce((a, b) => a + b, 0) / Math.max(lengths.length, 1);
-  const variance =
-    lengths.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(lengths.length, 1);
-  const cv = mean > 0 ? Math.sqrt(variance) / mean : 0;
-  // cv 0 => perfectly uniform (machine-like); cv >= 0.6 => very bursty (human-like)
-  const burstiness = Math.round(Math.min(cv / 0.6, 1) * 100);
-
-  const unique = new Set(words).size;
-  const ttr = words.length ? unique / words.length : 1;
-  const diversity = Math.round(Math.min(ttr / 0.8, 1) * 100);
-
-  const lower = text.toLowerCase();
-  let aiTells = 0;
-  for (const t of tells) if (lower.includes(t)) aiTells++;
-
-  return {
-    burstiness,
-    diversity,
-    avgSentenceLen: Math.round(mean * 10) / 10,
-    aiTells,
-  };
-}
+export type { Sentence, StyleMetrics, Engine, Confidence, DetectResult };
+export { computeMetrics };
 
 /** Cheap deterministic AI-style score, used for the humanize verify loop. */
 export function styleSignalScore(text: string): number {
   return heuristicDetect(text).score;
 }
 
-function heuristicDetect(text: string): DetectResult {
-  const sentences = splitSentences(text);
-  const words = text.toLowerCase().split(/\s+/).filter(Boolean);
-  const isArabic = /[؀-ۿ]/.test(text);
-  const tells = isArabic ? AI_TELLS_AR : AI_TELLS_EN;
-
-  // 1) sentence-length uniformity (AI tends to be uniform -> low variance)
-  const lengths = sentences.map((s) => s.split(/\s+/).length);
-  const mean = lengths.reduce((a, b) => a + b, 0) / Math.max(lengths.length, 1);
-  const variance =
-    lengths.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(lengths.length, 1);
-  const cv = mean > 0 ? Math.sqrt(variance) / mean : 1; // coefficient of variation
-  const uniformity = Math.max(0, 1 - Math.min(cv, 1)); // 0..1, higher = more uniform
-
-  // 2) lexical repetition, measured over a fixed window.
-  //
-  // Plain type-token ratio cannot be used here: it falls as a text gets longer
-  // no matter who wrote it, because common words keep recurring. Scoring it
-  // directly made the same passage look progressively more machine-written the
-  // more of it you pasted. A moving-average TTR averages the ratio across
-  // fixed-size windows instead, so the number describes the writing rather
-  // than its length.
-  const WINDOW = 60;
-  let ttr: number;
-  if (words.length <= WINDOW) {
-    ttr = words.length ? new Set(words).size / words.length : 1;
-  } else {
-    let sum = 0;
-    let windows = 0;
-    for (let i = 0; i + WINDOW <= words.length; i += 10) {
-      sum += new Set(words.slice(i, i + WINDOW)).size / WINDOW;
-      windows++;
-    }
-    ttr = windows ? sum / windows : 1;
-  }
-  const repetition = Math.max(0, 0.72 - ttr) / 0.72; // 0..1
-
-  // 3) AI tell phrases, as a rate rather than a presence flag.
-  //
-  // Counting how many distinct phrases appear at least once punished long
-  // honest writing: a 2,000-word essay that says "furthermore" once scored the
-  // same as a paragraph built entirely from filler. What separates the two is
-  // density, so count every occurrence and normalise per 100 words.
-  const lower = text.toLowerCase();
-  let tellOccurrences = 0;
-  for (const t of tells) {
-    const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    tellOccurrences += (lower.match(new RegExp(escaped, "g")) || []).length;
-  }
-  const tellsPer100 = words.length ? (tellOccurrences * 100) / words.length : 0;
-  // Roughly one filler phrase per 50 words already reads as machine-written.
-  const tellSignal = Math.min(tellsPer100 / 2, 1);
-
-  // 4) punctuation regularity — very even comma usage
-  const commaRatio =
-    (text.match(/[,،]/g)?.length || 0) / Math.max(sentences.length, 1);
-  const commaSignal = commaRatio > 1.5 ? Math.min((commaRatio - 1.5) / 2, 1) : 0;
-
-  // Rhythm uniformity and filler density carry the result; repetition and
-  // punctuation only nudge it. Weights were fitted against passages of known
-  // origin so that varied human prose lands low, formal human prose lands
-  // low-to-middle, machine text with filler lands high, and machine text
-  // without filler lands in the middle.
-  //
-  // That last band is deliberate. Formal human writing and unfilled machine
-  // writing genuinely overlap on these statistics, and forcing them apart here
-  // would mean flagging academic prose as AI — the exact failure this tool
-  // tells people not to trust. The middle is the honest answer; separating
-  // those two cases is what the language model is for.
-  const raw =
-    uniformity * 0.46 + tellSignal * 0.38 + repetition * 0.14 + commaSignal * 0.08;
-  const score = Math.round(Math.min(96, Math.max(3, raw * 100)));
-
-  // per-sentence scoring
-  const scored: Sentence[] = sentences.map((s) => {
-    const sl = s.split(/\s+/).length;
-    const near = mean > 0 ? 1 - Math.min(Math.abs(sl - mean) / mean, 1) : 0.5;
-    let sTell = 0;
-    for (const t of tells) if (s.toLowerCase().includes(t)) sTell = 1;
-    const sScore = Math.round(
-      Math.min(96, Math.max(4, (near * 0.55 + sTell * 0.45) * 100 * (score / 60)))
-    );
-    return { text: s, score: sScore };
-  });
-
-  return {
-    score,
-    verdict: verdictFromScore(score),
-    confidence: "medium",
-    sentences: scored,
-    metrics: computeMetrics(text),
-    engine: "heuristic",
-  };
-}
+export type HumanizeStyle = "natural" | "academic" | "casual";
+export type HumanizeResult = {
+  text: string;
+  engine: Engine;
+};
 
 /* ------------------------------------------------------------------
    Claude-powered detector
@@ -242,11 +82,12 @@ function heuristicDetect(text: string): DetectResult {
 async function claudeDetect(text: string, locale: string): Promise<DetectResult> {
   const anthropic = getAnthropic();
   const metrics = computeMetrics(text);
+  const signals = computeSignals(text);
   const msg = await anthropic.messages.create({
     model: MODEL,
     max_tokens: 2000,
     system: DETECT_SYSTEM,
-    messages: [{ role: "user", content: detectPrompt(text, locale, metrics) }],
+    messages: [{ role: "user", content: detectPrompt(text, locale, metrics, signals) }],
   });
   const raw = msg.content.find((c) => c.type === "text");
   const jsonText = raw && "text" in raw ? raw.text : "{}";
@@ -261,16 +102,65 @@ async function claudeDetect(text: string, locale: string): Promise<DetectResult>
   };
 }
 
-const DETECT_SYSTEM = `You are an expert writing-style analyst for the tool "Sahihly". You assess how likely a passage was AI-generated based on stylistic and structural signals (burstiness, perplexity proxies, uniformity, hedging phrases, generic transitions). You fully understand both Modern Standard Arabic and native English. Never claim certainty; you estimate. Respond with ONLY valid JSON.`;
+/**
+ * The model is told what it is for, not just what to output.
+ *
+ * Left to itself a language model scores this task like a marker: careful,
+ * conventional, correctly-punctuated prose reads to it as "AI-like", which
+ * means it convicts exactly the people least able to argue back — second
+ * language writers, students trained on a rigid rubric, meticulous editors.
+ * Those groups are the documented failure mode of every detector on the
+ * market and the reason this one publishes a confidence rating at all, so the
+ * instruction to discount fluency is not a nicety; it is the product.
+ */
+const DETECT_SYSTEM = `You are the writing-style analyst behind "Sahihly", an AI-text detector used by students, teachers and editors in Arabic and English.
 
-function detectPrompt(text: string, locale: string, metrics: StyleMetrics): string {
+You estimate how likely a passage was generated by a language model. You are never certain, and you say so through the number rather than through hedging prose.
+
+What actually distinguishes generated text:
+- Even rhythm. Generated prose rarely drops below eight words or runs past thirty; human writing punches short and rambles long.
+- Hedged, unstaked claims. "generally", "significant", "plays a role", "يُعد", "بشكل كبير" — a writer who knows the specific thing says the specific thing.
+- Stock connectives: "furthermore", "in conclusion", "علاوة على ذلك", "في الختام".
+- Coverage without commitment: every side balanced, no position a reader could disagree with.
+- Absence of the unshareable: a detail only this author would know, a number they checked, an aside that serves nothing.
+
+What does NOT indicate generation, and must not raise your score:
+- Correct grammar, careful punctuation, or formal register.
+- Writing in a second language. Controlled vocabulary and reliable sentence patterns are what fluency in a second language looks like, and detectors flag it wrongly far more often than they flag it rightly.
+- Academic or documentation conventions. A methods section, a literature summary, a policy paragraph is SUPPOSED to be predictable; that is the discipline, not a model.
+- Translated prose, which carries the source language's structure and reads unusually even.
+- Subject matter you find dull.
+
+Score honestly, including at the low end. Most text people paste was written by a person.
+
+Respond with ONLY valid JSON.`;
+
+function detectPrompt(
+  text: string,
+  locale: string,
+  metrics: StyleMetrics,
+  signals: ReturnType<typeof computeSignals>
+): string {
+  const pct = (x: number) => Math.round(x * 100);
   return `Analyze the following text (language: ${locale}).
 
-Precomputed statistical evidence for this exact text (weigh it alongside your own reading):
-- rhythm variety / burstiness: ${metrics.burstiness}/100 (low = machine-flat, high = human-uneven)
-- vocabulary richness: ${metrics.diversity}/100
-- average sentence length: ${metrics.avgSentenceLen} words
-- machine-typical stock phrases found: ${metrics.aiTells}
+Independent statistical measurements of this exact passage. Each is already
+calibrated against normal human writing in its own language, so 0 means
+"indistinguishable from ordinary human prose in this language" and 100 means
+"as far from it as this measure goes". Weigh these alongside your own reading;
+where you disagree with them, trust your reading and the disagreement will be
+reported to the user as lower confidence.
+
+- flat sentence rhythm: ${pct(signals.uniformity)}/100
+- never leaves the 8-30 word band: ${pct(signals.bandLock)}/100
+- hedge and booster density: ${pct(signals.hedging)}/100
+- stock connective density: ${pct(signals.stock)}/100
+- enumerated advice in prose: ${pct(signals.enumeration)}/100
+- raw average sentence length: ${metrics.avgSentenceLen} words
+- sentences measured: ${splitSentences(text).length}
+
+If fewer than about eight sentences were measured, those shape-based numbers
+are noise and you should rely on your reading of the wording instead.
 
 Return JSON:
 {"score": <int 0-100 probability AI-generated>, "sentences": [{"text": "<sentence>", "score": <int 0-100>}]}
@@ -294,7 +184,13 @@ function parseDetectJson(raw: string, text: string): { score: number; sentences:
 
 async function openaiDetect(text: string, locale: string): Promise<DetectResult> {
   const metrics = computeMetrics(text);
-  const raw = await openaiChat(DETECT_SYSTEM, detectPrompt(text, locale, metrics), true, 2000);
+  const signals = computeSignals(text);
+  const raw = await openaiChat(
+    DETECT_SYSTEM,
+    detectPrompt(text, locale, metrics, signals),
+    true,
+    2000
+  );
   const { score, sentences } = parseDetectJson(raw, text);
   return {
     score,
@@ -408,16 +304,49 @@ export async function detectAI(text: string, locale: string): Promise<DetectResu
 /* ------------------------------------------------------------------
    Humanizer
 ------------------------------------------------------------------ */
+/**
+ * Substitutions, kept deliberately aligned with what the detector counts.
+ *
+ * These two lists had drifted apart: the detector had learned a much larger
+ * inventory of stock connectives, so the rewriter was leaving behind exactly
+ * the phrases the score was punishing and the verify loop kept — correctly —
+ * discarding its own output as no improvement. Anything added to STOCK_EN or
+ * STOCK_AR in detector-stats needs a landing place here, or the humanizer
+ * cannot fix what the detector complains about.
+ *
+ * Replacements are meaning-preserving on purpose. Swapping a connective for a
+ * plainer connective is safe; swapping a hedge for a claim is not, so the
+ * hedges left here are only the ones with an exact plain equivalent.
+ */
 function heuristicHumanize(text: string, isArabic: boolean): string {
   let out = text;
   const swaps: [RegExp, string][] = isArabic
     ? [
-        [/علاوة على ذلك/g, "كمان"],
-        [/بالإضافة إلى ذلك/g, "وأيضاً"],
-        [/من الجدير بالذكر أنه?/g, "المهم إنه"],
-        [/في الختام/g, "بالنهاية"],
-        [/في نهاية المطاف/g, "بالآخر"],
-        [/يلعب دوراً/g, "له دور"],
+        [/علاوةً? على ذلك،?/g, "وأيضاً"],
+        [/بالإضافة إلى ذلك،?/g, "وكذلك"],
+        [/إضافةً? إلى ذلك،?/g, "وكذلك"],
+        [/فضلاً عن ذلك،?/g, "وكذلك"],
+        [/من الجدير بالذكر أنه?/g, "المهم أن"],
+        [/تجدر الإشارة إلى أنه?/g, "لاحظ أن"],
+        [/جدير بالذكر أنه?/g, "المهم أن"],
+        [/(?:و)?في الختام،?/g, "وأخيراً"],
+        [/في نهاية المطاف،?/g, "في النهاية"],
+        [/(?:و)?من ناحية أخرى،?/g, "في المقابل"],
+        [/على صعيد آخر،?/g, "في المقابل"],
+        [/في هذا السياق،?/g, "وهنا"],
+        [/في هذا الصدد،?/g, "وهنا"],
+        [/مما لا شك فيه أنه?/g, "بلا شك"],
+        [/لا يخفى على أحد أنه?/g, "معروف أن"],
+        [/وبناءً? على ذلك،?/g, "لذلك"],
+        [/(?:و)?بالتالي،?/g, "لذلك"],
+        [/يمكن القول إنه?/g, "أي أن"],
+        [/بشكل عام،?/g, "عموماً"],
+        // Not "له دور": the phrase is usually followed by an accusative
+        // adjective ("دوراً محورياً"), and swapping the verb for a possessive
+        // left the adjective stranded in the wrong case — "له دور محورياً".
+        // "يؤدي" carries the same meaning and the same grammar.
+        [/يلعب دوراً/g, "يؤدي دوراً"],
+        [/تلعب دوراً/g, "تؤدي دوراً"],
       ]
     : [
         // compound phrases first so they don't get double-replaced
@@ -425,13 +354,32 @@ function heuristicHumanize(text: string, isArabic: boolean): string {
         [/\bMoreover, it is important to\b/gi, "It also matters to"],
         [/\bFurthermore,?\b/gi, "Also,"],
         [/\bMoreover,?\b/gi, "On top of that,"],
+        [/\bAdditionally,?\b/gi, "Also,"],
         [/\bIn addition,?\b/gi, "Plus,"],
         [/\bIn conclusion,?\b/gi, "So, to wrap up,"],
+        [/\bIn summary,?\b/gi, "To sum up,"],
         [/\bIt is important to note that\b/gi, "Worth mentioning:"],
+        [/\bIt is (?:also )?worth noting that\b/gi, "note that"],
+        [/\bIt should be noted that\b/gi, "note that"],
         [/\bIt is important to consider\b/gi, "Take a moment to consider"],
         [/\bIt is important to\b/gi, "It matters to"],
         [/\bIn today'?s world,?\b/gi, "These days,"],
         [/\bin the ever-evolving\b/gi, "in the fast-moving"],
+        [/\bOn the other hand,?\b/gi, "By contrast,"],
+        [/\bAs a result,?\b/gi, "So,"],
+        [/\bConsequently,?\b/gi, "So,"],
+        [/\bUltimately,?\b/gi, "In the end,"],
+        [/\bAt the end of the day,?\b/gi, "In the end,"],
+        [/\bOverall,?\b/gi, "On the whole,"],
+        [/\bIn essence,?\b/gi, "Basically,"],
+        [/\bIn other words,?\b/gi, "Put differently,"],
+        [/\bThat being said,?\b/gi, "Still,"],
+        [/\bLast but not least,?\b/gi, "Finally,"],
+        [/\bwhen it comes to\b/gi, "with"],
+        [/\ba testament to\b/gi, "proof of"],
+        [/\bin the realm of\b/gi, "in"],
+        [/\bnavigating the\b/gi, "handling the"],
+        [/\bunderscores\b/gi, "shows"],
         [/\bplays a crucial role\b/gi, "really matters"],
         [/\bdelve into\b/gi, "dig into"],
         [/\bseamless\b/gi, "smooth"],
@@ -439,12 +387,17 @@ function heuristicHumanize(text: string, isArabic: boolean): string {
         [/\brobust\b/gi, "solid"],
         [/\bleverage\b/gi, "use"],
         [/\butilize\b/gi, "use"],
+        [/\bfacilitate\b/gi, "help"],
+        [/\bnumerous\b/gi, "many"],
       ];
   for (const [re, rep] of swaps) out = out.replace(re, rep);
   // soften semicolons
   out = out.replace(/;\s+/g, isArabic ? "، و" : ". ");
   // cleanup: collapse doubled punctuation/spaces left by swaps
   out = out
+    // A swap beginning with "و" landing after an existing "و" leaves "وو",
+    // which reads as a typo rather than as prose.
+    .replace(/(^|[\s،,])وو/g, "$1و")
     .replace(/،\s*،/g, "،")
     .replace(/,\s*,/g, ",")
     .replace(/\s+([,.،])/g, "$1")
@@ -482,7 +435,15 @@ function heuristicHumanize(text: string, isArabic: boolean): string {
           k++;
         }
         const rest = parts.slice(k).join(comma + " ");
-        if (rest.trim()) {
+        // Both halves have to be able to stand as sentences. Splitting after a
+        // leading connective produced fragments like "On top of that." — a
+        // burstier rhythm bought with a sentence that isn't one.
+        const MIN_HALF_WORDS = 5;
+        const viable =
+          rest.trim() &&
+          acc.split(/\s+/).filter(Boolean).length >= MIN_HALF_WORDS &&
+          rest.split(/\s+/).filter(Boolean).length >= MIN_HALF_WORDS;
+        if (viable) {
           const first = /[.!?؟]$/.test(acc) ? acc : acc + ".";
           const second = rest.charAt(0).toUpperCase() + rest.slice(1);
           rebuilt.push(first, isArabic ? rest : second);
@@ -509,6 +470,17 @@ function heuristicHumanize(text: string, isArabic: boolean): string {
     }
     out = rebuilt.join(" ");
   }
+
+  // Swaps are written lower-case so they read correctly mid-sentence; this
+  // puts the capital back wherever one actually starts a sentence.
+  if (!isArabic) {
+    out = out.replace(/(^|[.!?]\s+)([a-z])/g, (_, lead, letter) => lead + letter.toUpperCase());
+  }
+
+  // Repeated last, because the merge above joins clauses with "، و" and the
+  // clause it joins on often already begins with one — which is how a rewrite
+  // that had been cleaned of doubled waws grew a fresh "ووأخيراً" on the way out.
+  if (isArabic) out = out.replace(/(^|[\s،,])وو/g, "$1و");
 
   return out.trim();
 }
@@ -552,22 +524,92 @@ async function claudeHumanize(
   return raw && "text" in raw ? raw.text.trim() : text;
 }
 
+/**
+ * Did the rewrite keep the substance?
+ *
+ * Only long words count. A humanizer is supposed to replace "furthermore" with
+ * "also" and "leverage" with "use" — that is the entire job — so a plain
+ * bag-of-words comparison punishes it for succeeding. What must survive is the
+ * material that carries the argument: names, technical terms, numbers, the
+ * specific nouns a paraphrase has no business dropping.
+ */
+function contentOverlap(before: string, after: string): number {
+  const bag = (t: string) =>
+    new Set(
+      t
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .split(/\s+/)
+        .filter((w) => w.length >= 6 || /\d/.test(w))
+    );
+  const a = bag(before);
+  const b = bag(after);
+  if (a.size === 0) return 1;
+  let kept = 0;
+  for (const w of a) if (b.has(w)) kept++;
+  return kept / a.size;
+}
+
+/**
+ * Rewrite, then check the rewrite.
+ *
+ * A single pass is a guess: the model is asked to sound human and has no idea
+ * whether it succeeded, so it sometimes returns prose that is flatter than
+ * what it was given. Scoring the output against the same engine that scores
+ * the input turns that guess into a measurement, and one retry is enough to
+ * catch most of it.
+ *
+ * The overlap guard exists for the opposite failure. Told to vary the rhythm,
+ * a model will occasionally start dropping clauses, and a humanizer that
+ * quietly deletes a third of someone's argument is worse than one that does
+ * nothing. If too little of the original vocabulary survives, the rewrite is
+ * discarded rather than shown — losing the improvement is recoverable, losing
+ * the meaning is not.
+ */
+const MIN_CONTENT_KEPT = 0.6;
+
 export async function humanizeText(
   text: string,
   locale: string,
   style: HumanizeStyle = "natural"
 ): Promise<HumanizeResult> {
-  const isArabic = /[؀-ۿ]/.test(text);
+  const isArabic = isArabicText(text);
   const provider = pickProvider();
-  try {
-    if (provider === "openai") {
-      return { text: await openaiHumanize(text, locale, style), engine: "openai" };
+  const before = styleSignalScore(text);
+
+  const rewrite = (input: string) =>
+    provider === "openai"
+      ? openaiHumanize(input, locale, style)
+      : claudeHumanize(input, locale, style);
+
+  if (provider !== "heuristic") {
+    try {
+      let best = await rewrite(text);
+      let bestScore = styleSignalScore(best);
+
+      // Only retry when the first pass actually failed to help. A second call
+      // costs the user latency, so it has to be earning something.
+      if (bestScore >= before) {
+        const second = await rewrite(text);
+        if (styleSignalScore(second) < bestScore) {
+          best = second;
+          bestScore = styleSignalScore(second);
+        }
+      }
+
+      if (contentOverlap(text, best) >= MIN_CONTENT_KEPT) {
+        return { text: best, engine: provider === "openai" ? "openai" : "claude" };
+      }
+    } catch {
+      /* fall through to heuristic */
     }
-    if (provider === "anthropic") {
-      return { text: await claudeHumanize(text, locale, style), engine: "claude" };
-    }
-  } catch {
-    /* fall through to heuristic */
   }
-  return { text: heuristicHumanize(text, isArabic), engine: "heuristic" };
+
+  // No overlap guard on this path. The deterministic rewriter is a closed set
+  // of substitutions plus sentence splitting and merging — it cannot delete a
+  // claim, only rephrase one — so the only question worth asking is whether it
+  // helped. Its sentence surgery is blunt enough to sometimes make things
+  // worse, and when it does, the original is the better answer.
+  const local = heuristicHumanize(text, isArabic);
+  return { text: styleSignalScore(local) < before ? local : text, engine: "heuristic" };
 }

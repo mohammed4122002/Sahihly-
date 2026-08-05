@@ -1,0 +1,282 @@
+[
+ {
+  "id": "en-h-lit-1",
+  "lang": "en",
+  "label": "human",
+  "register": "literary",
+  "source": "Austen, Pride and Prejudice (1813), Project Gutenberg via GITenberg",
+  "text": "An invitation to dinner was soon afterwards dispatched; and already had Mrs. Bennet planned the courses that were to do credit to her housekeeping, when an answer arrived which deferred it all. Mr. Bingley was obliged to be in town the following day, and, consequently, unable to accept the honour of their invitation, etc. Mrs. Bennet was quite disconcerted. She could not imagine what business he could have in town so soon after his arrival in Hertfordshire; and she began to fear that he might be always flying about from one place to another, and never settled at Netherfield as he ought to be. Lady Lucas quieted her fears a little by starting the idea of his being gone to London only to get a large party for the ball; and a report soon followed that Mr. Bingley was to bring twelve ladies and seven gentlemen with him to the assembly. The girls grieved over such a number of ladies, but were comforted the day before the ball by hearing, that instead of twelve he brought only six with him from London--his five sisters and a cousin. And when the party entered the assembly room it consisted of only five altogether--Mr. Bingley, his two sisters, the husband of the eldest, and another young man."
+ },
+ {
+  "id": "en-h-lit-2",
+  "lang": "en",
+  "label": "human",
+  "register": "literary",
+  "source": "Austen, Pride and Prejudice (1813), Project Gutenberg via GITenberg",
+  "text": "Mr. Bingley was good-looking and gentlemanlike; he had a pleasant countenance, and easy, unaffected manners. His sisters were fine women, with an air of decided fashion. His brother-in-law, Mr. Hurst, merely looked the gentleman; but his friend Mr. Darcy soon drew the attention of the room by his fine, tall person, handsome features, noble mien, and the report which was in general circulation within five minutes after his entrance, of his having ten thousand a year. The gentlemen pronounced him to be a fine figure of a man, the ladies declared he was much handsomer than Mr. Bingley, and he was looked at with great admiration for about half the evening, till his manners gave a disgust which turned the tide of his popularity; for he was discovered to be proud; to be above his company, and above being pleased; and not all his large estate in Derbyshire could then save him from having a most forbidding, disagreeable countenance, and being unworthy to be compared with his friend."
+ },
+ {
+  "id": "en-h-lit-3",
+  "lang": "en",
+  "label": "human",
+  "register": "literary",
+  "source": "Austen, Pride and Prejudice (1813), Project Gutenberg via GITenberg",
+  "text": "The evening altogether passed off pleasantly to the whole family. Mrs. Bennet had seen her eldest daughter much admired by the Netherfield party. Mr. Bingley had danced with her twice, and she had been distinguished by his sisters. Jane was as much gratified by this as her mother could be, though in a quieter way. Elizabeth felt Jane's pleasure. Mary had heard herself mentioned to Miss Bingley as the most accomplished girl in the neighbourhood; and Catherine and Lydia had been fortunate enough never to be without partners, which was all that they had yet learnt to care for at a ball. They returned, therefore, in good spirits to Longbourn, the village where they lived, and of which they were the principal inhabitants. They found Mr. Bennet still up. With a book he was regardless of time; and on the present occasion he had a good deal of curiosity as to the event of an evening which had raised such splendid expectations. He had rather hoped that his wife's views on the stranger would be disappointed; but he soon found out that he had a different story to hear."
+ },
+ {
+  "id": "en-h-lit-4",
+  "lang": "en",
+  "label": "human",
+  "register": "literary",
+  "source": "Austen, Pride and Prejudice (1813), Project Gutenberg via GITenberg",
+  "text": "Elizabeth listened in silence, but was not convinced; their behaviour at the assembly had not been calculated to please in general; and with more quickness of observation and less pliancy of temper than her sister, and with a judgement too unassailed by any attention to herself, she was very little disposed to approve them. They were in fact very fine ladies; not deficient in good humour when they were pleased, nor in the power of making themselves agreeable when they chose it, but proud and conceited. They were rather handsome, had been educated in one of the first private seminaries in town, had a fortune of twenty thousand pounds, were in the habit of spending more than they ought, and of associating with people of rank, and were therefore in every respect entitled to think well of themselves, and meanly of others. They were of a respectable family in the north of England; a circumstance more deeply impressed on their memories than that their brother's fortune and their own had been acquired by trade."
+ },
+ {
+  "id": "en-h-lit-5",
+  "lang": "en",
+  "label": "human",
+  "register": "literary",
+  "source": "Austen, Pride and Prejudice (1813), Project Gutenberg via GITenberg",
+  "text": "Within a short walk of Longbourn lived a family with whom the Bennets were particularly intimate. Sir William Lucas had been formerly in trade in Meryton, where he had made a tolerable fortune, and risen to the honour of knighthood by an address to the king during his mayoralty. The distinction had perhaps been felt too strongly. It had given him a disgust to his business, and to his residence in a small market town; and, in quitting them both, he had removed with his family to a house about a mile from Meryton, denominated from that period Lucas Lodge, where he could think with pleasure of his own importance, and, unshackled by business, occupy himself solely in being civil to all the world. For, though elated by his rank, it did not render him supercilious; on the contrary, he was all attention to everybody. By nature inoffensive, friendly, and obliging, his presentation at St. James's had made him courteous."
+ },
+ {
+  "id": "en-h-doc-1",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "The Rust Programming Language book (rust-lang/book)",
+  "text": "_Ownership_ is a set of rules that govern how a Rust program manages memory. All programs have to manage the way they use a computer’s memory while running. Some languages have garbage collection that regularly looks for no-longer-used memory as the program runs; in other languages, the programmer must explicitly allocate and free the memory. Rust uses a third approach: Memory is managed through a system of ownership with a set of rules that the compiler checks. If any of the rules are violated, the program won’t compile. None of the features of ownership will slow down your program while it’s running."
+ },
+ {
+  "id": "en-h-doc-2",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "The Rust Programming Language book (rust-lang/book)",
+  "text": "To illustrate the rules of ownership, we need a data type that is more complex than those we covered in the [“Data Types”][data-types] section of Chapter 3. The types covered previously are of a known size, can be stored on the stack and popped off the stack when their scope is over, and can be quickly and trivially copied to make a new, independent instance if another part of code needs to use the same value in a different scope. But we want to look at data that is stored on the heap and explore how Rust knows when to clean up that data, and the `String` type is a great example."
+ },
+ {
+  "id": "en-h-doc-3",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "The Rust Programming Language book (rust-lang/book)",
+  "text": "We’ve already seen string literals, where a string value is hardcoded into our program. String literals are convenient, but they aren’t suitable for every situation in which we may want to use text. One reason is that they’re immutable. Another is that not every string value can be known when we write our code: For example, what if we want to take user input and store it? It is for these situations that Rust has the `String` type. This type manages data allocated on the heap and as such is able to store an amount of text that is unknown to us at compile time. You can create a `String` from a string literal using the `from` function, like so:"
+ },
+ {
+  "id": "en-h-doc-4",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "The Rust Programming Language book (rust-lang/book)",
+  "text": "However, the second part is different. In languages with a _garbage collector (GC)_, the GC keeps track of and cleans up memory that isn’t being used anymore, and we don’t need to think about it. In most languages without a GC, it’s our responsibility to identify when memory is no longer being used and to call code to explicitly free it, just as we did to request it. Doing this correctly has historically been a difficult programming problem. If we forget, we’ll waste memory. If we do it too early, we’ll have an invalid variable. If we do it twice, that’s a bug too. We need to pair exactly one `allocate` with exactly one `free`."
+ },
+ {
+  "id": "en-h-doc-5",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "Linux kernel coding-style.rst (torvalds/linux)",
+  "text": "Generally, you want your comments to tell WHAT your code does, not HOW. Also, try to avoid putting comments inside a function body: if the function is so complex that you need to separately comment parts of it, you should probably go back to chapter 6 for a while. You can make small comments to note or warn about something particularly clever (or ugly), but try to avoid excess. Instead, put the comments at the head of the function, telling people what it does, and possibly WHY it does it."
+ },
+ {
+  "id": "en-h-doc-6",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "Linux kernel coding-style.rst (torvalds/linux)",
+  "text": "There appears to be a common misperception that gcc has a magic \"make me faster\" speedup option called ``inline``. While the use of inlines can be appropriate (for example as a means of replacing macros, see Chapter 12), it very often is not. Abundant use of the inline keyword leads to a much bigger kernel, which in turn slows the system as a whole down, due to a bigger icache footprint for the CPU and simply because there is less memory available for the pagecache. Just think about it; a pagecache miss causes a disk seek, which easily takes 5 milliseconds. There are a LOT of cpu cycles that can go into these 5 milliseconds."
+ },
+ {
+  "id": "en-h-doc-7",
+  "lang": "en",
+  "label": "human",
+  "register": "technical",
+  "source": "Linux kernel coding-style.rst (torvalds/linux)",
+  "text": "Mixing up these two sorts of representations is a fertile source of difficult-to-find bugs. If the C language included a strong distinction between integers and booleans then the compiler would find these mistakes for us... but it doesn't. To help prevent such bugs, always follow this convention For example, ``add work`` is a command, and the add_work() function returns 0 for success or -EBUSY for failure. In the same way, ``PCI device present`` is a predicate, and the pci_dev_present() function returns 1 if it succeeds in finding a matching device or 0 if it doesn't."
+ },
+ {
+  "id": "ar-h-doc-1",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "تعد React من مكتبات JavaScript المخصَّصة لبناء واجهات المستخدم (UI). يتم بناء واجهات المستخدم من وحدات صغيرة مثل الأزرار والنصوص والصور. تسمح لك React بتجميع هذه العناصر في مكونات (Components) يمكن إعادة استخدامها أو تضمينها داخل بعضها البعض. من مواقع الويب إلى تطبيقات الهاتف الجوال يمكن تقسم كل شئ إلى مكونات. في هذا الفصل، سوف تتعلم كيفية إنشاء وتعديل وتصيير مكونات حسب الشروط."
+ },
+ {
+  "id": "ar-h-doc-2",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "بشكل عام، لا يجب عليك أن تتوقع أن يتم تصيير المكوّنات الخاصة بك بترتيب معين. لا يهم إذا قمت بطلب y = 2 x قبل أو بعد y = 5 x : ستتم حل كلا الصيغ بشكل مستقل عن بعضهما البعض. بنفس الطريقة، يجب على كل مكوّن \"أن يفكر لنفسه\" فقط، ولا يحاول التنسيق أو الاعتماد على المكوّنات الأخرى أثناء التصيير. التصيير مثل امتحان مدرسي: يجب على كل مكوّن حساب JSX بمفرده!"
+ },
+ {
+  "id": "ar-h-doc-3",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "لاحظ كيف عرض المثال الأصلي \"Guest #2\", \"Guest #4\", و \"Guest #6\" بدلاً من \"Guest #1\", \"Guest #2\", و \"Guest #3\". كانت الدالة الأصلية غير نقية، لذا تعطلت عند استدعاءها مرتين. ولكن الإصدار النقي المُصلح يعمل حتى إذا تم استدعاء الوظيفة مرتين. **الدوال النقية تقوم بالحساب فقط، لذلك لن يتغير أي شيء عند استدعائها مرتين**--تمامًا مثل استدعاء `double(2)` مرتين لن يتغير ما يتم إرجاعه، وحل y = 2 x مرتين لن يغير ما هو y . نفس المدخلات، نفس المخرجات. دائمًا."
+ },
+ {
+  "id": "ar-h-doc-4",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "باستخدام React، لن تستطيع تعديل واجهة المستخدم (UI) عن طريق الكود مباشرة. على سبيل المثال، لن تكتب أوامر مثل \"عطل الزر\"، \"فعل الزر\"، \"أظهر رسالة النجاح\"، إلخ. بدلا عن ذلك، سوف تصف واجهة المستخدم التي تريد أن تراها للحالات المرئية من مكوناتك (\"حالة ابتدائية (initial state)\"، \"حالة كتابية (typing state)\"، \"حالة ناجحة (success state)\")، ومن بعدها تنشيط تغيرات الحالة بناء على مدخل المستخدم. هذا مشابه لتصور المصممين عن واجهة المستخدم."
+ },
+ {
+  "id": "ar-h-doc-5",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "تعطيك React القدرة على تجاوز السلوك الافتراضي، و*إجبار* المكون إعادة تعيين حالته عن طريق تمرير `key` مختلف لها، مثل ` `. هذا يخبر React أن الطرف المستقبل مختلف، ومن الواجب تعيين مكون `Chat` *مختلف* يكون بحاجة إلى إعادة الإنشاء من الصفر ببايانات جديدة (وواجهة مستخدم مطابقة للمدخلات). الآن الانتقال بين المستقبلين يعيد تعيين حقل الإدخال -- حتى بالرغم من أنك تعيد تصيير نفس المكون."
+ },
+ {
+  "id": "ar-h-doc-6",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "عادة، سوف تقوم بتمرير معلومات من مكوّن أب إلى مكوّن ابن بواسطة الخصائص (props). لكن تمرير الخصائص قد يكون غير مجدٍ لو احتجت لتمرير بعض الخصائص خلال مكونات عديدة، أو لو أن العديد من المكونات تحتاج نفس المعلومات. السياق (context) يتيح للمكون الأب جعل بعض المعلومات متوفرة لأي مكون أدناه في الشجرة -لا يهم مقدار عمق المكون- بدون تمريرها مباشرة عن طريق الخصائص."
+ },
+ {
+  "id": "ar-h-doc-7",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "قد يغير React من الطريقة التي ترى بها التصاميم أو تبني بها التطبيقات. عندما تقوم ببناء واجهة للمستخدم بـ React سيتوجب عليك أولا أن تقسمها لأجزاء تدعى *مكونات*. بعد ذلك، تقوم بوصف الحالات الظاهرية المختلفة لكل مكون على حده. وأخيرا، تقوم بربط مكوناتك معا كي تسري البيانات خلالها بانسيابية. في هذا الدرس، سنخوض معك في طريقة التفكير في بناء جدول بيانات لمنتجات، مع إمكانية البحث فيه."
+ },
+ {
+  "id": "ar-h-doc-8",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "1. `FilterableProductTable` (باللون الرمادي - جدول منتجات قابل للبحث) يحوي البرنامج بالكامل. 2. `SearchBar` (بالأزرق - مربع بحث) حيث يكتب فيه المستخدم. 3. `ProductTable` (بالبنفسجي - جدول المنتجات) يعرض المنتجات ونتائج البحث فيها بحسب مدخلات المستخدم. 4. `ProductCategoryRow` (بالأخضر - سطر خاص بنوع المنتج) يعرض عنوان لكل نوع من المنتجات. 5. `ProductRow` (بالأصفر - سطر المنتج) يعرض سطرا لكل منتج."
+ },
+ {
+  "id": "ar-h-doc-9",
+  "lang": "ar",
+  "label": "human",
+  "register": "technical-translated",
+  "source": "Official Arabic React docs (reactjs/ar.react.dev)",
+  "text": "إذا ألقيت نظرة على جدول المنتجات (`ProductTable` - بالبنفسجي) ستجد أن رأس الجدول (الذي يحوي خانات \"الاسم - Name\" و\"السعر - Price\") ليس كائنا مستقلا بذاته. هذه مسألة تفضيل شخصي، حيث بإمكانك اتخاذ أي مسلك بين الاثنين. في هذا المثال هي جزء من مكون `ProductTable`، لأنه يظهر داخل قائمة `ProductTable`. على كل حال، إذا زادت مهام رأس الجدول تعقيدا (كأن تضيف لها خيار الترتيب) يمكنك حينها أن تنشئ له مكونا خاصًا به، وليكن `ProductTableHeader` (`رأس جدول المنتجات`)."
+ },
+ {
+  "id": "en-m-blog-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "blog",
+  "source": "LLM output, typical blog register (with stock transitions)",
+  "text": "In today's world, remote work has fundamentally transformed the way organizations operate. Furthermore, it is important to note that this shift has brought both opportunities and challenges for employers and employees alike. Companies that leverage robust collaboration tools have discovered that productivity can be maintained, and in many cases improved, outside the traditional office environment. Moreover, the flexibility offered by remote arrangements plays a crucial role in attracting and retaining top talent in an increasingly competitive market. However, it is worth noting that challenges remain. Maintaining team cohesion, ensuring effective communication, and preserving company culture require deliberate effort and thoughtful planning. In conclusion, remote work represents a significant evolution in the modern workplace, and organizations that navigate this transition thoughtfully will be well positioned for long-term success."
+ },
+ {
+  "id": "en-m-explain-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "explainer",
+  "source": "LLM output, explainer register (moderate tells)",
+  "text": "Photosynthesis is the process by which plants convert light energy into chemical energy. This remarkable process takes place primarily in the chloroplasts, which contain a green pigment called chlorophyll. The chlorophyll absorbs light energy, particularly in the blue and red portions of the spectrum, and uses that energy to drive a series of chemical reactions. During these reactions, water molecules are split and carbon dioxide is converted into glucose. Oxygen is released as a byproduct, which is essential for most life on Earth. The overall process can be divided into two main stages: the light-dependent reactions and the light-independent reactions, also known as the Calvin cycle. Understanding photosynthesis is fundamental to understanding how energy flows through ecosystems and how life on our planet is sustained."
+ },
+ {
+  "id": "en-m-clean-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "clean-informative",
+  "source": "LLM output written to avoid stock transitions (hard case)",
+  "text": "The Dutch East India Company was founded in 1602 through a merger of competing trading firms. Its charter granted it the authority to negotiate treaties, maintain armed forces, and establish colonies in Asia. This combination of commercial and quasi-governmental powers was unusual for the period and shaped how European trade in the region developed. The company issued shares that could be bought and sold, an arrangement that laid groundwork for later stock exchanges. Its operations centered on spices, particularly nutmeg, cloves, and pepper, which commanded high prices in European markets. Over time, administrative costs and military expenditures eroded profitability. The company was dissolved in 1799, and its territorial holdings passed to the Dutch state."
+ },
+ {
+  "id": "en-m-academic-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "pseudo-academic",
+  "source": "LLM output imitating academic register (hard case)",
+  "text": "The relationship between urban density and public transportation usage has been examined extensively in the transportation planning literature. Higher residential density generally correlates with increased transit ridership, as shorter distances between origins and destinations make transit service more viable to operate. However, density alone does not determine outcomes. The quality of service, the pricing structure, and the availability of competing modes all influence how residents choose to travel. Cities with comparable densities can exhibit substantially different transit mode shares depending on these factors. Policy interventions that address density without simultaneously addressing service quality tend to produce limited results. This suggests that integrated approaches, combining land use planning with transit investment, are more likely to achieve meaningful changes in travel behavior."
+ },
+ {
+  "id": "en-m-answer-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "assistant-answer",
+  "source": "LLM output, direct-answer register",
+  "text": "There are several factors to consider when choosing a programming language for your first project. First, consider the type of application you want to build, as different languages are better suited to different domains. Second, think about the learning resources available, since a language with strong documentation and an active community will make your learning process significantly smoother. Third, consider the job market in your area if career prospects are a priority for you. Python is often recommended for beginners due to its readable syntax and versatility across data science, web development, and automation. JavaScript is another strong choice, particularly if you are interested in web development, since it runs in every browser. Ultimately, the best language is the one that keeps you motivated to keep building."
+ },
+ {
+  "id": "en-m-edited-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "lightly-edited",
+  "source": "LLM output with stock phrases manually removed (hardest case)",
+  "text": "Sourdough baking depends on a stable culture of wild yeast and lactic acid bacteria. The starter is maintained by discarding a portion and feeding the remainder with flour and water on a regular schedule. Temperature affects fermentation speed considerably. A starter kept at twenty-four degrees will roughly double in four to six hours, while the same starter at eighteen degrees may take twice as long. Hydration levels change both handling and crumb structure. Doughs above eighty percent hydration are slack and difficult for beginners to shape, but they produce a more open interior. The bulk fermentation stage determines much of the final flavour, since the acids that develop during this period give sourdough its characteristic tang."
+ },
+ {
+  "id": "en-m-listy-1",
+  "lang": "en",
+  "label": "machine",
+  "register": "listicle-prose",
+  "source": "LLM output, enumerated advice register",
+  "text": "Improving your sleep quality does not require expensive equipment or complicated routines. Establishing a consistent schedule is one of the most effective changes you can make, as your body responds well to predictable patterns. Reducing screen exposure in the hour before bed helps because blue light interferes with melatonin production. Keeping your bedroom cool, ideally between sixteen and nineteen degrees, supports the natural drop in core body temperature that accompanies sleep onset. Limiting caffeine after midday is another practical adjustment, since caffeine has a half-life of roughly five hours in most adults. Regular physical activity improves sleep quality as well, though vigorous exercise close to bedtime can have the opposite effect for some people."
+ },
+ {
+  "id": "ar-m-blog-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "blog",
+  "source": "LLM output, typical Arabic blog register (with stock transitions)",
+  "text": "في عالم اليوم، أصبح التسوق الإلكتروني جزءاً لا يتجزأ من حياتنا اليومية. علاوة على ذلك، فقد أحدثت المنصات الرقمية تحولاً جذرياً في طريقة تعامل المستهلكين مع العلامات التجارية. من الجدير بالذكر أن هذا التحول لم يكن ليحدث لولا التطور الكبير في تقنيات الدفع الإلكتروني وأنظمة الشحن. بالإضافة إلى ذلك، يلعب المحتوى الرقمي دوراً محورياً في بناء الثقة بين المتجر والعميل. ومن ناحية أخرى، تواجه المتاجر الإلكترونية تحديات عديدة تتعلق بأمن البيانات وحماية خصوصية المستخدمين. وفي هذا السياق، تسعى الشركات إلى تبني أحدث الحلول التقنية لضمان تجربة تسوق آمنة وسلسة. وفي الختام، يمكن القول إن مستقبل التجارة الإلكترونية واعد، وإن المؤسسات التي تستثمر في التحول الرقمي ستكون في موقع أفضل للمنافسة."
+ },
+ {
+  "id": "ar-m-explain-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "explainer",
+  "source": "LLM output, Arabic explainer register",
+  "text": "تعتبر عملية التمثيل الضوئي من أهم العمليات الحيوية على سطح الأرض. تتم هذه العملية داخل البلاستيدات الخضراء الموجودة في خلايا النبات، والتي تحتوي على صبغة الكلوروفيل. تقوم هذه الصبغة بامتصاص الطاقة الضوئية واستخدامها في تحويل ثاني أكسيد الكربون والماء إلى سكريات بسيطة. يتم إطلاق الأكسجين كناتج ثانوي لهذه العملية، وهو الأكسجين الذي تعتمد عليه معظم الكائنات الحية في تنفسها. تنقسم عملية التمثيل الضوئي إلى مرحلتين رئيسيتين، هما التفاعلات الضوئية والتفاعلات اللاضوئية. تحدث التفاعلات الضوئية في وجود الضوء المباشر، بينما يمكن أن تستمر التفاعلات اللاضوئية دون الحاجة إلى ضوء مباشر. وتعد دراسة هذه العملية أساسية لفهم انتقال الطاقة داخل الأنظمة البيئية المختلفة."
+ },
+ {
+  "id": "ar-m-clean-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "clean-informative",
+  "source": "LLM output written to avoid Arabic stock transitions (hard case)",
+  "text": "تأسست مكتبة الإسكندرية القديمة في مطلع القرن الثالث قبل الميلاد في عهد البطالمة. كانت المكتبة جزءاً من مؤسسة أكبر تُعرف باسم الموسيون، وهي مركز للبحث والدراسة استقطب علماء من مناطق واسعة من العالم القديم. جمعت المكتبة مخطوطات بلغات متعددة، وكان القائمون عليها ينسخون النصوص التي تصل إلى ميناء المدينة ثم يحتفظون بالأصل ويعيدون النسخة إلى صاحبها. عمل في المكتبة عدد من أبرز علماء ذلك العصر، ومنهم إراتوستينس الذي قدّر محيط الأرض بدقة لافتة اعتماداً على قياس زوايا الظل في مدينتين مختلفتين. تعرضت المكتبة لأضرار متكررة عبر قرون، ولا يوجد اتفاق بين المؤرخين على تاريخ محدد لنهايتها."
+ },
+ {
+  "id": "ar-m-academic-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "pseudo-academic",
+  "source": "LLM output imitating Arabic academic register (hard case)",
+  "text": "تناولت الدراسات الحديثة العلاقة بين الكثافة السكانية واستخدام وسائل النقل العام في المدن الكبرى. تشير النتائج عموماً إلى وجود ارتباط إيجابي بين ارتفاع الكثافة السكنية وزيادة أعداد مستخدمي النقل العام، ويعود ذلك إلى قصر المسافات بين نقاط الانطلاق والوصول. غير أن الكثافة وحدها لا تفسر الاختلافات الملحوظة بين المدن. فجودة الخدمة وهيكل التسعير وتوافر بدائل التنقل الأخرى تؤثر جميعها في اختيارات السكان. وقد أظهرت المقارنات بين مدن متقاربة في الكثافة تبايناً واضحاً في نسب استخدام النقل العام. ويترتب على ذلك أن السياسات التي تعالج الكثافة دون معالجة جودة الخدمة تحقق نتائج محدودة، وأن المقاربات المتكاملة التي تجمع بين تخطيط استخدامات الأراضي والاستثمار في النقل أكثر قدرة على إحداث تغيير فعلي."
+ },
+ {
+  "id": "ar-m-answer-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "assistant-answer",
+  "source": "LLM output, Arabic direct-answer register",
+  "text": "هناك عدة عوامل ينبغي أخذها في الاعتبار عند اختيار لغة البرمجة الأولى. أولاً، حدد نوع التطبيقات التي ترغب في بنائها، فلكل مجال لغات أكثر ملاءمة من غيرها. ثانياً، انظر إلى المصادر التعليمية المتاحة، إذ إن اللغة التي تملك توثيقاً جيداً ومجتمعاً نشطاً تجعل رحلة التعلم أسهل بكثير. ثالثاً، ضع في حسبانك سوق العمل في منطقتك إذا كانت الفرص الوظيفية أولوية بالنسبة لك. تُعد لغة بايثون خياراً شائعاً للمبتدئين بفضل بساطة صياغتها وتعدد استخداماتها في تحليل البيانات وتطوير الويب والأتمتة. أما جافاسكربت فهي خيار قوي أيضاً، خصوصاً إن كنت مهتماً بتطوير الويب، لأنها تعمل في جميع المتصفحات دون استثناء."
+ },
+ {
+  "id": "ar-m-edited-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "lightly-edited",
+  "source": "LLM output with Arabic stock phrases manually removed (hardest case)",
+  "text": "يعتمد خبز العجين المخمر على مزرعة مستقرة من الخمائر البرية وبكتيريا حمض اللاكتيك. تُحفظ البادئة بالتخلص من جزء منها وتغذية الباقي بالدقيق والماء وفق جدول منتظم. تؤثر الحرارة في سرعة التخمر تأثيراً كبيراً. فالبادئة المحفوظة عند أربع وعشرين درجة يتضاعف حجمها خلال أربع إلى ست ساعات، بينما قد تحتاج البادئة نفسها عند ثماني عشرة درجة إلى ضعف تلك المدة. وتغيّر نسبة الماء في العجين طريقة التعامل معه وبنية اللبّ معاً. فالعجائن التي تتجاوز نسبة الماء فيها ثمانين بالمئة رخوة ويصعب تشكيلها على المبتدئ، لكنها تنتج داخلاً أكثر انفتاحاً. وتحدد مرحلة التخمر الأولي جزءاً كبيراً من النكهة النهائية."
+ },
+ {
+  "id": "ar-m-listy-1",
+  "lang": "ar",
+  "label": "machine",
+  "register": "listicle-prose",
+  "source": "LLM output, Arabic enumerated advice register",
+  "text": "لا يتطلب تحسين جودة النوم معدات باهظة الثمن ولا روتيناً معقداً. يُعد الالتزام بمواعيد ثابتة للنوم والاستيقاظ من أكثر التغييرات فاعلية، لأن الجسم يستجيب جيداً للأنماط المتوقعة. ويساعد تقليل التعرض للشاشات في الساعة السابقة للنوم لأن الضوء الأزرق يتداخل مع إفراز هرمون الميلاتونين. كما أن الحفاظ على غرفة النوم باردة، ويفضل بين ست عشرة وتسع عشرة درجة، يدعم الانخفاض الطبيعي في حرارة الجسم المصاحب لبداية النوم. ويمثل الحد من الكافيين بعد منتصف النهار تعديلاً عملياً آخر، إذ يبلغ عمر النصف للكافيين نحو خمس ساعات لدى معظم البالغين. ويحسّن النشاط البدني المنتظم جودة النوم أيضاً، غير أن التمارين العنيفة قبيل موعد النوم قد تحدث الأثر المعاكس لدى بعض الأشخاص."
+ }
+]
