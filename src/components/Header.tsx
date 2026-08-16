@@ -146,8 +146,10 @@ export default function Header({
             </>
           )}
 
+          {/* 44px: this is the only way into the site's navigation on a phone,
+              and at 36px it was under the size a thumb reliably hits. */}
           <button
-            className="rounded-lg border border-white/10 p-2 lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
           >
