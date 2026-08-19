@@ -4,6 +4,7 @@ import { Sparkles, Repeat, FileCheck2, HeartHandshake, Gauge, ShieldAlert, Users
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, pageUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
+import { humanizerUseCases } from "@/content/humanizer-use-cases";
 import ToolStudio from "@/components/ToolStudio";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
@@ -215,6 +216,37 @@ export default async function AIHumanizerPage({
             </Reveal>
           ))}
         </div>
+
+        <Reveal>
+          {/* Rewriting a cover letter and rewriting a LinkedIn post solve
+              different problems even though the button is the same one —
+              each case below exists because the fix that actually works is
+              different in each situation, not just the noun in the title. */}
+          <section className="mt-14">
+            <h2 className="text-center text-2xl font-bold">
+              {locale === "ar" ? "ماذا تُنسّن؟" : "What are you rewriting?"}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-center text-sm text-white/55">
+              {locale === "ar"
+                ? "لكل حالة ما يحتاج تغييراً فعلاً — اختر ما يشبه وضعك."
+                : "Each case has its own version of what actually needs to change — pick the one that matches yours."}
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {humanizerUseCases.map((u) => (
+                <TreeLink
+                  key={u.slug}
+                  href={`/ai-humanizer/${u.slug}`}
+                  className="glass glow-card rounded-2xl border border-white/10 p-5 transition-colors hover:border-violet-400/30"
+                >
+                  <span className="block font-semibold text-white">{u[locale].h1}</span>
+                  <span className="mt-1.5 block text-sm leading-relaxed text-white/55">
+                    {u[locale].metaDescription}
+                  </span>
+                </TreeLink>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
         <Reveal>
           <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-6 text-center">

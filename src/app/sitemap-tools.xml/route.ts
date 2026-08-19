@@ -1,6 +1,7 @@
 import { SITE_URL } from "@/lib/i18n/config";
 import { urlsetXml, xmlResponse, today, type Entry } from "@/lib/sitemap-xml";
 import { useCases } from "@/content/use-cases";
+import { humanizerUseCases } from "@/content/humanizer-use-cases";
 
 export const revalidate = 3600;
 
@@ -16,6 +17,12 @@ export function GET() {
     // Use-case landing pages: same tool, a different reader's question each time.
     ...useCases.map((u) => ({
       loc: `${SITE_URL}/ai-detector/${u.slug}`,
+      lastmod,
+      changefreq: "monthly" as const,
+      priority: 0.85,
+    })),
+    ...humanizerUseCases.map((u) => ({
+      loc: `${SITE_URL}/ai-humanizer/${u.slug}`,
       lastmod,
       changefreq: "monthly" as const,
       priority: 0.85,
