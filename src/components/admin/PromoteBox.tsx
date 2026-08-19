@@ -52,7 +52,7 @@ export default function PromoteBox({ ar }: { ar: boolean }) {
               key={r}
               type="button"
               onClick={() => setRole(r)}
-              className={`rounded-full px-3 py-1 transition-colors ${
+              className={`h-9 rounded-full px-3 transition-colors ${
                 role === r ? "bg-violet-400 text-ocean-900" : "text-white/55"
               }`}
             >
@@ -68,11 +68,11 @@ export default function PromoteBox({ ar }: { ar: boolean }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="new-admin@email.com"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 py-2 text-sm outline-none focus:border-violet-400/50"
+          className="h-11 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 text-sm outline-none focus:border-violet-400/50 sm:h-10"
         />
         <button
           disabled={pending}
-          className="btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm"
+          className="btn-primary inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm sm:h-10"
         >
           {pending && <Loader2 size={14} className="animate-spin" />}
           {ar ? "إضافة" : "Add"}

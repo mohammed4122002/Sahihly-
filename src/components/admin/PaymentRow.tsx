@@ -45,15 +45,15 @@ export default function PaymentRow({ req, ar }: { req: PayReq; ar: boolean }) {
             <>
               <button
                 onClick={() => start(() => approvePayment(req.id))}
-                className="btn-primary inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs"
+                className="btn-primary inline-flex h-11 items-center gap-1.5 rounded-full px-4 text-xs sm:h-8 sm:px-3"
               >
-                <Check size={13} /> {ar ? "تفعيل" : "Approve"}
+                <Check size={14} /> {ar ? "تفعيل" : "Approve"}
               </button>
               <button
                 onClick={() => start(() => rejectPayment(req.id))}
-                className="btn-ghost inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs"
+                className="btn-ghost inline-flex h-11 items-center gap-1.5 rounded-full px-4 text-xs sm:h-8 sm:px-3"
               >
-                <X size={13} /> {ar ? "رفض" : "Reject"}
+                <X size={14} /> {ar ? "رفض" : "Reject"}
               </button>
             </>
           ) : (

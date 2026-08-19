@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, Ban, CircleCheck, Trash2 } from "lucide-react";
+import { Loader2, Ban, CircleCheck, Trash2, AlertTriangle } from "lucide-react";
 import { setUserPlan, setUserRole, setUserStatus, deleteUser } from "@/app/[locale]/admin/actions";
 
 const ROLE_STYLES: Record<string, string> = {
@@ -54,7 +54,7 @@ export default function UserRow({
           defaultValue={user.plan}
           disabled={pending}
           onChange={(e) => start(() => setUserPlan(user.id, e.target.value))}
-          className="rounded-lg border border-white/10 bg-black/30 px-2 py-1 text-xs outline-none focus:border-violet-400/50"
+          className="h-10 rounded-lg border border-white/10 bg-black/30 px-2 text-xs outline-none focus:border-violet-400/50 sm:h-8"
         >
           <option value="free">free</option>
           <option value="pro">pro</option>
@@ -66,7 +66,7 @@ export default function UserRow({
           defaultValue={user.role}
           disabled={pending || isOwnerEmail}
           onChange={(e) => start(() => setUserRole(user.id, e.target.value))}
-          className={`rounded-full border bg-black/30 px-2 py-1 text-[11px] outline-none ${
+          className={`h-10 rounded-full border bg-black/30 px-2 text-[11px] outline-none sm:h-8 ${
             ROLE_STYLES[user.role] ?? ROLE_STYLES.user
           }`}
         >
@@ -87,38 +87,66 @@ export default function UserRow({
         </span>
       </td>
       <td data-label={L.actions} className="px-4 py-3">
-        <div className="flex items-center justify-end gap-1">
-          {pending && <Loader2 size={14} className="animate-spin text-white/40" />}
-          {isOwnerEmail ? (
-            <span className="text-[11px] text-white/30">{ar ? "المالك" : "owner"}</span>
-          ) : (
-            <>
+        {/*
+         * Delete used to turn into a one-word "confirm" button sitting in the
+         * exact spot the delete button just was — so the same tap location that
+         * asked for confirmation was the tap that granted it. On a touchscreen,
+         * a lagging UI or an eager second tap is ordinary, and this account
+         * deletion is real and irreversible, unlike a draft article. The
+         * confirmation now names the person and sits in its own row with an
+         * explicit, equally-sized Cancel next to it.
+         */}
+        {confirmDelete ? (
+          <div className="rounded-xl border border-red-500/25 bg-red-500/10 p-3">
+            <p className="flex items-start gap-2 text-xs leading-relaxed text-red-200">
+              <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+              {ar
+                ? `حذف حساب ${user.email} نهائياً؟ يُحذف حساب الدخول ولا يمكن التراجع.`
+                : `Delete ${user.email}'s account permanently? This removes their login and cannot be undone.`}
+            </p>
+            <div className="mt-2.5 flex gap-2">
               <button
-                title={suspended ? "Reactivate" : "Suspend"}
-                onClick={() => start(() => setUserStatus(user.id, suspended ? "active" : "suspended"))}
-                className="rounded-lg p-1.5 text-white/40 hover:bg-white/5 hover:text-amber-300"
+                onClick={() => {
+                  setConfirmDelete(false);
+                  start(() => deleteUser(user.id));
+                }}
+                className="h-10 flex-1 rounded-full border border-red-500/40 bg-red-500/20 text-xs font-medium text-red-100"
               >
-                {suspended ? <CircleCheck size={15} /> : <Ban size={15} />}
+                {ar ? "نعم، احذف" : "Yes, delete"}
               </button>
-              {confirmDelete ? (
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="btn-ghost h-10 flex-1 rounded-full text-xs"
+              >
+                {ar ? "إلغاء" : "Cancel"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-end gap-1">
+            {pending && <Loader2 size={14} className="animate-spin text-white/40" />}
+            {isOwnerEmail ? (
+              <span className="text-[11px] text-white/30">{ar ? "المالك" : "owner"}</span>
+            ) : (
+              <>
                 <button
-                  onClick={() => start(() => deleteUser(user.id))}
-                  className="rounded-lg bg-red-500/15 px-2 py-1 text-[11px] text-red-300"
+                  title={suspended ? "Reactivate" : "Suspend"}
+                  onClick={() => start(() => setUserStatus(user.id, suspended ? "active" : "suspended"))}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/40 hover:bg-white/5 hover:text-amber-300 sm:h-9 sm:w-9"
                 >
-                  {ar ? "تأكيد" : "confirm"}
+                  {suspended ? <CircleCheck size={16} /> : <Ban size={16} />}
                 </button>
-              ) : (
                 <button
                   title="Delete"
                   onClick={() => setConfirmDelete(true)}
-                  className="rounded-lg p-1.5 text-white/40 hover:bg-red-500/10 hover:text-red-300"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/40 hover:bg-red-500/10 hover:text-red-300 sm:h-9 sm:w-9"
                 >
-                  <Trash2 size={15} />
+                  <Trash2 size={16} />
                 </button>
-              )}
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
+        )}
       </td>
     </tr>
   );
