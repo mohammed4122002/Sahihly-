@@ -2,6 +2,8 @@ import { SITE_URL } from "@/lib/i18n/config";
 import { urlsetXml, xmlResponse, today, type Entry } from "@/lib/sitemap-xml";
 import { useCases } from "@/content/use-cases";
 import { humanizerUseCases } from "@/content/humanizer-use-cases";
+import { wordCounterUseCases } from "@/content/word-counter-use-cases";
+import { readabilityUseCases } from "@/content/readability-use-cases";
 
 export const revalidate = 3600;
 
@@ -23,6 +25,18 @@ export function GET() {
     })),
     ...humanizerUseCases.map((u) => ({
       loc: `${SITE_URL}/ai-humanizer/${u.slug}`,
+      lastmod,
+      changefreq: "monthly" as const,
+      priority: 0.85,
+    })),
+    ...wordCounterUseCases.map((u) => ({
+      loc: `${SITE_URL}/word-counter/${u.slug}`,
+      lastmod,
+      changefreq: "monthly" as const,
+      priority: 0.85,
+    })),
+    ...readabilityUseCases.map((u) => ({
+      loc: `${SITE_URL}/readability-checker/${u.slug}`,
       lastmod,
       changefreq: "monthly" as const,
       priority: 0.85,

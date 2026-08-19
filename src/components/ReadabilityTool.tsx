@@ -6,7 +6,7 @@ import { Trash2 } from "lucide-react";
 
 type LevelKey = "veryEasy" | "easy" | "medium" | "hard" | "veryHard";
 
-type Labels = {
+export type Labels = {
   placeholder: string;
   clear: string;
   score: string;

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Trash2 } from "lucide-react";
 
-type Labels = {
+export type Labels = {
   placeholder: string;
   words: string;
   chars: string;

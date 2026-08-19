@@ -6,6 +6,8 @@ import { getDictionary } from "@/lib/i18n";
 import ReadabilityTool from "@/components/ReadabilityTool";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
+import { readabilityLabels } from "@/content/tool-labels";
+import { readabilityUseCases } from "@/content/readability-use-cases";
 
 export async function generateMetadata({
   params,
@@ -40,31 +42,6 @@ const C = {
   en: {
     h1: "Free Readability Checker",
     sub: "Paste your text to see how easily people can read it — with a readability score, the audience level it suits, and the long sentences slowing readers down. Runs entirely in your browser.",
-    labels: {
-      placeholder: "Paste your text here…",
-      clear: "Clear",
-      score: "Readability score",
-      level: "Level",
-      words: "Words",
-      sentences: "Sentences",
-      avgWords: "Avg words / sentence",
-      longSentences: "Long sentences (25+)",
-      hint: "Higher is easier. Most web writing should land between 50 and 70. Split your long sentences first — it's the fastest way to raise the score.",
-      levels: {
-        veryEasy: "Very easy",
-        easy: "Easy",
-        medium: "Fairly readable",
-        hard: "Difficult",
-        veryHard: "Very difficult",
-      },
-      audience: {
-        veryEasy: "Suits any reader, including younger audiences",
-        easy: "Comfortable for a general online audience",
-        medium: "Fine for informed readers and most blogs",
-        hard: "Suits specialists; general readers will struggle",
-        veryHard: "Academic or technical readers only",
-      },
-    },
     sections: [
       {
         h: "What the score means",
@@ -105,31 +82,6 @@ const C = {
   ar: {
     h1: "فاحص سهولة القراءة المجاني",
     sub: "الصق نصّك لترى مدى سهولة قراءته — بدرجة قراءة، ومستوى الجمهور المناسب، والجمل الطويلة التي تُبطئ القارئ. يعمل بالكامل داخل متصفحك.",
-    labels: {
-      placeholder: "الصق نصّك هنا…",
-      clear: "مسح",
-      score: "درجة سهولة القراءة",
-      level: "المستوى",
-      words: "كلمة",
-      sentences: "جملة",
-      avgWords: "متوسط الكلمات/جملة",
-      longSentences: "جمل طويلة (٢٥+)",
-      hint: "كلما ارتفعت كان النص أسهل. معظم الكتابة على الويب يفضّل أن تقع بين ٥٠ و٧٠. ابدأ بتقسيم جملك الطويلة — أسرع طريقة لرفع الدرجة.",
-      levels: {
-        veryEasy: "سهل جداً",
-        easy: "سهل",
-        medium: "مقبول القراءة",
-        hard: "صعب",
-        veryHard: "صعب جداً",
-      },
-      audience: {
-        veryEasy: "يناسب أي قارئ، بما فيهم الفئات الأصغر سناً",
-        easy: "مريح لجمهور الإنترنت العام",
-        medium: "مناسب للقارئ المطّلع ومعظم المدوّنات",
-        hard: "يناسب المتخصصين؛ القارئ العام سيجد صعوبة",
-        veryHard: "للقارئ الأكاديمي أو التقني فقط",
-      },
-    },
     sections: [
       {
         h: "ماذا تعني الدرجة",
@@ -221,12 +173,43 @@ export default async function ReadabilityPage({
         </Reveal>
         <Reveal delay={1}>
           <div className="mx-auto mt-10 max-w-4xl">
-            <ReadabilityTool labels={c.labels} />
+            <ReadabilityTool labels={readabilityLabels[locale]} />
           </div>
         </Reveal>
       </div>
 
       <div className="container-x mt-16 max-w-3xl">
+        <Reveal>
+          {/* A teacher grading a ten-year-old's reading level and a healthcare
+              writer clearing an accessibility bar are both "checking
+              readability," but the target band and the stakes are nothing
+              alike — hence separate pages instead of one generic list. */}
+          <section className="mb-10">
+            <h2 className="text-center text-2xl font-bold">
+              {ar ? "لماذا تفحص سهولة القراءة؟" : "Why are you checking readability?"}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-center text-sm text-white/55">
+              {ar
+                ? "لكل جمهور نطاقه المستهدف الخاص — اختر ما يشبه وضعك."
+                : "Each audience has its own target band — pick the one that matches yours."}
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {readabilityUseCases.map((u) => (
+                <TreeLink
+                  key={u.slug}
+                  href={`/readability-checker/${u.slug}`}
+                  className="glass glow-card rounded-2xl border border-white/10 p-5 transition-colors hover:border-violet-400/30"
+                >
+                  <span className="block font-semibold text-white">{u[locale].h1}</span>
+                  <span className="mt-1.5 block text-sm leading-relaxed text-white/55">
+                    {u[locale].metaDescription}
+                  </span>
+                </TreeLink>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
         <div className="grid gap-4">
           {c.sections.map((s, i) => (
             <Reveal key={s.h} delay={i} as="div">

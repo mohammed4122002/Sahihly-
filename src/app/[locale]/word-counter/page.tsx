@@ -6,6 +6,8 @@ import { getDictionary } from "@/lib/i18n";
 import WordCounterTool from "@/components/WordCounterTool";
 import Reveal from "@/components/Reveal";
 import FAQ from "@/components/FAQ";
+import { wordCounterLabels } from "@/content/tool-labels";
+import { wordCounterUseCases } from "@/content/word-counter-use-cases";
 
 export async function generateMetadata({
   params,
@@ -40,18 +42,6 @@ const C = {
   en: {
     h1: "Free Word Counter",
     sub: "Count words, characters, sentences, and paragraphs instantly — with reading and speaking time. Works for English and Arabic, entirely in your browser: your text never leaves your device.",
-    labels: {
-      placeholder: "Type or paste your text here…",
-      words: "Words",
-      chars: "Characters",
-      charsNoSpaces: "Characters (no spaces)",
-      sentences: "Sentences",
-      paragraphs: "Paragraphs",
-      readingTime: "Reading time",
-      speakingTime: "Speaking time",
-      minutes: "min",
-      clear: "Clear",
-    },
     sections: [
       {
         h: "Why word counts matter more than writers expect",
@@ -86,18 +76,6 @@ const C = {
   ar: {
     h1: "عدّاد الكلمات المجاني",
     sub: "عدّ الكلمات والأحرف والجمل والفقرات فوراً — مع وقت القراءة والإلقاء. يعمل بالعربية والإنجليزية بالكامل داخل متصفحك: نصّك لا يغادر جهازك أبداً.",
-    labels: {
-      placeholder: "اكتب أو الصق نصّك هنا…",
-      words: "كلمة",
-      chars: "حرف",
-      charsNoSpaces: "حرف (بلا مسافات)",
-      sentences: "جملة",
-      paragraphs: "فقرة",
-      readingTime: "وقت القراءة",
-      speakingTime: "وقت الإلقاء",
-      minutes: "د",
-      clear: "مسح",
-    },
     sections: [
       {
         h: "لماذا يهمّ عدد الكلمات أكثر مما يتوقّع الكاتب",
@@ -185,14 +163,45 @@ export default async function WordCounterPage({
         </Reveal>
         <Reveal delay={1}>
           <div className="mx-auto mt-10 max-w-4xl">
-            <WordCounterTool labels={c.labels} />
+            <WordCounterTool labels={wordCounterLabels[locale]} />
           </div>
         </Reveal>
       </div>
 
       <div className="container-x mt-16 max-w-3xl">
         <Reveal>
-          <div className="rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-8 text-center">
+          {/* Why someone is counting differs by stakes: a student is matching a
+              professor's cap, a novelist is tracking a genre norm, a job
+              applicant is fitting a portal's hard character limit. Each has
+              its own numbers and its own page. */}
+          <section>
+            <h2 className="text-center text-2xl font-bold">
+              {locale === "ar" ? "لماذا تعدّ كلماتك؟" : "Why are you counting?"}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-center text-sm text-white/55">
+              {locale === "ar"
+                ? "لكل حالة حدودها ومعاييرها الخاصة — اختر ما يشبه وضعك."
+                : "Each situation has its own limits and its own norms — pick the one that matches yours."}
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {wordCounterUseCases.map((u) => (
+                <TreeLink
+                  key={u.slug}
+                  href={`/word-counter/${u.slug}`}
+                  className="glass glow-card rounded-2xl border border-white/10 p-5 transition-colors hover:border-violet-400/30"
+                >
+                  <span className="block font-semibold text-white">{u[locale].h1}</span>
+                  <span className="mt-1.5 block text-sm leading-relaxed text-white/55">
+                    {u[locale].metaDescription}
+                  </span>
+                </TreeLink>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-400/[0.05] p-8 text-center">
             <h2 className="text-xl font-semibold">{c.ctaTitle}</h2>
             <p className="mt-2 text-sm text-white/60">{c.ctaBody}</p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
