@@ -65,6 +65,13 @@ export async function generateMetadata({
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
       ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
       : {}),
+    // Static meta tag for AdSense's "Meta tag" ownership check. No script, no
+    // cookies, so it works before consent and doesn't fight ConsentBanner —
+    // unlike the "AdSense snippet" method, which only loads after consent
+    // and Google's verification crawler never clicks Accept.
+    ...(process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+      ? { other: { "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT } }
+      : {}),
     alternates: {
       types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
     },
