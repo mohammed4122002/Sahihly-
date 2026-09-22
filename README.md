@@ -17,8 +17,10 @@ languages — with first-class Arabic support and native-quality English.
   to the clean URL while adopting that language — which doubles as shareable language links.
 - **AI Detector** — probability score + sentence-level highlights.
 - **Humanizer** — meaning-safe rewrite with before/after, copy & download.
-- **Dual engine** — uses the Anthropic API (Claude) when `ANTHROPIC_API_KEY` is set, and
-  falls back to a built-in linguistic heuristic so the tools work out of the box.
+- **Multi-provider engine** — uses Gemini, OpenAI, or Anthropic depending on which key is
+  set (`GEMINI_API_KEY` first, since Google's free tier means a deployment can run the full
+  engine at no cost), and falls back to a built-in linguistic heuristic so the tools work
+  out of the box.
 - **Auth + Dashboard** — Supabase auth (email + Google), subscription status, usage history.
 - **Payments** — provider-abstracted layer with **LemonSqueezy** (Merchant of Record: cards,
   PayPal, Apple/Google Pay, automatic tax handling, real recurring billing) and **Binance Pay**
@@ -35,7 +37,7 @@ languages — with first-class Arabic support and native-quality English.
 | Framework  | Next.js 16 (App Router) · React 19 · TypeScript  |
 | Styling    | Tailwind CSS v4 · Framer Motion · lucide-react   |
 | Auth + DB  | Supabase (PostgreSQL, RLS)                        |
-| AI         | OpenAI (ChatGPT) or Anthropic (Claude) + heuristic fallback |
+| AI         | Gemini, OpenAI (ChatGPT), or Anthropic (Claude) + heuristic fallback |
 | Payments   | LemonSqueezy + Binance Pay (abstracted `PaymentProvider`) |
 
 ## 🚀 Getting started
@@ -57,8 +59,12 @@ npm run build && npm run start
 See `.env.example`. Minimum to run: `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Everything else is optional and degrades gracefully:
 
-- **AI engine** — auto-selected: `OPENAI_API_KEY` (ChatGPT) → `ANTHROPIC_API_KEY`
-  (Claude) → built-in heuristic engine. Force one with `AI_PROVIDER=openai|anthropic`.
+- **AI engine** — auto-selected: `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) → `OPENAI_API_KEY`
+  (ChatGPT) → `ANTHROPIC_API_KEY` (Claude) → built-in heuristic engine. Gemini goes first
+  because it is the one with a free tier — get a key from
+  [Google AI Studio](https://aistudio.google.com/apikey). Force a provider with
+  `AI_PROVIDER=gemini|openai|anthropic`, and override the model with `GEMINI_MODEL`
+  (default `gemini-2.5-flash`), `OPENAI_MODEL`, or `ANTHROPIC_MODEL`.
 - **LemonSqueezy (card/PayPal checkout)** — `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`,
   `LEMONSQUEEZY_WEBHOOK_SECRET`, and one variant id per plan/cycle:
   `LEMONSQUEEZY_VARIANT_PRO_MONTHLY`, `LEMONSQUEEZY_VARIANT_PRO_YEARLY`,

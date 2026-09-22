@@ -72,7 +72,7 @@ const en = {
     shortText: "Short texts carry weak signal — results under ~40 words are rough estimates. Add more text for a reliable read.",
     hybridBadge: "Hybrid engine: statistical signals + AI reasoning",
     basicEngineBadge: "Statistical engine only",
-    basicEngineNote: "AI reasoning is not enabled, so this score comes from statistical signals alone and is less accurate. Set OPENAI_API_KEY or ANTHROPIC_API_KEY to turn on the full engine.",
+    basicEngineNote: "AI reasoning is not enabled, so this score comes from statistical signals alone and is less accurate. Set GEMINI_API_KEY (Google has a free tier), OPENAI_API_KEY, or ANTHROPIC_API_KEY to turn on the full engine.",
   },
   trustStrip: [
     "No signup to try",
