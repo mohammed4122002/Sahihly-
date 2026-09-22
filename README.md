@@ -64,7 +64,15 @@ See `.env.example`. Minimum to run: `NEXT_PUBLIC_SUPABASE_URL` and
   because it is the one with a free tier — get a key from
   [Google AI Studio](https://aistudio.google.com/apikey). Force a provider with
   `AI_PROVIDER=gemini|openai|anthropic`, and override the model with `GEMINI_MODEL`
-  (default `gemini-2.5-flash`), `OPENAI_MODEL`, or `ANTHROPIC_MODEL`.
+  (default `gemini-2.5-flash`), `OPENAI_MODEL`, or `ANTHROPIC_MODEL`. `AI_PROVIDER` only
+  reorders the list — every other configured key stays as a fallback, so one rejected or
+  rate-limited key no longer drops the whole site to the heuristic engine.
+  Seeing "Statistical engine only" with a key set? Two different causes look identical from
+  the outside, and `/api/diag` (signed in as an admin) tells them apart: it reports which
+  keys the *running* deployment can see — a key added on Vercel after the last build is
+  invisible until you redeploy — and `/api/diag?ping=1` makes one real call per key and
+  returns the provider's own error (invalid key, quota, retired model). Failures are also
+  logged to the runtime log as `[analysis] detect via <provider> failed: …`.
 - **LemonSqueezy (card/PayPal checkout)** — `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`,
   `LEMONSQUEEZY_WEBHOOK_SECRET`, and one variant id per plan/cycle:
   `LEMONSQUEEZY_VARIANT_PRO_MONTHLY`, `LEMONSQUEEZY_VARIANT_PRO_YEARLY`,
