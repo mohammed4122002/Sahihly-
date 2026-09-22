@@ -99,9 +99,9 @@ export async function pingProviders(): Promise<
   for (const provider of chain) {
     try {
       if (provider === "gemini") {
-        await geminiChat("Reply with the single word: ok", "ping", false, 8);
+        await geminiChat("Reply with the single word: ok", "ping", false, 64);
       } else if (provider === "openai") {
-        await openaiChat("Reply with the single word: ok", "ping", false, 8);
+        await openaiChat("Reply with the single word: ok", "ping", false, 64);
       } else {
         const anthropic = getAnthropic();
         await anthropic.messages.create({
@@ -148,6 +148,17 @@ async function openaiChat(
   return json.choices?.[0]?.message?.content ?? "";
 }
 
+/**
+ * Output budget for one detection.
+ *
+ * The reply echoes every sentence of the chunk back with a score, so it is
+ * longer than the passage it read. Arabic costs roughly two to three tokens a
+ * word against English's one and a bit, which made 2000 tokens a truncated
+ * answer on exactly the language this tool exists for — and a truncated answer
+ * used to mean a silent drop to the statistical engine.
+ */
+const DETECT_MAX_TOKENS = 4000;
+
 export type { Sentence, StyleMetrics, Engine, Confidence, DetectResult };
 export { computeMetrics };
 
@@ -171,7 +182,7 @@ async function claudeDetect(text: string, locale: string): Promise<DetectResult>
   const signals = computeSignals(text);
   const msg = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 2000,
+    max_tokens: DETECT_MAX_TOKENS,
     system: DETECT_SYSTEM,
     messages: [{ role: "user", content: detectPrompt(text, locale, metrics, signals) }],
   });
@@ -256,8 +267,30 @@ TEXT:
 """${text}"""`;
 }
 
+/**
+ * The overall score is the first field the model writes, so a reply cut off
+ * mid-sentence-list still contains the number that drives the whole result.
+ * Throwing that away downgraded the entire analysis to the statistical engine
+ * over a formatting accident; the sentence highlights degrade to a flat score
+ * instead, which is a visibly smaller loss.
+ */
+function salvageScore(raw: string): number | null {
+  const m = raw.match(/"score"\s*:\s*(\d{1,3})/);
+  if (!m) return null;
+  return Math.min(100, Math.max(0, Number(m[1])));
+}
+
 function parseDetectJson(raw: string, text: string): { score: number; sentences: Sentence[] } {
-  const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+  const clean = raw.replace(/```json|```/g, "").trim();
+  let parsed: { score?: number; sentences?: { text: string; score: number }[] };
+  try {
+    parsed = JSON.parse(clean);
+  } catch (err) {
+    const rescued = salvageScore(clean);
+    if (rescued === null) throw err;
+    console.warn("[analysis] truncated model JSON; using its overall score only");
+    parsed = { score: rescued };
+  }
   const score = Math.min(100, Math.max(0, Math.round(parsed.score ?? 50)));
   const sentences: Sentence[] = Array.isArray(parsed.sentences)
     ? parsed.sentences.map((s: { text: string; score: number }) => ({
@@ -275,7 +308,7 @@ async function openaiDetect(text: string, locale: string): Promise<DetectResult>
     DETECT_SYSTEM,
     detectPrompt(text, locale, metrics, signals),
     true,
-    2000
+    DETECT_MAX_TOKENS
   );
   const { score, sentences } = parseDetectJson(raw, text);
   return {
@@ -295,7 +328,7 @@ async function geminiDetect(text: string, locale: string): Promise<DetectResult>
     DETECT_SYSTEM,
     detectPrompt(text, locale, metrics, signals),
     true,
-    2000
+    DETECT_MAX_TOKENS
   );
   const { score, sentences } = parseDetectJson(raw, text);
   return {

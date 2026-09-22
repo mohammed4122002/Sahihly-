@@ -67,12 +67,19 @@ See `.env.example`. Minimum to run: `NEXT_PUBLIC_SUPABASE_URL` and
   (default `gemini-2.5-flash`), `OPENAI_MODEL`, or `ANTHROPIC_MODEL`. `AI_PROVIDER` only
   reorders the list — every other configured key stays as a fallback, so one rejected or
   rate-limited key no longer drops the whole site to the heuristic engine.
-  Seeing "Statistical engine only" with a key set? Two different causes look identical from
-  the outside, and `/api/diag` (signed in as an admin) tells them apart: it reports which
-  keys the *running* deployment can see — a key added on Vercel after the last build is
-  invisible until you redeploy — and `/api/diag?ping=1` makes one real call per key and
-  returns the provider's own error (invalid key, quota, retired model). Failures are also
-  logged to the runtime log as `[analysis] detect via <provider> failed: …`.
+  Seeing "Statistical engine only" with a key set? Three different causes look identical
+  from the outside, and `/api/diag` (signed in as an admin) tells them apart: it reports
+  which keys the *running* deployment can see — a key added on Vercel after the last build
+  is invisible until you redeploy — and `/api/diag?ping=1` makes one real call per key and
+  returns the provider's own error (invalid key, quota, retired model, or a 200 carrying no
+  text). Failures are also logged to the runtime log as
+  `[analysis] detect via <provider> failed: …`.
+  The third cause is Gemini-specific: the 2.5 models think before answering and those
+  thinking tokens come out of the same output budget, so a valid key could return HTTP 200
+  with an empty answer and the detector quietly dropped to statistics. Thinking is now
+  switched off for detection (`GEMINI_THINKING_BUDGET` overrides it: a token count to allow
+  some, a negative value to leave the decision to the model, which is the only setting the
+  Pro models accept).
 - **LemonSqueezy (card/PayPal checkout)** — `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`,
   `LEMONSQUEEZY_WEBHOOK_SECRET`, and one variant id per plan/cycle:
   `LEMONSQUEEZY_VARIANT_PRO_MONTHLY`, `LEMONSQUEEZY_VARIANT_PRO_YEARLY`,
