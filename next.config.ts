@@ -22,6 +22,7 @@ const securityHeaders = [
  */
 const retiredPosts: Record<string, string> = {
   "turnitin-arabic-ai-detection2": "turnitin-arabic-ai-detection",
+  "school-ai-accusation-parents-guide1": "school-ai-accusation-parents-guide",
 };
 
 /**

@@ -3,6 +3,8 @@ import type { Locale } from "@/lib/i18n/config";
 export type BlogPost = {
   slug: string;
   date: string;
+  /** Last substantive edit (YYYY-MM-DD); absent means never edited since `date`. */
+  updated?: string;
   readingTime: number;
   category: string;
   title: Record<Locale, string>;

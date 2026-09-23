@@ -61,7 +61,7 @@ export default async function PostPage({
       headline: post.title[locale],
       description: post.excerpt[locale],
       datePublished: post.date,
-      dateModified: post.date,
+      dateModified: post.updated && post.updated > post.date ? post.updated : post.date,
       inLanguage: locale,
       author: post.author
         ? {

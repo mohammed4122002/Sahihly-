@@ -1,9 +1,10 @@
 import { SITE_URL } from "@/lib/i18n/config";
 import { urlsetXml, xmlResponse, today, type Entry } from "@/lib/sitemap-xml";
+import { getAuthors } from "@/lib/authors";
 
 export const revalidate = 3600;
 
-export function GET() {
+export async function GET() {
   const lastmod = today();
   const entries: Entry[] = [
     { loc: SITE_URL, lastmod, changefreq: "daily", priority: 1 },
@@ -18,5 +19,16 @@ export function GET() {
     { loc: `${SITE_URL}/privacy`, lastmod, changefreq: "yearly", priority: 0.3 },
     { loc: `${SITE_URL}/terms`, lastmod, changefreq: "yearly", priority: 0.3 },
   ];
+  // Writer pages are linked from every byline and from /about, but a page
+  // only reachable by crawling links gets discovered late; listing them here
+  // puts the people behind the articles in front of the crawler directly.
+  for (const a of await getAuthors()) {
+    entries.push({
+      loc: `${SITE_URL}/author/${encodeURIComponent(a.username)}`,
+      lastmod,
+      changefreq: "weekly",
+      priority: 0.6,
+    });
+  }
   return xmlResponse(urlsetXml(entries));
 }
