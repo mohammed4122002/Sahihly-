@@ -11,6 +11,7 @@ import ConsentBanner from "@/components/ConsentBanner";
 import WelcomeToast from "@/components/WelcomeToast";
 import CursorGlow from "@/components/CursorGlow";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -194,6 +195,7 @@ export default async function LocaleLayout({
         <ConsentBanner locale={locale} />
         <WelcomeToast locale={locale} />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
