@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { isLocale, type Locale } from "@/lib/i18n/config";
-import { alternatesFor } from "@/lib/seo";
+import { alternatesFor, localePath } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
 import PricingCards from "@/components/PricingCards";
 import FAQ from "@/components/FAQ";
@@ -67,7 +68,7 @@ export default async function PricingPage({
                 },
                 {
                   h: "الفوترة والإلغاء والاسترداد",
-                  p: "تُفوتَر الخطط للمدة التي تختارها وتستمر حتى تُلغيها بنفسك من لوحتك، ويسري الإلغاء بنهاية المدة المدفوعة فتحتفظ بما دفعت مقابله. ومعالجة الدفع تجري كلياً على صفحة المزوّد المستضافة — لا نرى بيانات بطاقتك أو محفظتك ولا نخزّنها. وإن خُصِم منك بالخطأ أو بعد الإلغاء أو لم تفعل الأداة ما وصفته هذه الصفحة، فراسلنا وسنُعيد المبلغ دون جدال.",
+                  p: "تُشترى الخطط للمدة المختارة. لا تتجدد دفعات USDT اليدوية تلقائياً؛ أما الدفع عبر Lemon Squeezy فقد يتجدد وفق شروط صفحة الدفع. لإيقاف التجديد أو طلب الإلغاء، استخدم أدوات المزوّد المتاحة أو تواصل معنا. لا يعيد الإلغاء وحده مبلغاً سبق دفعه. إذا خُصم منك بالخطأ أو تكرّر الخصم أو أخفقت الخدمة إخفاقاً جوهرياً فيما وصفته هذه الصفحة، فراجع سياسة الاسترداد وتواصل معنا.",
                 },
                 {
                   h: "ما لا نبيعه",
@@ -85,7 +86,7 @@ export default async function PricingPage({
                 },
                 {
                   h: "Billing, cancellation, and refunds",
-                  p: "Plans are billed for the period you choose and continue until you cancel yourself from the dashboard, with cancellation taking effect at the end of the paid period so you keep what you paid for. Payment processing happens entirely on the provider's hosted checkout — we never see or store your card or wallet details. If you were charged in error, charged after cancelling, or the tool did not do what this page described, email us and we will refund it without an argument.",
+                  p: "Plans are purchased for the selected period. Manual USDT payments do not renew automatically; a Lemon Squeezy payment may renew under the checkout terms. To stop a renewal or request cancellation, use the provider's available controls or contact us. Cancellation alone does not refund a previous payment. If you were charged in error, charged more than once, or the service materially failed to do what this page described, review the Refund Policy and contact us.",
                 },
                 {
                   h: "What we do not sell",
@@ -98,6 +99,11 @@ export default async function PricingPage({
               <p className="mt-3 leading-relaxed text-white/65">{sec.p}</p>
             </div>
           ))}
+          <p className="text-sm">
+            <Link href={localePath(locale, "/refunds")} className="text-violet-200 underline hover:text-white">
+              {ar ? "اقرأ سياسة الاسترداد" : "Read our Refund Policy"}
+            </Link>
+          </p>
         </section>
       </Reveal>
 

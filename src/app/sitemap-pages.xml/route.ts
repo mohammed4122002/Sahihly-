@@ -18,6 +18,7 @@ export async function GET() {
     { loc: `${SITE_URL}/contact`, lastmod, changefreq: "yearly", priority: 0.5 },
     { loc: `${SITE_URL}/privacy`, lastmod, changefreq: "yearly", priority: 0.3 },
     { loc: `${SITE_URL}/terms`, lastmod, changefreq: "yearly", priority: 0.3 },
+    { loc: `${SITE_URL}/refunds`, lastmod, changefreq: "yearly", priority: 0.3 },
   ];
   // Writer pages are linked from every byline and from /about, but a page
   // only reachable by crawling links gets discovered late; listing them here
