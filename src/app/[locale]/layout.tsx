@@ -11,6 +11,7 @@ import ConsentBanner from "@/components/ConsentBanner";
 import WelcomeToast from "@/components/WelcomeToast";
 import CursorGlow from "@/components/CursorGlow";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -64,6 +65,13 @@ export async function generateMetadata({
     robots: { index: true, follow: true },
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
       ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+      : {}),
+    // Static meta tag for AdSense's "Meta tag" ownership check. No script, no
+    // cookies, so it works before consent and doesn't fight ConsentBanner —
+    // unlike the "AdSense snippet" method, which only loads after consent
+    // and Google's verification crawler never clicks Accept.
+    ...(process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+      ? { other: { "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT } }
       : {}),
     alternates: {
       types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
@@ -187,6 +195,7 @@ export default async function LocaleLayout({
         <ConsentBanner locale={locale} />
         <WelcomeToast locale={locale} />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

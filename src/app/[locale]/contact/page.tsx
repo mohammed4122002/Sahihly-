@@ -35,7 +35,7 @@ const C = {
       },
       {
         h: "Billing, refunds, and cancellation",
-        p: "Write to us before disputing a charge and we will almost always sort it out faster than your bank will. If a subscription was activated in error, if you were charged after cancelling, or if the tool clearly did not do what the pricing page said it would, say so plainly and we will refund it. Cancelling is self-serve from your dashboard and takes effect at the end of the paid period.",
+        p: "Write to us before disputing a charge if you can, and include the payment reference so we can investigate. If you were charged in error, charged more than once, or the service materially failed to do what the pricing page described, we will review it under our Refund Policy. Cancellation does not by itself issue a refund. Manual USDT payments do not renew automatically; for a recurring provider payment, use its cancellation controls where available or contact us for help.",
       },
       {
         h: "Reporting a wrong result",
@@ -47,7 +47,7 @@ const C = {
       },
       {
         h: "Privacy and data requests",
-        p: "Requests to export or delete your data, questions about how something is processed, or anything else covered by our privacy policy should go to privacy@sahihly.com so they are handled on the right track. You do not need to explain why, and we respond within one month at the outside — usually far sooner.",
+        p: "Requests to access, correct, or delete your data, questions about how something is processed, or anything else covered by our privacy policy should go to privacy@sahihly.com. We may need to verify your request before acting on it.",
       },
     ],
 
@@ -75,7 +75,7 @@ const C = {
       },
       {
         h: "الفوترة والاسترداد والإلغاء",
-        p: "راسلنا قبل الاعتراض على أي خصم وسنحلّها غالباً أسرع من بنكك. فإن فُعِّل اشتراك بالخطأ، أو خُصِم منك بعد الإلغاء، أو كانت الأداة بوضوح لم تفعل ما وعدت به صفحة الأسعار، فقل ذلك صراحةً وسنُعيد المبلغ. والإلغاء ذاتي من لوحتك ويسري بنهاية المدة المدفوعة.",
+        p: "راسلنا قبل الاعتراض على خصم إن أمكن، وأرفق مرجع الدفع لنتمكن من التحقق. إذا خُصم المبلغ بالخطأ أو تكرر الخصم أو أخفقت الخدمة إخفاقاً جوهرياً فيما وصفته صفحة الأسعار، فسنراجع الطلب وفق سياسة الاسترداد. لا يؤدي الإلغاء وحده إلى استرداد المبلغ. لا تتجدد دفعات USDT اليدوية تلقائياً؛ وللدفع المتكرر لدى مزوّد، استخدم أدوات الإلغاء لديه حيثما توفرت أو راسلنا للمساعدة.",
       },
       {
         h: "الإبلاغ عن نتيجة خاطئة",
@@ -87,7 +87,7 @@ const C = {
       },
       {
         h: "الخصوصية وطلبات البيانات",
-        p: "طلبات تصدير بياناتك أو حذفها، والأسئلة عن كيفية معالجة شيء ما، وكل ما تغطّيه سياسة الخصوصية، تُرسَل إلى privacy@sahihly.com لتُعالَج في المسار الصحيح. ولست مضطراً لشرح السبب، ونردّ خلال شهر كحدّ أقصى — وغالباً أسرع بكثير.",
+        p: "طلبات الوصول إلى بياناتك أو تصحيحها أو حذفها، والأسئلة عن كيفية معالجة شيء ما، وكل ما تغطّيه سياسة الخصوصية، تُرسَل إلى privacy@sahihly.com. وقد نحتاج إلى التحقق من طلبك قبل تنفيذه.",
       },
     ],
 

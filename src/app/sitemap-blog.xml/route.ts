@@ -8,7 +8,7 @@ export async function GET() {
   const posts = await getAllPosts();
   const entries: Entry[] = posts.map((p) => ({
     loc: `${SITE_URL}/blog/${p.slug}`,
-    lastmod: p.date,
+    lastmod: p.updated && p.updated > p.date ? p.updated : p.date,
     changefreq: "monthly",
     priority: 0.7,
   }));

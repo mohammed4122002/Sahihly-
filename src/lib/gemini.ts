@@ -31,6 +31,28 @@ export function hasGemini(): boolean {
   return Boolean(apiKey());
 }
 
+/**
+ * Thinking is on by default in the 2.5 family, and thinking tokens are spent
+ * out of maxOutputTokens.
+ *
+ * This is why a working key still produced "statistical engine only": the
+ * detector asks for JSON covering every sentence, the model spent the budget
+ * reasoning first, and the reply came back with finishReason MAX_TOKENS and no
+ * text at all. Detection wants a scored list, not deliberation, so the budget
+ * goes to the answer. GEMINI_THINKING_BUDGET overrides it — a negative value
+ * leaves the decision to the model, which is the only option on the Pro models,
+ * where asking for zero is rejected outright.
+ */
+function thinkingConfig(): { thinkingBudget: number } | undefined {
+  const raw = (process.env.GEMINI_THINKING_BUDGET || "").trim();
+  if (raw) {
+    const n = Number(raw);
+    if (Number.isFinite(n)) return n < 0 ? undefined : { thinkingBudget: n };
+  }
+  if (/pro/i.test(GEMINI_MODEL)) return undefined;
+  return { thinkingBudget: 0 };
+}
+
 export async function geminiChat(
   system: string,
   user: string,
@@ -39,6 +61,7 @@ export async function geminiChat(
 ): Promise<string> {
   const key = apiKey();
   if (!key) throw new Error("gemini_not_configured");
+  const thinking = thinkingConfig();
 
   const res = await fetch(
     `${BASE}/models/${GEMINI_MODEL}:generateContent`,
@@ -54,6 +77,7 @@ export async function geminiChat(
           // must not come back with two different verdicts.
           temperature: jsonMode ? 0 : 0.7,
           ...(jsonMode ? { responseMimeType: "application/json" } : {}),
+          ...(thinking ? { thinkingConfig: thinking } : {}),
         },
       }),
     }
@@ -67,10 +91,31 @@ export async function geminiChat(
   }
 
   const json = await res.json();
-  const parts = json?.candidates?.[0]?.content?.parts;
-  if (!Array.isArray(parts)) return "";
-  return parts
-    .map((p: { text?: string }) => p.text ?? "")
-    .join("")
-    .trim();
+  const candidate = json?.candidates?.[0];
+  const parts = candidate?.content?.parts;
+  const out = Array.isArray(parts)
+    ? parts
+        .map((p: { text?: string }) => p.text ?? "")
+        .join("")
+        .trim()
+    : "";
+
+  // A 200 with no text is the failure that used to be invisible: the caller
+  // got "", JSON.parse threw somewhere else, and the log blamed the parser.
+  // Gemini says why in finishReason, so pass that on verbatim.
+  if (!out) {
+    const finish = candidate?.finishReason ?? "none";
+    const blocked = json?.promptFeedback?.blockReason;
+    const hint =
+      finish === "MAX_TOKENS"
+        ? " (the token budget was spent before any text was produced — thinking is on, or maxOutputTokens is too low for this passage)"
+        : "";
+    throw new Error(
+      `gemini_empty finishReason=${finish}` +
+        (blocked ? ` blockReason=${blocked}` : "") +
+        hint
+    );
+  }
+
+  return out;
 }

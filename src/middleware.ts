@@ -28,6 +28,7 @@ async function refreshSupabaseSession(req: NextRequest, res: NextResponse) {
 
 const PUBLIC_FILE = /\.(.*)$/;
 const COOKIE = "sahihly_locale";
+const INTERNAL_LOCALE_REWRITE = "x-sahihly-internal-locale-rewrite";
 
 // Paths served outside the [locale] tree — never rewrite these.
 const BYPASS_PREFIXES = ["/_next", "/api", "/auth", "/opengraph-image", "/og", "/embed"];
@@ -94,6 +95,13 @@ export async function middleware(req: NextRequest) {
   const hostRedirect = canonicalHostRedirect(req);
   if (hostRedirect) return hostRedirect;
 
+  // A clean URL is rewritten internally to /en/... for routing. Next may
+  // re-run middleware for that destination, so let this internal request
+  // reach the localized route instead of redirecting it back to the clean URL.
+  if (req.headers.get(INTERNAL_LOCALE_REWRITE) === "1") {
+    return NextResponse.next();
+  }
+
   if (
     // Match on path segments, not raw string prefixes: a bare startsWith
     // means "/auth" also swallows "/author/...", which silently drops those
@@ -134,7 +142,9 @@ export async function middleware(req: NextRequest) {
   const locale = detectLocale(req);
   const url = req.nextUrl.clone();
   url.pathname = `/${locale}${pathname === "/" ? "" : pathname}`;
-  const res = NextResponse.rewrite(url);
+  const headers = new Headers(req.headers);
+  headers.set(INTERNAL_LOCALE_REWRITE, "1");
+  const res = NextResponse.rewrite(url, { request: { headers } });
   res.cookies.set(COOKIE, locale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   // Cache/bot hygiene: the response depends on the negotiated language.
   res.headers.set("Vary", "Accept-Language, Cookie");

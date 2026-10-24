@@ -74,6 +74,7 @@ export default function Footer({
       links: [
         { href: "/privacy", label: dict.footer.privacy },
         { href: "/terms", label: dict.footer.terms },
+        { href: "/refunds", label: locale === "ar" ? "سياسة الاسترداد" : "Refund Policy" },
       ],
     },
   ];

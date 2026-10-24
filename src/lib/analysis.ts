@@ -1,5 +1,5 @@
 import { getAnthropic, hasAnthropic, MODEL } from "./anthropic";
-import { geminiChat, hasGemini } from "./gemini";
+import { geminiChat, hasGemini, GEMINI_MODEL } from "./gemini";
 import {
   heuristicDetect,
   computeMetrics,
@@ -30,16 +30,92 @@ function hasOpenAI(): boolean {
 }
 
 type Provider = "gemini" | "openai" | "anthropic" | "heuristic";
+type LlmProvider = Exclude<Provider, "heuristic">;
+
+/**
+ * Every configured provider, best first.
+ *
+ * AI_PROVIDER moves its provider to the front; it does not remove the others.
+ * A preference that silently discarded the rest turned one dead key into a
+ * site-wide downgrade: the statistical engine answered every request while a
+ * perfectly good second key sat unused in the same project, and nothing in the
+ * interface or the logs said which key had failed or why.
+ */
+function providerChain(): LlmProvider[] {
+  const configured: LlmProvider[] = [];
+  if (hasGemini()) configured.push("gemini");
+  if (hasOpenAI()) configured.push("openai");
+  if (hasAnthropic()) configured.push("anthropic");
+
+  const pref = (process.env.AI_PROVIDER || "").trim() as LlmProvider;
+  if (configured.includes(pref)) {
+    return [pref, ...configured.filter((p) => p !== pref)];
+  }
+  return configured;
+}
 
 function pickProvider(): Provider {
-  const pref = process.env.AI_PROVIDER;
-  if (pref === "gemini" && hasGemini()) return "gemini";
-  if (pref === "openai" && hasOpenAI()) return "openai";
-  if (pref === "anthropic" && hasAnthropic()) return "anthropic";
-  if (hasGemini()) return "gemini";
-  if (hasOpenAI()) return "openai";
-  if (hasAnthropic()) return "anthropic";
-  return "heuristic";
+  return providerChain()[0] ?? "heuristic";
+}
+
+/** Log-safe one-liner: reason without the key or the whole stack. */
+function reasonOf(err: unknown): string {
+  const msg = err instanceof Error ? err.message : String(err);
+  return msg.slice(0, 300);
+}
+
+/**
+ * Which engine a deployment is actually running, and why.
+ *
+ * Read by the admin diagnostics route. Keys are reported as booleans only —
+ * the point is "is it there", and a value echoed back over HTTP is a value
+ * that ends up in a log somewhere.
+ */
+export function providerStatus() {
+  return {
+    active: pickProvider(),
+    chain: providerChain(),
+    preference: process.env.AI_PROVIDER?.trim() || null,
+    keys: {
+      gemini: hasGemini(),
+      openai: hasOpenAI(),
+      anthropic: hasAnthropic(),
+    },
+    models: { gemini: GEMINI_MODEL, openai: OPENAI_MODEL, anthropic: MODEL },
+  };
+}
+
+/**
+ * One real call per configured provider, so a key can be proved live without
+ * pasting an essay into the tool and reading the badge. Errors come back
+ * verbatim from the provider — "API key not valid", a 429, a retired model
+ * name — because that sentence is the whole answer to "why is my key ignored".
+ */
+export async function pingProviders(): Promise<
+  { provider: LlmProvider; ok: boolean; error?: string }[]
+> {
+  const chain = providerChain();
+  const out: { provider: LlmProvider; ok: boolean; error?: string }[] = [];
+  for (const provider of chain) {
+    try {
+      if (provider === "gemini") {
+        await geminiChat("Reply with the single word: ok", "ping", false, 64);
+      } else if (provider === "openai") {
+        await openaiChat("Reply with the single word: ok", "ping", false, 64);
+      } else {
+        const anthropic = getAnthropic();
+        await anthropic.messages.create({
+          model: MODEL,
+          max_tokens: 8,
+          messages: [{ role: "user", content: "ping" }],
+        });
+      }
+      out.push({ provider, ok: true });
+    } catch (err) {
+      out.push({ provider, ok: false, error: reasonOf(err) });
+    }
+  }
+  return out;
 }
 
 async function openaiChat(
@@ -72,6 +148,17 @@ async function openaiChat(
   return json.choices?.[0]?.message?.content ?? "";
 }
 
+/**
+ * Output budget for one detection.
+ *
+ * The reply echoes every sentence of the chunk back with a score, so it is
+ * longer than the passage it read. Arabic costs roughly two to three tokens a
+ * word against English's one and a bit, which made 2000 tokens a truncated
+ * answer on exactly the language this tool exists for — and a truncated answer
+ * used to mean a silent drop to the statistical engine.
+ */
+const DETECT_MAX_TOKENS = 4000;
+
 export type { Sentence, StyleMetrics, Engine, Confidence, DetectResult };
 export { computeMetrics };
 
@@ -95,7 +182,7 @@ async function claudeDetect(text: string, locale: string): Promise<DetectResult>
   const signals = computeSignals(text);
   const msg = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 2000,
+    max_tokens: DETECT_MAX_TOKENS,
     system: DETECT_SYSTEM,
     messages: [{ role: "user", content: detectPrompt(text, locale, metrics, signals) }],
   });
@@ -180,8 +267,30 @@ TEXT:
 """${text}"""`;
 }
 
+/**
+ * The overall score is the first field the model writes, so a reply cut off
+ * mid-sentence-list still contains the number that drives the whole result.
+ * Throwing that away downgraded the entire analysis to the statistical engine
+ * over a formatting accident; the sentence highlights degrade to a flat score
+ * instead, which is a visibly smaller loss.
+ */
+function salvageScore(raw: string): number | null {
+  const m = raw.match(/"score"\s*:\s*(\d{1,3})/);
+  if (!m) return null;
+  return Math.min(100, Math.max(0, Number(m[1])));
+}
+
 function parseDetectJson(raw: string, text: string): { score: number; sentences: Sentence[] } {
-  const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+  const clean = raw.replace(/```json|```/g, "").trim();
+  let parsed: { score?: number; sentences?: { text: string; score: number }[] };
+  try {
+    parsed = JSON.parse(clean);
+  } catch (err) {
+    const rescued = salvageScore(clean);
+    if (rescued === null) throw err;
+    console.warn("[analysis] truncated model JSON; using its overall score only");
+    parsed = { score: rescued };
+  }
   const score = Math.min(100, Math.max(0, Math.round(parsed.score ?? 50)));
   const sentences: Sentence[] = Array.isArray(parsed.sentences)
     ? parsed.sentences.map((s: { text: string; score: number }) => ({
@@ -199,7 +308,7 @@ async function openaiDetect(text: string, locale: string): Promise<DetectResult>
     DETECT_SYSTEM,
     detectPrompt(text, locale, metrics, signals),
     true,
-    2000
+    DETECT_MAX_TOKENS
   );
   const { score, sentences } = parseDetectJson(raw, text);
   return {
@@ -219,7 +328,7 @@ async function geminiDetect(text: string, locale: string): Promise<DetectResult>
     DETECT_SYSTEM,
     detectPrompt(text, locale, metrics, signals),
     true,
-    2000
+    DETECT_MAX_TOKENS
   );
   const { score, sentences } = parseDetectJson(raw, text);
   return {
@@ -270,24 +379,41 @@ function chunkText(text: string, maxWords = 600): string[] {
   return chunks;
 }
 
+/**
+ * First provider in the chain that answers wins.
+ *
+ * The failure is logged rather than swallowed. An empty catch here meant a
+ * rejected key, an exhausted quota and a retired model name all surfaced as
+ * the same thing — the statistical badge — with nothing in the runtime log to
+ * tell them apart, which is a long afternoon for whoever has to guess.
+ */
 async function llmDetect(
   text: string,
   locale: string,
-  provider: Exclude<Provider, "heuristic">
+  chain: LlmProvider[]
 ): Promise<DetectResult> {
-  if (provider === "gemini") return geminiDetect(text, locale);
-  if (provider === "openai") return openaiDetect(text, locale);
-  return claudeDetect(text, locale);
+  let last: unknown = new Error("no_provider_configured");
+  for (const provider of chain) {
+    try {
+      if (provider === "gemini") return await geminiDetect(text, locale);
+      if (provider === "openai") return await openaiDetect(text, locale);
+      return await claudeDetect(text, locale);
+    } catch (err) {
+      last = err;
+      console.warn(`[analysis] detect via ${provider} failed: ${reasonOf(err)}`);
+    }
+  }
+  throw last;
 }
 
 /** One hybrid pass over a single chunk. */
 async function detectChunk(
   text: string,
   locale: string,
-  provider: Exclude<Provider, "heuristic">
+  chain: LlmProvider[]
 ): Promise<{ score: number; gap: number; sentences: Sentence[]; words: number }> {
   const statistical = heuristicDetect(text);
-  const llm = await llmDetect(text, locale, provider);
+  const llm = await llmDetect(text, locale, chain);
   const blended = Math.round(llm.score * 0.65 + statistical.score * 0.35);
   return {
     score: blended,
@@ -319,11 +445,12 @@ function statisticalChunk(text: string) {
  * more likely to return a model-quality answer at all.
  */
 export async function detectAI(text: string, locale: string): Promise<DetectResult> {
-  const provider = pickProvider();
+  const chain = providerChain();
   const statistical = heuristicDetect(text);
   const words = wordsOf(text);
 
-  if (provider === "heuristic") {
+  if (chain.length === 0) {
+    console.warn("[analysis] no model key configured — statistical engine only");
     return { ...statistical, confidence: confidenceFor(words, null) };
   }
 
@@ -331,8 +458,9 @@ export async function detectAI(text: string, locale: string): Promise<DetectResu
   const results: ReturnType<typeof statisticalChunk>[] = [];
   for (const chunk of chunks) {
     try {
-      results.push({ ...(await detectChunk(chunk, locale, provider)), llm: true });
-    } catch {
+      results.push({ ...(await detectChunk(chunk, locale, chain)), llm: true });
+    } catch (err) {
+      console.warn(`[analysis] chunk fell back to statistics: ${reasonOf(err)}`);
       results.push(statisticalChunk(chunk));
     }
   }
@@ -644,16 +772,17 @@ export async function humanizeText(
   style: HumanizeStyle = "natural"
 ): Promise<HumanizeResult> {
   const isArabic = isArabicText(text);
-  const provider = pickProvider();
   const before = styleSignalScore(text);
 
-  const rewrite = (input: string) => {
-    if (provider === "gemini") return geminiHumanize(input, locale, style);
-    if (provider === "openai") return openaiHumanize(input, locale, style);
-    return claudeHumanize(input, locale, style);
-  };
+  // Same failover as the detector: a dead key hands the work to the next
+  // configured one instead of dropping the whole site to substitutions.
+  for (const provider of providerChain()) {
+    const rewrite = (input: string) => {
+      if (provider === "gemini") return geminiHumanize(input, locale, style);
+      if (provider === "openai") return openaiHumanize(input, locale, style);
+      return claudeHumanize(input, locale, style);
+    };
 
-  if (provider !== "heuristic") {
     try {
       let best = await rewrite(text);
       let bestScore = styleSignalScore(best);
@@ -673,8 +802,11 @@ export async function humanizeText(
           provider === "gemini" ? "gemini" : provider === "openai" ? "openai" : "claude";
         return { text: best, engine };
       }
-    } catch {
-      /* fall through to heuristic */
+      // Answered, but ate the content — a second provider would most likely do
+      // the same, so take the deterministic rewrite rather than pay for it.
+      break;
+    } catch (err) {
+      console.warn(`[analysis] humanize via ${provider} failed: ${reasonOf(err)}`);
     }
   }
 

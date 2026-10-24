@@ -15,12 +15,14 @@ type DbRow = {
   author_name: string | null;
   author_id: string | null;
   created_at: string;
+  updated_at: string | null;
 };
 
 function rowToPost(r: DbRow): BlogPost {
   return {
     slug: r.slug,
     date: String(r.created_at).slice(0, 10),
+    updated: r.updated_at ? String(r.updated_at).slice(0, 10) : undefined,
     readingTime: r.reading_time,
     category: r.category,
     title: { en: r.title_en, ar: r.title_ar },
@@ -90,7 +92,7 @@ async function dbPosts(): Promise<BlogPost[]> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, author_id, created_at")
+      .select("slug, category, title_en, title_ar, excerpt_en, excerpt_ar, body_en, body_ar, reading_time, author_name, author_id, created_at, updated_at")
       .eq("published", true)
       .order("created_at", { ascending: false });
     if (error || !data) return [];
